@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link-Lite - 간편한 리더십 진단</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="premium-style.css">
+    <link rel="stylesheet" href="mobile-native.css">
+    <meta name="description" content="20개 간단한 질문으로 나의 리더십 스타일을 확인하고 팀원들과 더 잘 소통하는 방법을 알아보세요.">
+</head>
+<body class="welcome-page">
+    <div class="premium-container">
+        <div class="glass-card">
+            <div class="glass-header">
+                <h1>Link-Lite</h1>
+                <p class="subtitle">간편한 리더십 진단 & 팀 궁합 체크</p>
+            </div>
+
+            <div class="premium-content">
+                <!-- 시작 화면 -->
+                <div id="welcome" class="premium-section active">
+                    <div class="welcome-section">
+                        <h2 class="welcome-title">리더에서 링커로</h2>
+                        <p class="welcome-description">
+                            디지털 시대 새로운 리더십 패러다임<br>
+                            링커십(Linkership) 진단으로 팀 연결의 힘을 발견하세요
+                        </p>
+
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <div class="feature-icon-modern analytics"></div>
+                                <div class="feature-text">
+                                    <h3 class="feature-title">SIG 모델 진단</h3>
+                                    <p class="feature-description">공유·상호작용·성장 영역 분석</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon-modern collaboration"></div>
+                                <div class="feature-text">
+                                    <h3 class="feature-title">팔로워십 매칭</h3>
+                                    <p class="feature-description">팀원 유형별 맞춤 코칭 전략</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon-modern insights"></div>
+                                <div class="feature-text">
+                                    <h3 class="feature-title">링커십 전환</h3>
+                                    <p class="feature-description">연결자로서의 실행 가이드</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="premium-btn" onclick="startAssessment()">
+                            <span>진단 시작</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 진단 화면 -->
+                <div id="assessment" class="premium-section">
+                    <div class="premium-progress">
+                        <div class="premium-progress-fill" id="progressBar"></div>
+                    </div>
+
+                    <div class="premium-question-card">
+                        <div class="question-meta">
+                            <div class="question-number" id="questionNumber"></div>
+                            <div class="question-category" id="questionCategory"></div>
+                        </div>
+
+                        <div class="question-text" id="questionText"></div>
+
+                        <div id="interactiveInput"></div>
+                    </div>
+
+                    <div class="premium-nav">
+                        <button class="premium-btn premium-btn-secondary" id="prevBtn" onclick="previousQuestion()" disabled>
+                            ← 이전
+                        </button>
+                        <button class="premium-btn" id="nextBtn" onclick="nextQuestion()" disabled>
+                            <span id="nextBtnText">다음</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 결과 화면 -->
+                <div id="results" class="premium-section">
+                    <div class="premium-results">
+                        <div class="results-hero">
+                            <div class="leadership-type" id="leadershipType"></div>
+                            <div class="type-description" id="typeDescription"></div>
+                        </div>
+
+                        <div class="scores-grid">
+                            <div class="score-card">
+                                <div class="score-title">Sharing (공유)</div>
+                                <div class="score-value" id="sharingScore"></div>
+                                <div class="score-label">목표 공유 및 참여 촉진</div>
+                            </div>
+                            <div class="score-card">
+                                <div class="score-title">Interaction (상호작용)</div>
+                                <div class="score-value" id="interactionScore"></div>
+                                <div class="score-label">관계 구축 및 소통 역량</div>
+                            </div>
+                            <div class="score-card">
+                                <div class="score-title">Growth (성장)</div>
+                                <div class="score-value" id="growthScore"></div>
+                                <div class="score-label">개별 성장 지원 역량</div>
+                            </div>
+                        </div>
+
+                        <div class="followership-section">
+                            <h3 class="section-title">팀원의 팔로워십 유형을 선택하세요</h3>
+                            <p class="section-description">팀원들의 팔로워십 유형을 선택하면 맞춤형 코칭 전략을 제안해드립니다.</p>
+                            <div class="followership-grid" id="followershipOptions"></div>
+                            <button class="premium-btn" onclick="analyzeCompatibility()" id="analyzeBtn" disabled>
+                                <span>팀 궁합 분석하기</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+
+                        <div id="compatibilityResults" class="compatibility-results" style="display: none;">
+                            <h3 class="section-title">팀 궁합 분석 결과</h3>
+                            <div id="compatibilityList"></div>
+                        </div>
+
+                        <div style="margin-top: var(--space-12); text-align: center;">
+                            <button class="premium-btn premium-btn-secondary" onclick="resetAssessment()">
+                                ↻ 다시 진단하기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="leadership-assessment.js"></script>
+    <script src="team-compatibility.js"></script>
+    <script src="mobile-native.js"></script>
+    <script>
+        let assessment = new LeadershipAssessment();
+        let teamCompatibility = new TeamCompatibility();
+        let currentQuestion = 0;
+        let selectedFollowerTypes = [];
+        let mobileInput = null;
+        let mobileNav = null;
+
+        function startAssessment() {
+            showSection('assessment');
+
+            // Initialize mobile navigation
+            if (!mobileNav) {
+                mobileNav = new MobileNavigationManager();
+            }
+
+            loadQuestion(0);
+        }
+
+        function showSection(sectionId) {
+            // 모든 섹션 숨기기
+            document.querySelectorAll('.premium-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // body 클래스 변경 (페이지별 레이아웃)
+            document.body.className = sectionId === 'welcome' ? 'welcome-page' : 'content-page';
+
+            // 새 섹션 표시
+            setTimeout(() => {
+                document.getElementById(sectionId).classList.add('active');
+            }, 150);
+        }
+
+        function loadQuestion(index) {
+            currentQuestion = index;
+            const question = assessment.getQuestion(index);
+            const totalQuestions = assessment.getTotalQuestions();
+
+            // 질문 정보 업데이트
+            document.getElementById('questionNumber').textContent = `${index + 1} / ${totalQuestions}`;
+            document.getElementById('questionCategory').textContent = getCategoryName(question.category);
+            document.getElementById('questionText').textContent = question.text;
+
+            // 진행률 업데이트
+            const progress = ((index + 1) / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // 모바일 네이티브 입력 시스템 초기화
+            const inputContainer = document.getElementById('interactiveInput');
+
+            // 기존 인스턴스 정리
+            if (mobileInput) {
+                mobileInput.destroy();
+            }
+
+            // 새 모바일 입력 생성
+            const currentResponse = assessment.responses[question.id]; // undefined if not answered
+            mobileInput = new MobileNativeInput(inputContainer, {
+                defaultValue: currentResponse, // Will be null for new questions
+                min: 1,
+                max: 6,
+                onChange: (value) => {
+                    assessment.recordResponse(question.id, value);
+                    updateNextButton();
+                }
+            });
+
+            // 버튼 상태 업데이트
+            document.getElementById('prevBtn').disabled = index === 0;
+            updateNextButton();
+
+            // 모바일 네비게이션 업데이트 (모바일 화면에서만)
+            if (mobileNav && window.innerWidth <= 768) {
+                const canGoPrev = index > 0;
+                const canGoNext = assessment.responses[question.id] !== undefined;
+                const isLastQuestion = index === assessment.getTotalQuestions() - 1;
+                const nextText = isLastQuestion ? '결과 보기' : '다음';
+
+                mobileNav.updateNavigation(canGoPrev, canGoNext, nextText);
+            }
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'sharing': '공유 및 참여',
+                'interaction': '상호작용',
+                'growth': '성장지향'
+            };
+            return names[category] || category;
+        }
+
+        // selectScale 함수는 더 이상 필요하지 않음 (인터랙티브 입력에서 처리)
+
+        function updateNextButton() {
+            const question = assessment.getQuestion(currentQuestion);
+            const hasResponse = assessment.responses[question.id] !== undefined;
+            const isLastQuestion = currentQuestion === assessment.getTotalQuestions() - 1;
+
+            const nextBtn = document.getElementById('nextBtn');
+            const nextBtnText = document.getElementById('nextBtnText');
+
+            nextBtn.disabled = !hasResponse;
+            nextBtnText.textContent = isLastQuestion ? '결과 보기' : '다음';
+
+            // 모바일 네비게이션도 업데이트 (모바일 화면에서만)
+            if (mobileNav && window.innerWidth <= 768) {
+                const canGoPrev = currentQuestion > 0;
+                const nextText = isLastQuestion ? '결과 보기' : '다음';
+                mobileNav.updateNavigation(canGoPrev, hasResponse, nextText);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < assessment.getTotalQuestions() - 1) {
+                loadQuestion(currentQuestion + 1);
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                loadQuestion(currentQuestion - 1);
+            }
+        }
+
+        function showResults() {
+            const result = assessment.determineLeadershipType();
+
+            // 더 자세한 디버깅용 로그
+            console.log('=== LEADERSHIP TYPE DEBUG ===');
+            console.log('Assessment object:', assessment);
+            console.log('Assessment result:', result);
+            console.log('Type code:', result.code);
+            console.log('Type object:', result.type);
+            console.log('Scores:', result.scores);
+            console.log('Available leadership types:', assessment.leadershipTypes);
+            console.log('Type found in leadershipTypes:', assessment.leadershipTypes[result.code]);
+            console.log('=============================');
+
+            // 리더십 유형 표시
+            const leadershipTypeElement = document.getElementById('leadershipType');
+            const typeDescriptionElement = document.getElementById('typeDescription');
+
+            if (result.type && result.type.name) {
+                leadershipTypeElement.textContent = result.type.name;
+                typeDescriptionElement.textContent = result.type.description;
+                console.log('✓ Successfully displayed leadership type:', result.type.name);
+            } else {
+                // 문제가 있을 때 더 자세한 디버깅 정보 표시
+                const debugInfo = `디버그: 코드=${result.code}, 타입객체=${JSON.stringify(result.type)}`;
+                leadershipTypeElement.textContent = debugInfo;
+                typeDescriptionElement.textContent = `점수 - 공유:${result.scores.sharing.toFixed(1)}, 상호작용:${result.scores.interaction.toFixed(1)}, 성장:${result.scores.growth.toFixed(1)}`;
+                console.error('✗ Failed to display leadership type. Result.type:', result.type);
+                console.error('✗ Code lookup result:', assessment.leadershipTypes[result.code]);
+            }
+
+            document.getElementById('sharingScore').textContent = result.scores.sharing.toFixed(1);
+            document.getElementById('interactionScore').textContent = result.scores.interaction.toFixed(1);
+            document.getElementById('growthScore').textContent = result.scores.growth.toFixed(1);
+
+            // 팔로워십 옵션 생성
+            createFollowershipOptions();
+
+            showSection('results');
+        }
+
+        function createFollowershipOptions() {
+            const container = document.getElementById('followershipOptions');
+            container.innerHTML = '';
+
+            // 팔로워십 섹션 스타일 추가
+            if (!document.querySelector('.followership-section-style')) {
+                const style = document.createElement('style');
+                style.className = 'followership-section-style';
+                style.textContent = `
+                    .followership-section {
+                        background: var(--primary-50);
+                        border-radius: var(--radius-2xl);
+                        padding: var(--space-10);
+                        margin-top: var(--space-12);
+                        border: 1px solid var(--primary-200);
+                    }
+
+                    .section-title {
+                        font-size: var(--font-size-2xl);
+                        font-weight: 600;
+                        color: var(--primary-900);
+                        margin-bottom: var(--space-4);
+                        text-align: center;
+                    }
+
+                    .section-description {
+                        color: var(--primary-600);
+                        text-align: center;
+                        margin-bottom: var(--space-8);
+                    }
+
+                    .followership-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+                        gap: var(--space-4);
+                        margin-bottom: var(--space-8);
+                    }
+
+                    .followership-card {
+                        background: white;
+                        border: 2px solid var(--primary-200);
+                        border-radius: var(--radius-xl);
+                        padding: var(--space-6);
+                        cursor: pointer;
+                        transition: all var(--transition-base);
+                        text-align: left;
+                    }
+
+                    .followership-card:hover {
+                        border-color: var(--accent-400);
+                        transform: translateY(-2px);
+                        box-shadow: var(--shadow-md);
+                    }
+
+                    .followership-card.selected {
+                        border-color: var(--accent-500);
+                        background: linear-gradient(135deg, var(--accent-500), var(--accent-400));
+                        color: white;
+                        transform: translateY(-2px);
+                        box-shadow: var(--shadow-lg);
+                    }
+
+                    .followership-name {
+                        font-weight: 600;
+                        font-size: var(--font-size-lg);
+                        margin-bottom: var(--space-2);
+                    }
+
+                    .followership-desc {
+                        font-size: var(--font-size-sm);
+                        opacity: 0.9;
+                        line-height: 1.5;
+                    }
+
+                    .compatibility-results {
+                        margin-top: var(--space-12);
+                    }
+
+                    .compatibility-item {
+                        background: white;
+                        border-radius: var(--radius-xl);
+                        padding: var(--space-6);
+                        margin-bottom: var(--space-4);
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        box-shadow: var(--shadow-md);
+                        border: 1px solid var(--primary-100);
+                    }
+
+                    .compatibility-info h4 {
+                        margin-bottom: var(--space-2);
+                        color: var(--primary-900);
+                        font-weight: 600;
+                    }
+
+                    .compatibility-message {
+                        color: var(--primary-600);
+                        font-size: var(--font-size-sm);
+                    }
+
+                    .compatibility-score {
+                        text-align: center;
+                        min-width: 5rem;
+                    }
+
+                    .score-circle {
+                        width: 4rem;
+                        height: 4rem;
+                        border-radius: var(--radius-full);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: 700;
+                        color: white;
+                        margin-bottom: var(--space-2);
+                        font-size: var(--font-size-lg);
+                    }
+
+                    .score-excellent { background: linear-gradient(135deg, var(--success-500), var(--success-400)); }
+                    .score-good { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+                    .score-average { background: linear-gradient(135deg, var(--warning-500), var(--warning-400)); color: white; }
+                    .score-caution { background: linear-gradient(135deg, #f97316, #fb923c); }
+                    .score-poor { background: linear-gradient(135deg, var(--error-500), var(--error-400)); }
+
+                    .score-level {
+                        font-size: var(--font-size-xs);
+                        font-weight: 600;
+                        color: var(--primary-600);
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            teamCompatibility.getFollowershipTypes().forEach(follower => {
+                const card = document.createElement('div');
+                card.className = 'followership-card';
+                card.onclick = () => toggleFollowerType(follower.id, card);
+                card.innerHTML = `
+                    <div class="followership-name">${follower.name}</div>
+                    <div class="followership-desc">${follower.description}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleFollowerType(followerId, element) {
+            const index = selectedFollowerTypes.indexOf(followerId);
+
+            if (index > -1) {
+                selectedFollowerTypes.splice(index, 1);
+                element.classList.remove('selected');
+            } else {
+                selectedFollowerTypes.push(followerId);
+                element.classList.add('selected');
+            }
+
+            document.getElementById('analyzeBtn').disabled = selectedFollowerTypes.length === 0;
+        }
+
+        function analyzeCompatibility() {
+            const leadershipResult = assessment.determineLeadershipType();
+            const teamReport = teamCompatibility.generateTeamReport(leadershipResult, selectedFollowerTypes);
+
+            const resultsContainer = document.getElementById('compatibilityList');
+            resultsContainer.innerHTML = '';
+
+            teamReport.teamMembers.forEach(member => {
+                const item = document.createElement('div');
+                item.className = 'compatibility-item';
+
+                const scoreClass = getScoreClass(member.compatibility.score);
+
+                item.innerHTML = `
+                    <div class="compatibility-info">
+                        <h4>${member.follower.name}</h4>
+                        <div class="compatibility-message">${member.compatibility.message}</div>
+                    </div>
+                    <div class="compatibility-score">
+                        <div class="score-circle ${scoreClass}">${member.compatibility.score}</div>
+                        <div class="score-level">${member.compatibility.level}</div>
+                    </div>
+                `;
+                resultsContainer.appendChild(item);
+            });
+
+            document.getElementById('compatibilityResults').style.display = 'block';
+        }
+
+        function getScoreClass(score) {
+            if (score >= 90) return 'score-excellent';
+            if (score >= 80) return 'score-good';
+            if (score >= 70) return 'score-average';
+            if (score >= 60) return 'score-caution';
+            return 'score-poor';
+        }
+
+        function resetAssessment() {
+            assessment.reset();
+            selectedFollowerTypes = [];
+            currentQuestion = 0;
+
+            // 모바일 입력 정리
+            if (mobileInput) {
+                mobileInput.destroy();
+                mobileInput = null;
+            }
+
+            // 모바일 네비게이션 정리
+            if (mobileNav) {
+                mobileNav.destroy();
+                mobileNav = null;
+            }
+
+            document.getElementById('compatibilityResults').style.display = 'none';
+            showSection('welcome');
+        }
+
+        // 초기 로딩 애니메이션
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

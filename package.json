@@ -1,0 +1,14 @@
+{
+  "name": "link-lite",
+  "version": "1.0.0",
+  "description": "리더십 진단 및 팀 궁합 분석 시스템",
+  "main": "src/leadership-assessment.js",
+  "scripts": {
+    "start": "python3 -m http.server 8000 --directory public",
+    "dev": "python3 -m http.server 8000 --directory public",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["leadership", "assessment", "team", "compatibility", "analysis"],
+  "author": "",
+  "license": "MIT"
+}
