@@ -1,5 +1,37 @@
 /* Mobile-Native Professional Input System */
 
+/* 터치 존만 강력하게 애니메이션 비활성화 */
+.touch-zone,
+.touch-zone::before,
+.touch-zone::after,
+.touch-zone *,
+.touch-zone:hover,
+.touch-zone:focus,
+.touch-zone:active,
+.touch-zone.selected,
+.touch-zone.selected:hover,
+.touch-zone.selected:focus,
+.touch-zone.selected:active {
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -ms-transform: none !important;
+    -o-transform: none !important;
+    transform: none !important;
+    scale: 1 !important;
+    animation: none !important;
+    -webkit-animation: none !important;
+    -moz-animation: none !important;
+    -ms-animation: none !important;
+    -o-animation: none !important;
+    transition: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -ms-transition: none !important;
+    -o-transition: none !important;
+    will-change: auto !important;
+    backface-visibility: visible !important;
+}
+
 :root {
     /* Dynamic Score Colors - Premium Gradient System */
     --score-1-primary: #ef4444;    /* Red - Strong disagreement */
@@ -53,12 +85,166 @@
     border: 1px solid var(--ios-gray-light);
 }
 
-/* Touch Zone Grid */
+/* Touch Zone Grid - 기본 설정 (모바일 우선) */
 .touch-zone-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-3);
-    margin: var(--space-6) 0;
+    gap: var(--space-2);
+    margin: var(--space-3) 0;
+    padding: 0 var(--space-1);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* 프리미엄 스코어 버튼 스타일 */
+.premium-score-button {
+    /* 기본 크기 설정 */
+    width: 100% !important;
+    min-height: var(--touch-target-large) !important;
+
+    /* 패딩과 여백 */
+    padding: var(--space-3) var(--space-2) !important;
+    margin: 0 !important;
+
+    /* 애니메이션 비활성화 */
+    transform: none !important;
+    scale: 1 !important;
+    animation: none !important;
+    -webkit-transform: none !important;
+    -webkit-animation: none !important;
+    will-change: auto !important;
+    backface-visibility: visible !important;
+
+    /* 브라우저 기본 버튼 스타일 완전 제거 */
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+
+    /* 레이아웃 고정 */
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    flex-grow: 1 !important;
+    position: relative !important;
+    overflow: hidden !important;
+
+    /* 플렉스 레이아웃 */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    /* 둥근 모서리 */
+    border-radius: 16px !important;
+}
+
+/* 기본 글자 크기 (모바일 우선) */
+.premium-score-button .zone-value {
+    font-size: 1.3rem !important;
+}
+
+.premium-score-button .zone-label {
+    font-size: 0.6rem !important;
+}
+
+/* 선택된 버튼의 글자 색상 강제 적용 */
+.premium-score-button.selected .zone-value {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+.premium-score-button.selected .zone-label {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.25) !important;
+    opacity: 1 !important;
+}
+
+/* 프리미엄 스코어 버튼 호버 효과 */
+.premium-score-button:hover:not(.selected) {
+    transform: none !important;
+    scale: 1 !important;
+    animation: none !important;
+    background: linear-gradient(145deg,
+        rgba(255, 255, 255, 1),
+        rgba(248, 250, 252, 0.98)) !important;
+    box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.06),
+        0 8px 20px rgba(0, 0, 0, 0.04),
+        0 4px 10px rgba(0, 0, 0, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 1),
+        0 0 0 1px rgba(79, 70, 229, 0.12) !important;
+}
+
+.premium-score-button:hover .score-shimmer {
+    animation: shimmer 1.5s ease-in-out infinite !important;
+}
+
+/* 프리미엄 스코어 버튼 액티브 효과 */
+.premium-score-button:active {
+    opacity: 0.9 !important;
+    transform: none !important;
+    scale: 1 !important;
+    animation: none !important;
+}
+
+/* 시머 애니메이션 */
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* 기존 고정된 터치 존 스타일 (하위 호환성을 위해 유지) */
+.fixed-touch-zone {
+    min-height: var(--touch-target-large) !important;
+    padding: var(--space-3) var(--space-2) !important;
+    transform: none !important;
+    scale: 1 !important;
+    animation: none !important;
+    -webkit-transform: none !important;
+    -webkit-animation: none !important;
+    will-change: auto !important;
+    backface-visibility: visible !important;
+    /* 브라우저 기본 버튼 스타일 완전 제거 */
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    /* 크기 고정 */
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.fixed-touch-zone.selected {
+    transform: none !important;
+    scale: 1 !important;
+}
+
+.fixed-touch-zone:active {
+    opacity: 0.8 !important;
+    transform: none !important;
+    scale: 1 !important;
+    animation: none !important;
+}
+
+.fixed-touch-zone:focus,
+.fixed-touch-zone:hover {
+    transform: none !important;
+    scale: 1 !important;
+    animation: none !important;
 }
 
 .touch-zone {
@@ -71,32 +257,49 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: none !important;
     position: relative;
     overflow: hidden;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    padding: var(--space-3) var(--space-2);
+    transform: none !important;
+    scale: 1 !important;
+    animation: none !important;
+    will-change: auto;
 }
 
 .touch-zone.selected {
-    transform: scale(0.98);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+    transform: none !important;
+    scale: 1 !important;
+    animation: none !important;
 }
 
 .touch-zone:active {
-    transform: scale(0.95);
-    background: var(--ios-gray);
+    background: var(--ios-gray) !important;
+    opacity: 0.8 !important;
+    transform: none !important;
+    scale: none !important;
 }
 
 .touch-zone.selected:active {
-    transform: scale(0.95);
+    opacity: 0.9 !important;
+    transform: none !important;
+    scale: none !important;
+}
+
+.touch-zone,
+.touch-zone * {
+    transform: none !important;
+    scale: none !important;
 }
 
 /* Touch Zone Content */
 .zone-value {
     font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: var(--space-1);
+    margin-bottom: 4px;
     position: relative;
     z-index: 1;
 }
@@ -108,7 +311,8 @@
     opacity: 0.8;
     position: relative;
     z-index: 1;
-    line-height: 1.2;
+    line-height: 1.3;
+    padding: 0 4px;
 }
 
 .touch-zone.selected .zone-label {
@@ -138,7 +342,8 @@
     font-weight: 600;
     min-width: 3rem;
     text-align: center;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: background 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -156,7 +361,8 @@
     height: 100%;
     background: var(--ios-blue);
     border-radius: var(--radius-full);
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: background 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     width: 0%;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -167,19 +373,25 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid var(--ios-gray-light);
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.98),
+        rgba(248, 250, 252, 0.95));
+    backdrop-filter: blur(24px);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
     padding: var(--space-4);
     display: flex;
     gap: var(--space-4);
     z-index: 100;
+    box-shadow:
+        0 -8px 32px rgba(0, 0, 0, 0.08),
+        0 -4px 16px rgba(0, 0, 0, 0.04),
+        0 -1px 4px rgba(0, 0, 0, 0.02);
 }
 
 .mobile-nav-btn {
     flex: 1;
     min-height: var(--touch-target-large);
-    background: var(--ios-blue);
+    background: linear-gradient(135deg, var(--ios-blue) 0%, #0066cc 100%);
     color: white;
     border: none;
     border-radius: var(--radius-xl);
@@ -190,13 +402,18 @@
     justify-content: center;
     gap: var(--space-2);
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     -webkit-tap-highlight-color: transparent;
-    box-shadow: var(--ios-shadow);
+    box-shadow:
+        0 8px 24px rgba(0, 122, 255, 0.25),
+        0 4px 12px rgba(0, 122, 255, 0.15),
+        0 2px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
 }
 
 .mobile-nav-btn:active {
-    transform: scale(0.96);
+    opacity: 0.8;
     background: var(--ios-blue-active);
 }
 
@@ -208,9 +425,13 @@
 }
 
 .mobile-nav-btn.secondary {
-    background: var(--ios-gray-light);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.9));
     color: var(--ios-blue);
     border: 2px solid var(--ios-blue);
+    box-shadow:
+        0 4px 16px rgba(0, 122, 255, 0.15),
+        0 2px 8px rgba(0, 122, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .mobile-nav-btn.secondary:active {
@@ -229,13 +450,37 @@
     padding-bottom: 6rem; /* Space for fixed navigation */
 }
 
-/* Hide original navigation on mobile */
+/* ======================
+   반응형 미디어 쿼리
+   ====================== */
+
+/* 모바일 네비게이션 */
 @media (max-width: 768px) {
     .premium-nav {
         display: none;
     }
 }
 
+/* 태블릿 (481px ~ 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .touch-zone-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-3);
+        max-width: 450px;
+        margin: var(--space-4) auto;
+        padding: 0;
+    }
+
+    .premium-score-button .zone-value {
+        font-size: 1.5rem !important;
+    }
+
+    .premium-score-button .zone-label {
+        font-size: 0.7rem !important;
+    }
+}
+
+/* 데스크톱 (769px 이상) */
 @media (min-width: 769px) {
     .mobile-nav {
         display: none;
@@ -247,30 +492,87 @@
 
     .touch-zone-grid {
         grid-template-columns: repeat(6, 1fr);
-        max-width: 48rem;
+        gap: var(--space-4);
+        max-width: 600px;
         margin: var(--space-6) auto;
+        padding: 0;
+    }
+
+    .premium-score-button {
+        min-height: 70px !important;
+    }
+
+    .premium-score-button .zone-value {
+        font-size: 1.4rem !important;
+    }
+
+    .premium-score-button .zone-label {
+        font-size: 0.65rem !important;
     }
 }
 
-/* Screen Size Optimizations */
-@media (max-width: 480px) {
+/* 큰 데스크톱 (1024px 이상) */
+@media (min-width: 1024px) {
     .touch-zone-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-2);
+        max-width: 700px;
+        gap: calc(var(--space-4) + 2px);
+    }
+
+    .premium-score-button {
+        min-height: 75px !important;
+    }
+
+    .premium-score-button .zone-value {
+        font-size: 1.5rem !important;
+    }
+
+    .premium-score-button .zone-label {
+        font-size: 0.7rem !important;
+    }
+}
+
+/* 매우 큰 데스크톱 (1440px 이상) */
+@media (min-width: 1440px) {
+    .touch-zone-grid {
+        max-width: 800px;
+        gap: calc(var(--space-4) + 4px);
+    }
+
+    .premium-score-button {
+        min-height: 80px !important;
+    }
+
+    .premium-score-button .zone-value {
+        font-size: 1.6rem !important;
+    }
+
+    .premium-score-button .zone-label {
+        font-size: 0.75rem !important;
+    }
+}
+
+/* 추가 모바일 최적화 */
+@media (max-width: 380px) {
+    .touch-zone-grid {
+        gap: var(--space-1);
+        margin: var(--space-2) 0;
+        padding: 0;
+    }
+
+    .premium-score-button .zone-value {
+        font-size: 1.2rem !important;
+    }
+
+    .premium-score-button .zone-label {
+        font-size: 0.55rem !important;
     }
 
     .mobile-nav {
-        padding: var(--space-3);
+        padding: var(--space-2);
     }
 
     .mobile-nav-btn {
         min-height: var(--touch-target);
         font-size: var(--font-size-sm);
-    }
-}
-
-@media (min-width: 481px) and (max-width: 768px) {
-    .touch-zone-grid {
-        grid-template-columns: repeat(3, 1fr);
     }
 }

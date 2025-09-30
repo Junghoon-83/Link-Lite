@@ -35,9 +35,17 @@ class MobileNativeInput {
 
     init() {
         this.container.innerHTML = this.createHTML();
-        this.touchZones = this.container.querySelectorAll('.touch-zone');
+        this.touchZones = this.container.querySelectorAll('.premium-score-button');
         this.feedbackProgress = this.container.querySelector('.feedback-progress');
         this.selectedDisplay = this.container.querySelector('.selected-value-display');
+
+        // 강제로 모든 터치 존의 애니메이션 비활성화
+        this.touchZones.forEach(zone => {
+            zone.style.setProperty('transform', 'none', 'important');
+            zone.style.setProperty('scale', '1', 'important');
+            zone.style.setProperty('animation', 'none', 'important');
+            zone.style.setProperty('transition', 'none', 'important');
+        });
 
         if (this.value) {
             this.updateValue(this.value, false);
@@ -67,22 +75,72 @@ class MobileNativeInput {
 
     createTouchZone(value) {
         const isSelected = value === this.value;
+
+        // 선택된 버튼만 점수별 고유 색상 적용
+        const scoreColors = {
+            1: { primary: '#ef4444', secondary: '#dc2626' },
+            2: { primary: '#f97316', secondary: '#ea580c' },
+            3: { primary: '#f59e0b', secondary: '#d97706' },
+            4: { primary: '#84cc16', secondary: '#65a30d' },
+            5: { primary: '#22c55e', secondary: '#16a34a' },
+            6: { primary: '#10b981', secondary: '#059669' }
+        };
+
+        const selectedColor = scoreColors[value];
+
+        const selectedStyle = isSelected ?
+            `background: linear-gradient(145deg, ${selectedColor.primary}, ${selectedColor.secondary}) !important;
+             color: white !important;
+             border: none !important;
+             box-shadow:
+                0 16px 40px rgba(${this.hexToRgb(selectedColor.primary)}, 0.25),
+                0 8px 20px rgba(${this.hexToRgb(selectedColor.primary)}, 0.15),
+                0 4px 10px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;` :
+            `background: linear-gradient(145deg,
+                rgba(255, 255, 255, 0.98),
+                rgba(248, 250, 252, 0.95)) !important;
+             backdrop-filter: blur(20px) !important;
+             color: #4f46e5 !important;
+             border: none !important;
+             box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.04),
+                0 4px 12px rgba(0, 0, 0, 0.02),
+                0 2px 6px rgba(0, 0, 0, 0.01),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                0 0 0 1px rgba(79, 70, 229, 0.08) !important;`;
+
         return `
-            <div class="touch-zone ${isSelected ? 'selected' : ''}"
-                 data-value="${value}"
-                 tabindex="0"
-                 role="button"
-                 aria-label="${this.shortLabels[value - 1]}"
-                 aria-pressed="${isSelected}">
-                <div class="zone-value">${value}</div>
-                <div class="zone-label">${this.labels[value - 1]}</div>
-            </div>
+            <button class="premium-score-button ${isSelected ? 'selected' : ''}"
+                    data-value="${value}"
+                    type="button"
+                    aria-label="${this.shortLabels[value - 1]}"
+                    aria-pressed="${isSelected}"
+                    style="transform: none !important;
+                           scale: 1 !important;
+                           animation: none !important;
+                           transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+                           ${selectedStyle}">
+                <div class="score-shimmer" style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); z-index: 1; pointer-events: none;"></div>
+                <span class="zone-value" style="font-size: 1.6rem !important; font-weight: 800 !important; margin-bottom: 2px !important; transform: none !important; z-index: 3 !important; position: relative !important; letter-spacing: -0.02em !important; ${isSelected ? 'color: rgb(255, 255, 255) !important; text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;' : 'color: #4f46e5 !important;'}">${value}</span>
+                <span class="zone-label" style="font-size: 0.7rem !important; font-weight: 600 !important; text-align: center !important; opacity: ${isSelected ? '1' : '0.8'} !important; line-height: 1.2 !important; transform: none !important; z-index: 3 !important; position: relative !important; padding: 0 2px !important; letter-spacing: 0.01em !important; ${isSelected ? 'color: rgb(255, 255, 255) !important; text-shadow: 0 1px 3px rgba(0,0,0,0.25) !important;' : 'color: #6366f1 !important;'}">${this.labels[value - 1]}</span>
+            </button>
         `;
+    }
+
+    hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ?
+            `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` :
+            '0, 0, 0';
     }
 
     attachEventListeners() {
         this.touchZones.forEach((zone, index) => {
             const value = index + 1;
+
+            // 실시간 스타일 변경 감지 및 차단
+            this.observeZoneStyles(zone);
 
             // Touch Events
             zone.addEventListener('touchstart', (e) => this.handleTouchStart(e, value), { passive: true });
@@ -110,31 +168,116 @@ class MobileNativeInput {
         this.container.addEventListener('keydown', this.handleKeyboardNavigation.bind(this));
     }
 
+    observeZoneStyles(zone) {
+        // MutationObserver로 스타일 변경 감지
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    // 스타일이 변경되면 즉시 애니메이션 차단
+                    this.forceNoAnimation(zone);
+                }
+            });
+        });
+
+        observer.observe(zone, {
+            attributes: true,
+            attributeFilter: ['style']
+        });
+
+        // 클래스에 observer 저장
+        if (!this.observers) this.observers = [];
+        this.observers.push(observer);
+    }
+
+    forceNoAnimation(zone) {
+        zone.style.setProperty('transform', 'none', 'important');
+        zone.style.setProperty('scale', '1', 'important');
+        zone.style.setProperty('animation', 'none', 'important');
+        zone.style.setProperty('transition', 'none', 'important');
+        zone.style.setProperty('-webkit-transform', 'none', 'important');
+        zone.style.setProperty('-webkit-animation', 'none', 'important');
+        zone.style.setProperty('-webkit-transition', 'none', 'important');
+    }
+
     handleTouchStart(e, value) {
         const zone = e.currentTarget;
+
+        console.log('=== TOUCH START DEBUG ===');
+        console.log('Before touch - computed styles:', {
+            transform: window.getComputedStyle(zone).transform,
+            scale: window.getComputedStyle(zone).scale,
+            width: window.getComputedStyle(zone).width,
+            height: window.getComputedStyle(zone).height
+        });
+
+        // 애니메이션 강제 비활성화
+        zone.style.setProperty('transform', 'none', 'important');
+        zone.style.setProperty('scale', '1', 'important');
+        zone.style.setProperty('animation', 'none', 'important');
+        zone.style.setProperty('transition', 'none', 'important');
+        zone.style.setProperty('width', zone.offsetWidth + 'px', 'important');
+        zone.style.setProperty('height', zone.offsetHeight + 'px', 'important');
+
+        console.log('After force styles:', {
+            transform: window.getComputedStyle(zone).transform,
+            scale: window.getComputedStyle(zone).scale,
+            width: window.getComputedStyle(zone).width,
+            height: window.getComputedStyle(zone).height
+        });
+
         this.createRippleEffect(e, zone);
         this.triggerHapticFeedback('light');
     }
 
     handleTouchEnd(e, value) {
+        const zone = e.currentTarget;
+
+        console.log('=== TOUCH END DEBUG ===');
+        console.log('Touch end - computed styles:', {
+            transform: window.getComputedStyle(zone).transform,
+            scale: window.getComputedStyle(zone).scale,
+            width: window.getComputedStyle(zone).width,
+            height: window.getComputedStyle(zone).height
+        });
+
+        // 애니메이션 강제 비활성화
+        zone.style.setProperty('transform', 'none', 'important');
+        zone.style.setProperty('scale', '1', 'important');
+        zone.style.setProperty('animation', 'none', 'important');
+        zone.style.setProperty('transition', 'none', 'important');
+
         // Small delay to ensure ripple effect is visible
         setTimeout(() => {
+            console.log('Before selectValue - computed styles:', {
+                transform: window.getComputedStyle(zone).transform,
+                scale: window.getComputedStyle(zone).scale,
+                width: window.getComputedStyle(zone).width,
+                height: window.getComputedStyle(zone).height
+            });
             this.selectValue(value);
         }, 50);
     }
 
     handleFocus(zone) {
-        zone.style.transform = 'scale(1.02)';
+        zone.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
     }
 
     handleBlur(zone) {
         if (!zone.classList.contains('selected')) {
-            zone.style.transform = '';
+            zone.style.boxShadow = '';
         }
     }
 
     selectValue(value) {
         if (value === this.value) return; // No change needed
+
+        // 모든 터치 존의 애니메이션 강제 비활성화
+        this.touchZones.forEach(zone => {
+            zone.style.transform = 'none';
+            zone.style.scale = '1';
+            zone.style.animation = 'none';
+            zone.style.transition = 'none';
+        });
 
         this.updateValue(value, true);
         this.triggerHapticFeedback('medium');
@@ -205,9 +348,28 @@ class MobileNativeInput {
             zone.removeAttribute('data-selected-color');
             zone.removeAttribute('data-text-color');
 
+            // 강제로 애니메이션 비활성화
+            zone.style.setProperty('transform', 'none', 'important');
+            zone.style.setProperty('scale', '1', 'important');
+            zone.style.setProperty('animation', 'none', 'important');
+            zone.style.setProperty('transition', 'none', 'important');
+
             if (isSelected) {
                 zone.classList.add('selected');
                 zone.setAttribute('aria-pressed', 'true');
+
+                // 선택된 버튼의 글자 색상을 강제로 하얀색으로 설정
+                const valueSpan = zone.querySelector('.zone-value');
+                const labelSpan = zone.querySelector('.zone-label');
+                if (valueSpan) {
+                    valueSpan.style.setProperty('color', '#ffffff', 'important');
+                    valueSpan.style.setProperty('text-shadow', '0 2px 4px rgba(0,0,0,0.3)', 'important');
+                }
+                if (labelSpan) {
+                    labelSpan.style.setProperty('color', '#ffffff', 'important');
+                    labelSpan.style.setProperty('text-shadow', '0 1px 3px rgba(0,0,0,0.25)', 'important');
+                    labelSpan.style.setProperty('opacity', '1', 'important');
+                }
 
                 // Debug log
                 console.log(`Applying colors to zone ${this.value}: bg=${scoreColors[this.value]}, text=${textColors[this.value]}`);
@@ -232,8 +394,20 @@ class MobileNativeInput {
                 });
 
                 if (animate) {
-                    zone.classList.add('haptic-pulse');
-                    setTimeout(() => zone.classList.remove('haptic-pulse'), 150);
+                    // 부드러운 시각적 피드백만 제공
+                }
+            } else {
+                // 미선택된 버튼의 글자 색상을 인디고 블루로 설정
+                const valueSpan = zone.querySelector('.zone-value');
+                const labelSpan = zone.querySelector('.zone-label');
+                if (valueSpan) {
+                    valueSpan.style.setProperty('color', '#4f46e5', 'important');
+                    valueSpan.style.removeProperty('text-shadow');
+                }
+                if (labelSpan) {
+                    labelSpan.style.setProperty('color', '#6366f1', 'important');
+                    labelSpan.style.setProperty('opacity', '0.8', 'important');
+                    labelSpan.style.removeProperty('text-shadow');
                 }
             }
         });
@@ -248,8 +422,7 @@ class MobileNativeInput {
         this.selectedDisplay.style.setProperty('background', scoreColors[this.value] || '#8E8E93', 'important');
 
         if (animate) {
-            this.selectedDisplay.classList.add('haptic-pulse');
-            setTimeout(() => this.selectedDisplay.classList.remove('haptic-pulse'), 150);
+            // 부드러운 시각적 피드백만 제공
         }
     }
 
@@ -294,9 +467,7 @@ class MobileNativeInput {
             navigator.vibrate(patterns[intensity] || patterns.medium);
         }
 
-        // Fallback visual feedback
-        this.container.classList.add('haptic-pulse');
-        setTimeout(() => this.container.classList.remove('haptic-pulse'), 150);
+        // 부드러운 시각적 피드백만 제공
     }
 
     handleKeyboardNavigation(e) {
@@ -351,6 +522,12 @@ class MobileNativeInput {
 
 
     destroy() {
+        // Clean up observers
+        if (this.observers) {
+            this.observers.forEach(observer => observer.disconnect());
+            this.observers = [];
+        }
+
         // Clean up event listeners if needed
         this.container.innerHTML = '';
     }

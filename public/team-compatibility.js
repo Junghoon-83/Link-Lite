@@ -105,12 +105,29 @@ class TeamCompatibility {
     }
 
     generateTeamReport(leadershipType, selectedFollowerTypes) {
-        const teamAnalysis = selectedFollowerTypes.map(followerType => {
-            const compatibility = this.analyzeCompatibility(leadershipType, followerType);
-            const follower = this.followershipTypes.find(f => f.id === followerType);
+        console.log('generateTeamReport 시작');
+        console.log('leadershipType:', leadershipType);
+        console.log('selectedFollowerTypes:', selectedFollowerTypes);
+        console.log('available followershipTypes:', this.followershipTypes);
+
+        const teamAnalysis = selectedFollowerTypes.map(followerItem => {
+            // followerItem이 문자열(기존)인지 객체(새로운)인지 확인
+            const followerId = typeof followerItem === 'string' ? followerItem : followerItem.id;
+            const memberName = typeof followerItem === 'object' ? followerItem.memberName : '';
+
+            console.log('Processing followerItem:', followerItem);
+            console.log('followerId:', followerId);
+            console.log('memberName:', memberName);
+
+            const compatibility = this.analyzeCompatibility(leadershipType, followerId);
+            const follower = this.followershipTypes.find(f => f.id === followerId);
+
+            console.log('Found follower:', follower);
+            console.log('Compatibility:', compatibility);
 
             return {
                 follower: follower,
+                memberName: memberName,
                 compatibility: compatibility
             };
         });

@@ -1,0 +1,41 @@
+name: Auto Backup
+
+on:
+  schedule:
+    # 매일 오전 9시에 자동 백업 (한국 시간 기준)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 수동 실행 가능
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Create backup branch
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # 현재 날짜로 백업 브랜치 생성
+        BACKUP_BRANCH="backup-$(date +%Y%m%d)"
+        
+        # 백업 브랜치가 이미 존재하는지 확인
+        if git show-ref --verify --quiet refs/heads/$BACKUP_BRANCH; then
+          echo "Backup branch $BACKUP_BRANCH already exists"
+        else
+          # 새 백업 브랜치 생성
+          git checkout -b $BACKUP_BRANCH
+          git push origin $BACKUP_BRANCH
+          echo "Created backup branch: $BACKUP_BRANCH"
+        fi
+        
+    - name: Create backup commit
+      run: |
+        # 현재 날짜와 시간으로 백업 커밋 생성
+        BACKUP_MESSAGE="Auto backup - $(date '+%Y-%m-%d %H:%M:%S')"
+        git add .
+        git commit -m "$BACKUP_MESSAGE" || echo "No changes to commit"
+        git push origin $BACKUP_BRANCH || echo "Nothing to push"
