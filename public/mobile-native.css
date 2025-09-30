@@ -429,6 +429,29 @@
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
+/* 대체 애니메이션 방법 - 의사 요소 사용 */
+.mobile-nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg,
+        #475569 0%,
+        #334155 25%,
+        #5b21b6 50%,
+        #334155 75%,
+        #1e293b 100%);
+    background-size: 400% 400%;
+    -webkit-animation: gradientShiftAlt 8s ease infinite;
+    -moz-animation: gradientShiftAlt 8s ease infinite;
+    -o-animation: gradientShiftAlt 8s ease infinite;
+    animation: gradientShiftAlt 8s ease infinite;
+    z-index: -1;
+    border-radius: inherit;
+}
+
 /* 그라디언트 애니메이션 키프레임 - 여러 브라우저 지원 */
 @-webkit-keyframes gradientShift {
     0%, 100% {
@@ -463,6 +486,99 @@
     }
     50% {
         background-position: 100% 50%;
+    }
+}
+
+/* 대체 애니메이션 - 더 확실한 방법 */
+@-webkit-keyframes gradientShiftAlt {
+    0% {
+        background-position: 0% 50%;
+        transform: translateX(0%);
+    }
+    25% {
+        background-position: 25% 50%;
+        transform: translateX(2%);
+    }
+    50% {
+        background-position: 100% 50%;
+        transform: translateX(0%);
+    }
+    75% {
+        background-position: 75% 50%;
+        transform: translateX(-2%);
+    }
+    100% {
+        background-position: 0% 50%;
+        transform: translateX(0%);
+    }
+}
+
+@-moz-keyframes gradientShiftAlt {
+    0% {
+        background-position: 0% 50%;
+        transform: translateX(0%);
+    }
+    25% {
+        background-position: 25% 50%;
+        transform: translateX(2%);
+    }
+    50% {
+        background-position: 100% 50%;
+        transform: translateX(0%);
+    }
+    75% {
+        background-position: 75% 50%;
+        transform: translateX(-2%);
+    }
+    100% {
+        background-position: 0% 50%;
+        transform: translateX(0%);
+    }
+}
+
+@-o-keyframes gradientShiftAlt {
+    0% {
+        background-position: 0% 50%;
+        transform: translateX(0%);
+    }
+    25% {
+        background-position: 25% 50%;
+        transform: translateX(2%);
+    }
+    50% {
+        background-position: 100% 50%;
+        transform: translateX(0%);
+    }
+    75% {
+        background-position: 75% 50%;
+        transform: translateX(-2%);
+    }
+    100% {
+        background-position: 0% 50%;
+        transform: translateX(0%);
+    }
+}
+
+@keyframes gradientShiftAlt {
+    0% {
+        background-position: 0% 50%;
+        transform: translateX(0%);
+    }
+    25% {
+        background-position: 25% 50%;
+        transform: translateX(2%);
+    }
+    50% {
+        background-position: 100% 50%;
+        transform: translateX(0%);
+    }
+    75% {
+        background-position: 75% 50%;
+        transform: translateX(-2%);
+    }
+    100% {
+        background-position: 0% 50%;
+        transform: translateX(0%);
     }
 }
 
@@ -542,6 +658,29 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.4),
         inset 0 -1px 0 rgba(0, 0, 0, 0.1);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* secondary 버튼에도 대체 애니메이션 적용 */
+.mobile-nav-btn.secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg,
+        #475569 0%,
+        #334155 25%,
+        #5b21b6 50%,
+        #334155 75%,
+        #1e293b 100%);
+    background-size: 400% 400%;
+    -webkit-animation: gradientShiftAlt 8s ease infinite;
+    -moz-animation: gradientShiftAlt 8s ease infinite;
+    -o-animation: gradientShiftAlt 8s ease infinite;
+    animation: gradientShiftAlt 8s ease infinite;
+    z-index: -1;
+    border-radius: inherit;
 }
 
 .mobile-nav-btn.secondary:hover {
