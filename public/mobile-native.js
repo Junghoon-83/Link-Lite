@@ -609,6 +609,18 @@ class MobileNavigationManager {
         }
     }
 
+    hide() {
+        if (this.navElement) {
+            this.navElement.style.display = 'none';
+        }
+    }
+
+    show() {
+        if (this.navElement) {
+            this.navElement.style.display = 'flex';
+        }
+    }
+
     attachEventListeners() {
         window.addEventListener('resize', () => {
             const newIsFixedNav = window.innerWidth <= 768;

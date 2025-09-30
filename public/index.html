@@ -7,8 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="premium-style.css?v=41">
-    <link rel="stylesheet" href="mobile-native.css?v=41">
+    <link rel="stylesheet" href="premium-style.css?v=44">
+    <link rel="stylesheet" href="mobile-native.css?v=44">
     <meta name="description" content="20개 간단한 질문으로 나의 리더십 스타일을 확인하고 팀원들과 더 잘 소통하는 방법을 알아보세요.">
 </head>
 <body class="welcome-page">
@@ -154,8 +154,8 @@
         function startAssessment() {
             showSection('assessment');
 
-            // Initialize mobile navigation
-            if (!mobileNav) {
+            // Initialize mobile navigation for mobile screens
+            if (window.innerWidth <= 768 && !mobileNav) {
                 mobileNav = new MobileNavigationManager();
             }
 
@@ -170,6 +170,17 @@
 
             // body 클래스 변경 (페이지별 레이아웃)
             document.body.className = sectionId === 'welcome' ? 'welcome-page' : 'content-page';
+
+            // 모바일 네비게이션 표시/숨김 처리
+            if (mobileNav) {
+                if (sectionId === 'results' || sectionId === 'welcome') {
+                    // 결과 페이지나 시작 페이지에서는 모바일 네비게이션 숨김
+                    mobileNav.hide();
+                } else {
+                    // 진단 페이지에서만 모바일 네비게이션 표시
+                    mobileNav.show();
+                }
+            }
 
             // 새 섹션 표시
             setTimeout(() => {
@@ -725,10 +736,9 @@
                 mobileInput = null;
             }
 
-            // 모바일 네비게이션 정리
+            // 모바일 네비게이션 숨김 (destroy 대신 hide 사용)
             if (mobileNav) {
-                mobileNav.destroy();
-                mobileNav = null;
+                mobileNav.hide();
             }
 
             document.getElementById('compatibilityResults').style.display = 'none';
@@ -845,6 +855,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 document.body.style.opacity = '1';
+
+                // 모바일 화면에서만 MobileNavigationManager 초기화 및 숨김
+                if (window.innerWidth <= 768) {
+                    if (!mobileNav) {
+                        mobileNav = new MobileNavigationManager();
+                    }
+                    // 초기 로드 시 모바일 네비게이션 숨김 (시작 페이지이므로)
+                    mobileNav.hide();
+                }
+
                 // 개발 모드일 때 단축키 안내 표시
                 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                     console.log('🚀 개발 모드: 테스트용 단축키가 활성화되었습니다. showTestShortcuts()를 입력하여 단축키를 확인하세요.');
