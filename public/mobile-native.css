@@ -85,6 +85,14 @@
     border: 1px solid var(--ios-gray-light);
 }
 
+/* 데스크톱에서 질문과 점수 선택 영역 간격 증가 */
+@media (min-width: 769px) {
+    .mobile-input-container {
+        margin-top: var(--space-4);
+        padding: var(--space-8) var(--space-6);
+    }
+}
+
 /* Touch Zone Grid - 기본 설정 (모바일 우선) */
 .touch-zone-grid {
     display: grid;

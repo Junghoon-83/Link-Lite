@@ -37,12 +37,8 @@
     <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
 
     <!-- Stylesheets -->
-    <link rel="preload" href="premium-style.css?v=49&disabled=fixed" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="mobile-native.css?v=49&disabled=fixed" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link rel="stylesheet" href="premium-style.css?v=49&disabled=fixed">
-        <link rel="stylesheet" href="mobile-native.css?v=49&disabled=fixed">
-    </noscript>
+    <link rel="stylesheet" href="premium-style.css?v=78">
+    <link rel="stylesheet" href="mobile-native.css?v=78">
 
     <!-- Theme Color -->
     <meta name="theme-color" content="#8b5cf6">
@@ -52,8 +48,6 @@
         body {
             margin: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
         .premium-container {
             min-height: 100vh;
@@ -65,7 +59,7 @@
 </head>
 <body class="welcome-page">
     <div class="premium-container">
-        <div class="glass-card">
+        <div class="glass-card" style="max-width: 900px; width: 100%; margin-left: auto; margin-right: auto;">
             <div class="glass-header">
                 <h1>Link-Lite</h1>
                 <p class="subtitle">간편한 리더십 진단 & 팀 궁합 체크</p>
@@ -244,9 +238,9 @@
         </div>
     </div>
 
-    <script src="leadership-assessment.js?v=8" defer></script>
-    <script src="team-compatibility.js?v=8" defer></script>
-    <script src="mobile-native.js?v=15" defer></script>
+    <script src="leadership-assessment.js?v=8"></script>
+    <script src="team-compatibility.js?v=8"></script>
+    <script src="mobile-native.js?v=15"></script>
     <script>
         // Global Error Handler
         window.addEventListener('error', function(event) {
@@ -394,13 +388,13 @@
                 }
             });
 
-            // 버튼 상태 업데이트
-            document.getElementById('prevBtn').disabled = index === 0;
+            // 버튼 상태 업데이트 (이전 버튼은 항상 활성화)
+            document.getElementById('prevBtn').disabled = false;
             updateNextButton();
 
             // 모바일 네비게이션 업데이트 (모바일 화면에서만)
             if (mobileNav && window.innerWidth <= 768) {
-                const canGoPrev = index > 0;
+                const canGoPrev = true; // 항상 이전 버튼 활성화
                 const canGoNext = assessment.responses[question.id] !== undefined;
                 const isLastQuestion = index === assessment.getTotalQuestions() - 1;
                 const nextText = isLastQuestion ? '결과 보기' : '다음';
@@ -433,7 +427,7 @@
 
             // 모바일 네비게이션도 업데이트 (모바일 화면에서만)
             if (mobileNav && window.innerWidth <= 768) {
-                const canGoPrev = currentQuestion > 0;
+                const canGoPrev = true; // 항상 이전 버튼 활성화
                 const nextText = isLastQuestion ? '결과 보기' : '다음';
                 mobileNav.updateNavigation(canGoPrev, hasResponse, nextText);
             }
@@ -450,6 +444,9 @@
         function previousQuestion() {
             if (currentQuestion > 0) {
                 loadQuestion(currentQuestion - 1);
+            } else {
+                // 첫 질문에서 이전 버튼 클릭 시 시작 화면으로
+                showSection('welcome');
             }
         }
 
@@ -1224,24 +1221,42 @@
             }
         }
 
-        // 초기 로딩 애니메이션
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                document.body.style.opacity = '1';
-
-                // 모바일 화면에서만 MobileNavigationManager 초기화 및 숨김
-                if (window.innerWidth <= 768) {
-                    if (!mobileNav) {
-                        mobileNav = new MobileNavigationManager();
-                    }
-                    // 초기 로드 시 모바일 네비게이션 숨김 (시작 페이지이므로)
+        // 모바일 네비게이션 초기화 함수
+        function initMobileNav() {
+            if (window.innerWidth <= 768) {
+                if (!mobileNav) {
+                    mobileNav = new MobileNavigationManager();
+                }
+                // 진단 페이지가 아니면 숨김
+                const isAssessmentPage = document.getElementById('assessment').classList.contains('active');
+                if (!isAssessmentPage) {
                     mobileNav.hide();
                 }
-
-                // 개발 모드일 때 단축키 안내 표시
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    console.log('🚀 개발 모드: 테스트용 단축키가 활성화되었습니다. showTestShortcuts()를 입력하여 단축키를 확인하세요.');
+            } else {
+                // 데스크톱 화면에서는 모바일 네비게이션 숨김
+                if (mobileNav) {
+                    mobileNav.hide();
                 }
+            }
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initMobileNav();
+
+            // 개발 모드일 때 단축키 안내 표시
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                console.log('🚀 개발 모드: 테스트용 단축키가 활성화되었습니다. showTestShortcuts()를 입력하여 단축키를 확인하세요.');
+            }
+
+        });
+
+        // 화면 크기 변경 시 모바일 네비게이션 재초기화
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                initMobileNav();
             }, 100);
         });
     </script>
