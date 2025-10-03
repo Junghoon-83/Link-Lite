@@ -3,13 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link-Lite - 간편한 리더십 진단 (Public 폴더 배포 테스트)</title>
+
+    <!-- Primary Meta Tags -->
+    <title>Link-Lite - 리더십 진단 & 팀 궁합 분석</title>
+    <meta name="title" content="Link-Lite - 리더십 진단 & 팀 궁합 분석">
+    <meta name="description" content="20개 간단한 질문으로 나의 리더십 스타일을 확인하고 팀원들과 더 잘 소통하는 방법을 알아보세요. SIG 모델 기반 링커십 진단 도구.">
+    <meta name="keywords" content="리더십, 진단, 팀 궁합, 링커십, SIG 모델, 팔로워십, 팀 관리, 리더십 테스트">
+    <meta name="author" content="Link-Lite">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://link-lite.netlify.app/">
+    <meta property="og:title" content="Link-Lite - 리더십 진단 & 팀 궁합 분석">
+    <meta property="og:description" content="20개 간단한 질문으로 나의 리더십 스타일을 확인하고 팀원들과 더 잘 소통하는 방법을 알아보세요.">
+    <meta property="og:image" content="https://link-lite.netlify.app/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://link-lite.netlify.app/">
+    <meta property="twitter:title" content="Link-Lite - 리더십 진단 & 팀 궁합 분석">
+    <meta property="twitter:description" content="20개 간단한 질문으로 나의 리더십 스타일을 확인하고 팀원들과 더 잘 소통하는 방법을 알아보세요.">
+    <meta property="twitter:image" content="https://link-lite.netlify.app/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="premium-style.css?v=49&disabled=fixed">
-    <link rel="stylesheet" href="mobile-native.css?v=49&disabled=fixed">
-    <meta name="description" content="20개 간단한 질문으로 나의 리더십 스타일을 확인하고 팀원들과 더 잘 소통하는 방법을 알아보세요.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+
+    <!-- Stylesheets -->
+    <link rel="preload" href="premium-style.css?v=49&disabled=fixed" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="mobile-native.css?v=49&disabled=fixed" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="premium-style.css?v=49&disabled=fixed">
+        <link rel="stylesheet" href="mobile-native.css?v=49&disabled=fixed">
+    </noscript>
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#8b5cf6">
+
+    <!-- Critical CSS for initial render -->
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .premium-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body class="welcome-page">
     <div class="premium-container">
@@ -192,10 +244,73 @@
         </div>
     </div>
 
-    <script src="leadership-assessment.js?v=8"></script>
-    <script src="team-compatibility.js?v=8"></script>
-    <script src="mobile-native.js?v=15"></script>
+    <script src="leadership-assessment.js?v=8" defer></script>
+    <script src="team-compatibility.js?v=8" defer></script>
+    <script src="mobile-native.js?v=15" defer></script>
     <script>
+        // Global Error Handler
+        window.addEventListener('error', function(event) {
+            console.error('전역 에러 발생:', event.error);
+            showErrorMessage('일시적인 오류가 발생했습니다. 페이지를 새로고침해주세요.');
+        });
+
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('처리되지 않은 Promise 거부:', event.reason);
+            showErrorMessage('데이터 처리 중 오류가 발생했습니다.');
+        });
+
+        function showErrorMessage(message) {
+            // 기존 에러 메시지가 있다면 제거
+            const existingError = document.querySelector('.error-toast');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            // 에러 토스트 생성
+            const errorToast = document.createElement('div');
+            errorToast.className = 'error-toast';
+            errorToast.textContent = message;
+            errorToast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                color: white;
+                padding: 16px 24px;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+                z-index: 10000;
+                font-weight: 500;
+                animation: slideDown 0.3s ease;
+            `;
+
+            document.body.appendChild(errorToast);
+
+            // 3초 후 자동 제거
+            setTimeout(() => {
+                errorToast.style.animation = 'slideUp 0.3s ease';
+                setTimeout(() => errorToast.remove(), 300);
+            }, 3000);
+        }
+
+        // 애니메이션 스타일 추가
+        if (!document.querySelector('#error-animations')) {
+            const style = document.createElement('style');
+            style.id = 'error-animations';
+            style.textContent = `
+                @keyframes slideDown {
+                    from { transform: translate(-50%, -100%); opacity: 0; }
+                    to { transform: translate(-50%, 0); opacity: 1; }
+                }
+                @keyframes slideUp {
+                    from { transform: translate(-50%, 0); opacity: 1; }
+                    to { transform: translate(-50%, -100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
         let assessment = new LeadershipAssessment();
         let teamCompatibility = new TeamCompatibility();
         let currentQuestion = 0;
@@ -204,14 +319,19 @@
         let mobileNav = null;
 
         function startAssessment() {
-            showSection('assessment');
+            try {
+                showSection('assessment');
 
-            // Initialize mobile navigation for mobile screens
-            if (window.innerWidth <= 768 && !mobileNav) {
-                mobileNav = new MobileNavigationManager();
+                // Initialize mobile navigation for mobile screens
+                if (window.innerWidth <= 768 && !mobileNav) {
+                    mobileNav = new MobileNavigationManager();
+                }
+
+                loadQuestion(0);
+            } catch (error) {
+                console.error('진단 시작 오류:', error);
+                showErrorMessage('진단을 시작할 수 없습니다. 페이지를 새로고침해주세요.');
             }
-
-            loadQuestion(0);
         }
 
         function showSection(sectionId) {
@@ -887,13 +1007,26 @@
             console.log('selectedFollowerTypes:', selectedFollowerTypes);
 
             try {
+                if (selectedFollowerTypes.length === 0) {
+                    showErrorMessage('팀원을 선택해주세요.');
+                    return;
+                }
+
                 const leadershipResult = assessment.determineLeadershipType();
                 console.log('leadershipResult:', leadershipResult);
+
+                if (!leadershipResult || !leadershipResult.code) {
+                    throw new Error('리더십 진단 결과를 찾을 수 없습니다.');
+                }
 
                 const teamReport = teamCompatibility.generateTeamReport(leadershipResult, selectedFollowerTypes);
                 console.log('teamReport:', teamReport);
 
                 const resultsContainer = document.getElementById('compatibilityList');
+                if (!resultsContainer) {
+                    throw new Error('결과 컨테이너를 찾을 수 없습니다.');
+                }
+
                 resultsContainer.innerHTML = '';
 
                 teamReport.teamMembers.forEach(member => {
@@ -932,7 +1065,7 @@
                 console.log('=== 궁합 분석 완료 ===');
             } catch (error) {
                 console.error('analyzeCompatibility 에러:', error);
-                alert('팀 궁합 분석 중 오류가 발생했습니다: ' + error.message);
+                showErrorMessage('팀 궁합 분석 중 오류가 발생했습니다: ' + error.message);
             }
         }
 
@@ -1069,6 +1202,27 @@
 ========================
             `);
         };
+
+        // 성능 모니터링
+        if ('PerformanceObserver' in window) {
+            const perfObserver = new PerformanceObserver((entryList) => {
+                for (const entry of entryList.getEntries()) {
+                    if (entry.entryType === 'navigation') {
+                        console.log('페이지 로드 시간:', entry.loadEventEnd - entry.fetchStart, 'ms');
+                    }
+                    if (entry.entryType === 'paint') {
+                        console.log(entry.name + ':', entry.startTime, 'ms');
+                    }
+                }
+            });
+
+            try {
+                perfObserver.observe({ entryTypes: ['navigation', 'paint'] });
+            } catch (e) {
+                // Safari may not support all entry types
+                console.log('성능 모니터링 일부 미지원');
+            }
+        }
 
         // 초기 로딩 애니메이션
         document.addEventListener('DOMContentLoaded', function() {
