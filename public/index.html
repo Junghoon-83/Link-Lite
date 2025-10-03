@@ -96,21 +96,73 @@
                             <div class="type-description" id="typeDescription"></div>
                         </div>
 
-                        <div class="scores-grid">
-                            <div class="score-card">
-                                <div class="score-title">Sharing (공유)</div>
-                                <div class="score-value" id="sharingScore"></div>
-                                <div class="score-label">목표 공유 및 참여 촉진</div>
+                        <!-- 레이더 차트 컨테이너 -->
+                        <div class="radar-chart-container">
+                            <div class="radar-chart-wrapper">
+                                <svg id="radarChart" class="radar-chart" viewBox="0 0 400 400">
+                                    <!-- 배경 그리드 -->
+                                    <g class="radar-grid">
+                                        <!-- 동심원들 (1점~6점) -->
+                                        <circle cx="200" cy="200" r="32" class="grid-circle" />   <!-- 2점 -->
+                                        <circle cx="200" cy="200" r="64" class="grid-circle" />   <!-- 3점 -->
+                                        <circle cx="200" cy="200" r="96" class="grid-circle" />   <!-- 4점 -->
+                                        <circle cx="200" cy="200" r="128" class="grid-circle" />  <!-- 5점 -->
+                                        <circle cx="200" cy="200" r="160" class="grid-circle" />  <!-- 6점 -->
+                                        <!-- 축선들 -->
+                                        <!-- Sharing 축 (위쪽 -90도) -->
+                                        <line x1="200" y1="200" x2="200.00" y2="40.00" class="grid-line" />
+                                        <!-- Interaction 축 (오른쪽 아래 30도) -->
+                                        <line x1="200" y1="200" x2="338.56" y2="280.00" class="grid-line" />
+                                        <!-- Growth 축 (왼쪽 아래 150도) -->
+                                        <line x1="200" y1="200" x2="61.44" y2="280.00" class="grid-line" />
+                                    </g>
+
+                                    <!-- 점수 영역 -->
+                                    <polygon id="scoreArea" class="score-area" />
+
+                                    <!-- 점수 포인트들 -->
+                                    <g class="score-points">
+                                        <circle id="sharingPoint" class="score-point sharing" r="6" />
+                                        <circle id="interactionPoint" class="score-point interaction" r="6" />
+                                        <circle id="growthPoint" class="score-point growth" r="6" />
+                                    </g>
+
+                                    <!-- 레이블들 -->
+                                    <g class="radar-labels">
+                                        <text x="200" y="25" text-anchor="middle" class="radar-label">
+                                            <tspan x="200" dy="0">Sharing</tspan>
+                                            <tspan x="200" dy="15" class="label-desc">공유</tspan>
+                                        </text>
+                                        <text x="355" y="310" text-anchor="middle" class="radar-label">
+                                            <tspan x="355" dy="0">Interaction</tspan>
+                                            <tspan x="355" dy="15" class="label-desc">상호작용</tspan>
+                                        </text>
+                                        <text x="45" y="310" text-anchor="middle" class="radar-label">
+                                            <tspan x="45" dy="0">Growth</tspan>
+                                            <tspan x="45" dy="15" class="label-desc">성장</tspan>
+                                        </text>
+                                    </g>
+
+                                </svg>
                             </div>
-                            <div class="score-card">
-                                <div class="score-title">Interaction (상호작용)</div>
-                                <div class="score-value" id="interactionScore"></div>
-                                <div class="score-label">관계 구축 및 소통 역량</div>
-                            </div>
-                            <div class="score-card">
-                                <div class="score-title">Growth (성장)</div>
-                                <div class="score-value" id="growthScore"></div>
-                                <div class="score-label">개별 성장 지원 역량</div>
+
+                            <!-- 점수 카드들 (호버 시 자세한 정보) -->
+                            <div class="score-details">
+                                <div class="score-detail-card" data-category="sharing">
+                                    <div class="score-detail-title">Sharing (공유)</div>
+                                    <div class="score-detail-value" id="sharingScore"></div>
+                                    <div class="score-detail-desc">목표 공유 및 참여 촉진</div>
+                                </div>
+                                <div class="score-detail-card" data-category="interaction">
+                                    <div class="score-detail-title">Interaction (상호작용)</div>
+                                    <div class="score-detail-value" id="interactionScore"></div>
+                                    <div class="score-detail-desc">관계 구축 및 소통 역량</div>
+                                </div>
+                                <div class="score-detail-card" data-category="growth">
+                                    <div class="score-detail-title">Growth (성장)</div>
+                                    <div class="score-detail-value" id="growthScore"></div>
+                                    <div class="score-detail-desc">개별 성장 지원 역량</div>
+                                </div>
                             </div>
                         </div>
 
@@ -312,14 +364,181 @@
                 console.error('✗ Code lookup result:', assessment.leadershipTypes[result.code]);
             }
 
+            // 점수 텍스트 업데이트
             document.getElementById('sharingScore').textContent = result.scores.sharing.toFixed(1);
             document.getElementById('interactionScore').textContent = result.scores.interaction.toFixed(1);
             document.getElementById('growthScore').textContent = result.scores.growth.toFixed(1);
+
+            // 레이더 차트 업데이트
+            updateRadarChart(result.scores);
 
             // 팔로워십 옵션 생성
             createFollowershipOptions();
 
             showSection('results');
+        }
+
+        function updateRadarChart(scores) {
+            // 점수를 0-6 범위에서 0-160으로 변환 (중심에서 최대 반지름까지)
+            const center = 200;
+            const maxRadius = 160;
+
+            // 각 축의 각도 (라디안) - 120도씩 균등 분할
+            const angles = {
+                sharing: -Math.PI / 2,           // 위쪽 (90도)
+                interaction: Math.PI / 6,        // 오른쪽 아래 (30도)
+                growth: 5 * Math.PI / 6          // 왼쪽 아래 (150도)
+            };
+
+            // 점수에 따른 반지름 계산 (1~6점 범위)
+            const sharingRadius = ((scores.sharing - 1) / 5) * maxRadius;
+            const interactionRadius = ((scores.interaction - 1) / 5) * maxRadius;
+            const growthRadius = ((scores.growth - 1) / 5) * maxRadius;
+
+            // 각 점의 좌표 계산
+            const sharingX = center + sharingRadius * Math.cos(angles.sharing);
+            const sharingY = center + sharingRadius * Math.sin(angles.sharing);
+
+            const interactionX = center + interactionRadius * Math.cos(angles.interaction);
+            const interactionY = center + interactionRadius * Math.sin(angles.interaction);
+
+            const growthX = center + growthRadius * Math.cos(angles.growth);
+            const growthY = center + growthRadius * Math.sin(angles.growth);
+
+            // 점수 포인트 위치 업데이트
+            document.getElementById('sharingPoint').setAttribute('cx', sharingX);
+            document.getElementById('sharingPoint').setAttribute('cy', sharingY);
+
+            document.getElementById('interactionPoint').setAttribute('cx', interactionX);
+            document.getElementById('interactionPoint').setAttribute('cy', interactionY);
+
+            document.getElementById('growthPoint').setAttribute('cx', growthX);
+            document.getElementById('growthPoint').setAttribute('cy', growthY);
+
+            // 폴리곤 영역 업데이트
+            const polygonPoints = `${sharingX},${sharingY} ${interactionX},${interactionY} ${growthX},${growthY}`;
+            document.getElementById('scoreArea').setAttribute('points', polygonPoints);
+
+
+            // 애니메이션 효과 추가
+            animateRadarChart();
+
+            // 인터랙티브 효과 추가
+            addRadarChartInteraction(scores);
+        }
+
+        function animateRadarChart() {
+            const scoreArea = document.getElementById('scoreArea');
+            const points = document.querySelectorAll('.score-point');
+
+            // 초기 상태 설정
+            scoreArea.style.opacity = '0';
+            scoreArea.style.transform = 'scale(0)';
+
+            points.forEach((point, index) => {
+                point.style.opacity = '0';
+                point.style.transform = 'scale(0)';
+            });
+
+            // 애니메이션 실행
+            setTimeout(() => {
+                scoreArea.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                scoreArea.style.opacity = '1';
+                scoreArea.style.transform = 'scale(1)';
+            }, 300);
+
+            points.forEach((point, index) => {
+                setTimeout(() => {
+                    point.style.transition = 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    point.style.opacity = '1';
+                    point.style.transform = 'scale(1)';
+                }, 500 + index * 200);
+            });
+        }
+
+        function addRadarChartInteraction(scores) {
+            const scorePoints = document.querySelectorAll('.score-point');
+            const scoreCards = document.querySelectorAll('.score-detail-card');
+
+            // 점수 포인트 클릭/호버 이벤트
+            scorePoints.forEach((point) => {
+                const category = point.classList[1]; // sharing, interaction, growth
+
+                point.addEventListener('mouseenter', () => {
+                    // 해당 카테고리 카드 하이라이트
+                    const targetCard = document.querySelector(`[data-category="${category}"]`);
+                    if (targetCard) {
+                        targetCard.style.transform = 'translateY(-4px) scale(1.02)';
+                        targetCard.style.boxShadow = '0 12px 32px rgba(71, 85, 105, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.7)';
+                    }
+
+                    // 점수 영역 하이라이트
+                    const scoreArea = document.getElementById('scoreArea');
+                    scoreArea.style.fill = `rgba(${getCategoryColor(category)}, 0.3)`;
+                    scoreArea.style.stroke = `rgba(${getCategoryColor(category)}, 0.8)`;
+                });
+
+                point.addEventListener('mouseleave', () => {
+                    // 카드 원래 상태로
+                    const targetCard = document.querySelector(`[data-category="${category}"]`);
+                    if (targetCard) {
+                        targetCard.style.transform = '';
+                        targetCard.style.boxShadow = '';
+                    }
+
+                    // 점수 영역 원래 상태로
+                    const scoreArea = document.getElementById('scoreArea');
+                    scoreArea.style.fill = 'rgba(139, 92, 246, 0.15)';
+                    scoreArea.style.stroke = 'rgba(139, 92, 246, 0.6)';
+                });
+
+                point.addEventListener('click', () => {
+                    // 점수 카드 애니메이션
+                    const targetCard = document.querySelector(`[data-category="${category}"]`);
+                    if (targetCard) {
+                        targetCard.style.animation = 'scoreCardPulse 0.6s ease';
+                        setTimeout(() => {
+                            targetCard.style.animation = '';
+                        }, 600);
+                    }
+                });
+            });
+
+            // 점수 카드 호버 이벤트
+            scoreCards.forEach((card) => {
+                const category = card.dataset.category;
+
+                card.addEventListener('mouseenter', () => {
+                    // 해당 점수 포인트 하이라이트
+                    const targetPoint = document.querySelector(`.score-point.${category}`);
+                    if (targetPoint) {
+                        targetPoint.setAttribute('r', '9');
+                        targetPoint.style.filter = 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3))';
+                    }
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    // 점수 포인트 원래 상태로
+                    const targetPoint = document.querySelector(`.score-point.${category}`);
+                    if (targetPoint) {
+                        targetPoint.setAttribute('r', '6');
+                        targetPoint.style.filter = 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))';
+                    }
+                });
+            });
+        }
+
+        function getCategoryColor(category) {
+            switch (category) {
+                case 'sharing':
+                    return '16, 185, 129';  // green
+                case 'interaction':
+                    return '59, 130, 246';  // blue
+                case 'growth':
+                    return '245, 158, 11';  // amber
+                default:
+                    return '139, 92, 246';  // purple
+            }
         }
 
         function createFollowershipOptions() {

@@ -750,6 +750,222 @@ body::before {
     margin-bottom: var(--space-8);
 }
 
+/* 레이더 차트 스타일 */
+.radar-chart-container {
+    margin-bottom: var(--space-8);
+    padding: var(--space-6);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px) saturate(160%);
+    border-radius: var(--radius-3xl);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow:
+        0 20px 60px rgba(71, 85, 105, 0.15),
+        0 8px 24px rgba(71, 85, 105, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.radar-chart-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-6);
+}
+
+.radar-chart {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    filter: drop-shadow(0 4px 12px rgba(71, 85, 105, 0.1));
+}
+
+/* 레이더 차트 그리드 */
+.grid-circle {
+    fill: none;
+    stroke: rgba(148, 163, 184, 0.3);
+    stroke-width: 1;
+}
+
+.grid-line {
+    stroke: rgba(148, 163, 184, 0.2);
+    stroke-width: 1;
+}
+
+/* 점수 영역 */
+.score-area {
+    fill: rgba(139, 92, 246, 0.15);
+    stroke: rgba(139, 92, 246, 0.6);
+    stroke-width: 3;
+    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.2));
+    animation: scoreAreaPulse 3s ease-in-out infinite;
+}
+
+@keyframes scoreAreaPulse {
+    0%, 100% {
+        fill-opacity: 0.15;
+        stroke-opacity: 0.6;
+    }
+    50% {
+        fill-opacity: 0.25;
+        stroke-opacity: 0.8;
+    }
+}
+
+@keyframes scoreCardPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 12px 32px rgba(71, 85, 105, 0.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 점수 포인트들 */
+.score-point {
+    stroke-width: 3;
+    stroke: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.score-point.sharing {
+    fill: #10b981;
+}
+
+.score-point.interaction {
+    fill: #3b82f6;
+}
+
+.score-point.growth {
+    fill: #f59e0b;
+}
+
+.score-point:hover {
+    r: 8;
+    stroke-width: 4;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+/* 레이블 스타일 */
+.radar-label {
+    font-size: 14px;
+    font-weight: 600;
+    fill: var(--primary-700);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.label-desc {
+    font-size: 12px;
+    font-weight: 400;
+    fill: var(--primary-500);
+}
+
+
+/* 점수 상세 카드들 */
+.score-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.score-detail-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px) saturate(140%);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-4);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+        0 4px 16px rgba(71, 85, 105, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.score-detail-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+        transparent,
+        var(--accent-400),
+        transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.score-detail-card:hover::before {
+    transform: translateX(100%);
+}
+
+.score-detail-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 24px rgba(71, 85, 105, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.score-detail-card[data-category="sharing"]:hover {
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.score-detail-card[data-category="interaction"]:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.score-detail-card[data-category="growth"]:hover {
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.score-detail-title {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--primary-700);
+    margin-bottom: var(--space-2);
+}
+
+.score-detail-value {
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
+    margin-bottom: var(--space-2);
+}
+
+/* 카테고리별 점수 색상 */
+.score-detail-card[data-category="sharing"] .score-detail-value {
+    background: linear-gradient(135deg, #10b981, #059669);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.score-detail-card[data-category="interaction"] .score-detail-value {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.score-detail-card[data-category="growth"] .score-detail-value {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.score-detail-desc {
+    font-size: var(--font-size-xs);
+    color: var(--primary-600);
+    line-height: 1.4;
+}
+
 .scores-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1302,4 +1518,54 @@ body::before {
     .score-cards {
         grid-template-columns: repeat(3, 1fr);
     }
+
+    /* 레이더 차트 반응형 */
+    .radar-chart-container {
+        padding: var(--space-4);
+        margin-bottom: var(--space-6);
+    }
+
+    .radar-chart {
+        max-width: 350px;
+    }
+
+    .score-details {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+    }
+
+    .score-detail-card {
+        padding: var(--space-3);
+    }
+
+    .score-detail-title {
+        font-size: var(--font-size-xs);
+    }
+
+    .score-detail-value {
+        font-size: var(--font-size-xl);
+    }
+
+    .score-detail-desc {
+        font-size: var(--font-size-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .radar-chart-container {
+        padding: var(--space-3);
+    }
+
+    .radar-chart {
+        max-width: 300px;
+    }
+
+    .radar-label {
+        font-size: 12px;
+    }
+
+    .label-desc {
+        font-size: 10px;
+    }
+
 }
