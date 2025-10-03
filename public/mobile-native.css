@@ -78,18 +78,19 @@
 /* Professional Mobile Input Container */
 .mobile-input-container {
     width: 100%;
-    padding: var(--space-6) var(--space-4);
-    background: white;
+    padding: var(--space-8) var(--space-6);
+    background: rgba(255, 255, 255, 0.95);
     border-radius: var(--radius-2xl);
-    box-shadow: var(--ios-shadow);
-    border: 1px solid var(--ios-gray-light);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.1);
+    margin-top: var(--space-6);
 }
 
 /* 데스크톱에서 질문과 점수 선택 영역 간격 증가 */
 @media (min-width: 769px) {
     .mobile-input-container {
-        margin-top: var(--space-4);
-        padding: var(--space-8) var(--space-6);
+        margin-top: var(--space-8);
+        padding: var(--space-10) var(--space-12);
     }
 }
 
@@ -97,9 +98,9 @@
 .touch-zone-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-2);
-    margin: var(--space-3) 0;
-    padding: 0 var(--space-1);
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -109,7 +110,7 @@
 .premium-score-button {
     /* 기본 크기 설정 */
     width: 100% !important;
-    min-height: var(--touch-target-large) !important;
+    min-height: 60px !important;
 
     /* 패딩과 여백 */
     padding: var(--space-3) var(--space-2) !important;
@@ -154,11 +155,13 @@
 
 /* 기본 글자 크기 (모바일 우선) */
 .premium-score-button .zone-value {
-    font-size: 1.3rem !important;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
 }
 
 .premium-score-button .zone-label {
-    font-size: 0.6rem !important;
+    font-size: 0.65rem !important;
+    margin-top: 2px !important;
 }
 
 /* 선택된 버튼의 글자 색상 강제 적용 */
@@ -749,14 +752,18 @@
 @media (min-width: 481px) and (max-width: 768px) {
     .touch-zone-grid {
         grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-3);
-        max-width: 450px;
-        margin: var(--space-4) auto;
+        gap: var(--space-4);
+        max-width: 480px;
+        margin: 0 auto;
         padding: 0;
     }
 
+    .premium-score-button {
+        min-height: 70px !important;
+    }
+
     .premium-score-button .zone-value {
-        font-size: 1.5rem !important;
+        font-size: 1.6rem !important;
     }
 
     .premium-score-button .zone-label {
@@ -777,41 +784,41 @@
     .touch-zone-grid {
         grid-template-columns: repeat(6, 1fr);
         gap: var(--space-4);
-        max-width: 600px;
-        margin: var(--space-6) auto;
+        max-width: 650px;
+        margin: 0 auto;
         padding: 0;
     }
 
     .premium-score-button {
-        min-height: 70px !important;
+        min-height: 80px !important;
     }
 
     .premium-score-button .zone-value {
-        font-size: 1.4rem !important;
+        font-size: 1.6rem !important;
     }
 
     .premium-score-button .zone-label {
-        font-size: 0.65rem !important;
+        font-size: 0.7rem !important;
     }
 }
 
 /* 큰 데스크톱 (1024px 이상) */
 @media (min-width: 1024px) {
     .touch-zone-grid {
-        max-width: 700px;
-        gap: calc(var(--space-4) + 2px);
+        max-width: 720px;
+        gap: var(--space-5);
     }
 
     .premium-score-button {
-        min-height: 75px !important;
+        min-height: 85px !important;
     }
 
     .premium-score-button .zone-value {
-        font-size: 1.5rem !important;
+        font-size: 1.75rem !important;
     }
 
     .premium-score-button .zone-label {
-        font-size: 0.7rem !important;
+        font-size: 0.75rem !important;
     }
 }
 
@@ -841,6 +848,10 @@
         gap: var(--space-1);
         margin: var(--space-2) 0;
         padding: 0;
+    }
+
+    .mobile-input-container {
+        padding: var(--space-6) var(--space-8);
     }
 
     .premium-score-button .zone-value {

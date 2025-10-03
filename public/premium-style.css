@@ -139,6 +139,13 @@ body::before {
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
+    padding: 0 var(--space-4);
+}
+
+@media (max-width: 768px) {
+    .premium-content {
+        padding: 0 var(--space-1);
+    }
 }
 
 /* Page-specific containers */
@@ -665,7 +672,6 @@ body::before {
     font-size: var(--font-size-sm);
     color: var(--primary-500);
     font-weight: 600;
-    margin-bottom: var(--space-2);
 }
 
 .question-text {
@@ -673,16 +679,16 @@ body::before {
     color: var(--primary-900);
     font-weight: 600;
     line-height: 1.5;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
+    min-height: auto;
+    display: block;
+    padding: 0 0 var(--space-3);
+    margin-bottom: var(--space-3);
 }
 
 .question-category {
     font-size: var(--font-size-sm);
     color: var(--primary-400);
     font-weight: 500;
-    margin-top: var(--space-2);
 }
 
 /* Results Display */
@@ -760,7 +766,7 @@ body::before {
     height: 8px;
     background: var(--primary-200);
     border-radius: var(--radius-full);
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-4);
     overflow: hidden;
 }
 
@@ -773,13 +779,13 @@ body::before {
 }
 
 .premium-question-card {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: var(--radius-2xl);
-    padding: var(--space-8);
-    margin-bottom: var(--space-6);
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    min-height: 300px;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: var(--space-4);
+    box-shadow: none;
+    border: none;
+    min-height: auto;
     width: 100%;
     max-width: 800px;
     margin-left: auto;
@@ -790,7 +796,8 @@ body::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-3);
+    padding: 0;
 }
 
 .premium-results {
@@ -1270,7 +1277,7 @@ body::before {
 /* Responsive Design */
 @media (max-width: 768px) {
     .premium-container {
-        margin: var(--space-4);
+        margin: var(--space-4) 2.5rem;
         border-radius: var(--radius-2xl);
         min-height: calc(100vh - 2rem);
     }
@@ -1368,6 +1375,10 @@ body::before {
         margin: var(--space-8) 0;
     }
 
+    .premium-question-card {
+        padding: 0;
+    }
+
     .premium-btn {
         padding: var(--space-5) var(--space-10);
         font-size: var(--font-size-lg);
@@ -1376,6 +1387,7 @@ body::before {
 
     .question-text {
         font-size: var(--font-size-lg);
+        padding: 0 0 var(--space-3);
     }
 
     .score-cards {
