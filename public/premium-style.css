@@ -510,6 +510,16 @@ body::before {
     animation: buttonPulse 3s ease-in-out infinite;
 }
 
+/* 이전 버튼 애니메이션 딜레이 */
+.premium-btn-secondary {
+    animation-delay: 0s;
+}
+
+/* 다음 버튼 애니메이션 딜레이 (연계 효과) */
+#nextBtn {
+    animation-delay: 1.5s;
+}
+
 @keyframes buttonPulse {
     0%, 100% {
         box-shadow:

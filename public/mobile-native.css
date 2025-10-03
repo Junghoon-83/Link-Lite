@@ -415,6 +415,7 @@
     -moz-animation: gradientShift 8s ease infinite;
     -o-animation: gradientShift 8s ease infinite;
     animation: gradientShift 8s ease infinite;
+    animation-delay: 1.5s;
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: var(--radius-xl);
@@ -459,6 +460,7 @@
     -moz-animation: gradientShiftAlt 8s ease infinite;
     -o-animation: gradientShiftAlt 8s ease infinite;
     animation: gradientShiftAlt 8s ease infinite;
+    animation-delay: 1.5s;
     z-index: -1;
     border-radius: inherit;
 }
@@ -658,6 +660,7 @@
     -moz-animation: gradientShift 8s ease infinite;
     -o-animation: gradientShift 8s ease infinite;
     animation: gradientShift 8s ease infinite;
+    animation-delay: 0s;
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(16px) saturate(160%);
@@ -690,6 +693,7 @@
     -moz-animation: gradientShiftAlt 8s ease infinite;
     -o-animation: gradientShiftAlt 8s ease infinite;
     animation: gradientShiftAlt 8s ease infinite;
+    animation-delay: 0s;
     z-index: -1;
     border-radius: inherit;
 }
