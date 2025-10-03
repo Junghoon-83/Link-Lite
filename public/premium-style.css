@@ -1052,7 +1052,7 @@ body::before {
     font-size: var(--font-size-5xl);
     font-weight: 800;
     color: var(--primary-900);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-3);
     letter-spacing: -0.02em;
     background: linear-gradient(135deg, var(--primary-900) 0%, var(--primary-700) 100%);
     -webkit-background-clip: text;
@@ -1060,8 +1060,16 @@ body::before {
     background-clip: text;
 }
 
-.welcome-description {
+.welcome-subtitle {
     font-size: var(--font-size-2xl);
+    font-weight: 600;
+    color: var(--accent-500);
+    margin-bottom: var(--space-6);
+    letter-spacing: -0.01em;
+}
+
+.welcome-description {
+    font-size: var(--font-size-xl);
     color: var(--primary-600);
     line-height: 1.7;
     margin-bottom: var(--space-10);
@@ -1318,6 +1326,10 @@ body::before {
         font-size: var(--font-size-3xl);
     }
 
+    .welcome-subtitle {
+        font-size: var(--font-size-lg);
+    }
+
     .glass-header .subtitle {
         font-size: var(--font-size-lg);
     }
@@ -1436,6 +1448,11 @@ body::before {
     .glass-header h1,
     .welcome-title {
         font-size: var(--font-size-2xl);
+        margin-bottom: var(--space-2);
+    }
+
+    .welcome-subtitle {
+        font-size: var(--font-size-base);
         margin-bottom: var(--space-3);
     }
 
@@ -1450,7 +1467,7 @@ body::before {
     }
 
     .welcome-description {
-        font-size: var(--font-size-base);
+        font-size: var(--font-size-sm);
         margin-bottom: var(--space-6);
     }
 
