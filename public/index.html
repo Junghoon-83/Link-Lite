@@ -40,7 +40,7 @@
     <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="premium-style.css?v=1759496837">
+    <link rel="stylesheet" href="premium-style.css?v=1761005313">
     <link rel="stylesheet" href="mobile-native.css?v=1759492236">
 
     <!-- Theme Color -->
@@ -73,7 +73,7 @@
                 <div id="welcome" class="premium-section active">
                     <div class="welcome-section">
                         <h2 class="welcome-title">일일이 챙겨야 팀이 움직이나요?</h2>
-                        <p class="welcome-subtitle">디지털 시대 새로운 리더십, 링커십(Linkership)</p>
+                        <p class="welcome-subtitle">AI 시대 새로운 리더십, 링커십(Linkership)</p>
                         <p class="welcome-description">
                             강한 지시보다 단단한 연결이 팀을 움직입니다.<br>
                             짧은 참여로 나의 링커십과 팔로워십을 확인하고,<br>
@@ -139,17 +139,47 @@
                     </div>
                 </div>
 
+                <!-- 팔로워십 선택 화면 -->
+                <div id="followership" class="premium-section">
+                    <div class="followership-selection">
+                        <div class="section-header">
+                            <h2 class="section-title">팀원의 팔로워십 유형을 선택하세요</h2>
+                            <p class="section-description">팀원의 유형에 따라 리더십 궁합과 맞춤형 코칭 전략을 제시합니다.<br>최소 1명 이상의 팀원을 선택해주세요.</p>
+                        </div>
+
+                        <div class="followership-grid" id="followershipOptionsPage"></div>
+
+                        <div class="premium-nav" style="margin-top: var(--space-10);">
+                            <button class="premium-btn premium-btn-secondary" onclick="showSection('assessment')">
+                                ← 이전
+                            </button>
+                            <button class="premium-btn" onclick="showResultsPage()" id="showResultsBtn" disabled>
+                                <span>결과 보기</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 결과 화면 -->
                 <div id="results" class="premium-section">
                     <div class="premium-results">
-                        <div class="results-hero">
-                            <div class="leadership-type" id="leadershipType"></div>
-                            <div class="type-description" id="typeDescription"></div>
-                        </div>
+                        <!-- 1. 나의 리더십 특징 -->
+                        <section class="results-section">
+                            <h2 class="results-main-title">나의 리더십 특징</h2>
+                            <p class="results-intro">평소 팀과의 상호작용 패턴을 분석하여, 현재 강점과 보완이 필요한 영역을 파악했습니다.</p>
 
-                        <!-- 레이더 차트 컨테이너 -->
-                        <div class="radar-chart-container">
-                            <div class="radar-chart-wrapper">
+                            <div class="leadership-type-card">
+                                <div class="leadership-card-header">
+                                    <div class="leadership-type-info">
+                                        <h3 class="leadership-type" id="leadershipType"></h3>
+                                        <p class="leadership-subtitle" id="leadershipSubtitle"></p>
+                                    </div>
+                                </div>
+
+                                <!-- 그래프와 점수 카드 통합 -->
+                                <div class="leadership-chart-section">
+                                    <div class="radar-chart-wrapper">
                                 <svg id="radarChart" class="radar-chart" viewBox="0 0 400 420">
                                     <!-- 배경 그리드 -->
                                     <g class="radar-grid" transform="translate(0, 25)">
@@ -198,41 +228,90 @@
 
                                 </svg>
                             </div>
+                        </div>
 
-                            <!-- 점수 카드들 (호버 시 자세한 정보) -->
-                            <div class="score-details">
-                                <div class="score-detail-card" data-category="sharing">
-                                    <div class="score-detail-title">Sharing (공유)</div>
-                                    <div class="score-detail-value" id="sharingScore"></div>
-                                    <div class="score-detail-desc">목표 공유 및 참여 촉진</div>
-                                </div>
-                                <div class="score-detail-card" data-category="interaction">
-                                    <div class="score-detail-title">Interaction (상호작용)</div>
-                                    <div class="score-detail-value" id="interactionScore"></div>
-                                    <div class="score-detail-desc">관계 구축 및 소통 역량</div>
-                                </div>
-                                <div class="score-detail-card" data-category="growth">
-                                    <div class="score-detail-title">Growth (성장)</div>
-                                    <div class="score-detail-value" id="growthScore"></div>
-                                    <div class="score-detail-desc">개별 성장 지원 역량</div>
+                                <!-- 강점과 주의사항 -->
+                                <div class="leadership-details">
+                                    <div class="detail-section">
+                                        <h4 class="detail-title">강점</h4>
+                                        <ul id="leadershipStrengths" class="detail-list"></ul>
+                                    </div>
+                                    <div class="detail-section">
+                                        <h4 class="detail-title">주의</h4>
+                                        <ul id="leadershipCautions" class="detail-list"></ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="followership-section">
-                            <h3 class="section-title">팀원의 팔로워십 유형을 선택하세요</h3>
-                            <p class="section-description">팀원들의 팔로워십 유형을 선택하면 맞춤형 코칭 전략을 제안해드립니다.</p>
-                            <div class="followership-grid" id="followershipOptions"></div>
-                            <button class="premium-btn" onclick="analyzeCompatibility()" id="analyzeBtn" disabled>
-                                <span>팀 궁합 분석하기</span>
-                                <span>→</span>
-                            </button>
-                        </div>
+                        </section>
 
-                        <div id="compatibilityResults" class="compatibility-results" style="display: none;">
-                            <h3 class="section-title">팀 궁합 분석 결과</h3>
-                            <div id="compatibilityList"></div>
-                        </div>
+                        <!-- 2. 팀 궁합 분석 맛보기 -->
+                        <section class="results-section">
+                            <h2 class="results-main-title">팀 궁합 분석 맛보기</h2>
+                            <p class="results-intro">선택하신 팀원들의 팔로워십 유형과 리더십 궁합을 분석했습니다.</p>
+
+                            <div id="compatibilityList" class="compatibility-list-container"></div>
+                        </section>
+
+                        <!-- 3. 팔로워십 유형 안내 -->
+                        <section class="results-section">
+                            <h2 class="results-main-title">팔로워십 유형 안내</h2>
+                            <div class="followership-guide-table">
+                                <div class="guide-row">
+                                    <div class="guide-type">Driver</div>
+                                    <div class="guide-desc">모호함 속에서 길을 먼저 내는 추진형</div>
+                                </div>
+                                <div class="guide-row">
+                                    <div class="guide-type">Doer</div>
+                                    <div class="guide-desc">역할이 분명할 때 빠르고 정확한 실행형</div>
+                                </div>
+                                <div class="guide-row">
+                                    <div class="guide-type">Supporter</div>
+                                    <div class="guide-desc">업무 관계의 빈틈을 메워 흐름을 지키는 연결형</div>
+                                </div>
+                                <div class="guide-row">
+                                    <div class="guide-type">Thinker</div>
+                                    <div class="guide-desc">깊이 파고들어 본질을 파악하는 탐구형</div>
+                                </div>
+                                <div class="guide-row">
+                                    <div class="guide-type">Follower</div>
+                                    <div class="guide-desc">최근 동기, 몰입이 낮아 재점화가 필요한 대기형</div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 4. 통합 CTA -->
+                        <section class="results-section final-cta-section">
+                            <div class="full-version-cta-unified">
+                                <div class="cta-header-line"></div>
+                                <h3 class="cta-main-title">팀 기반 성장을 위한 조직 문화 조성에 관심이 있으신가요?</h3>
+                                <p class="cta-main-desc">팀과 함께하는 Link 팀 진단 참여를 통해 우리 만의 팀 문화 조성을 위한 방향성을 알아보세요!</p>
+
+                                <div class="cta-dual-columns">
+                                    <div class="cta-column">
+                                        <h4 class="cta-column-title">Link 팀 진단 주요 내용</h4>
+                                        <ul class="cta-list-unified">
+                                            <li>팀 기반 성장 촉진을 위한 현재 우리 팀의 강점/개선점</li>
+                                            <li>팀 몰입도 수준</li>
+                                            <li>나의 리더십 특징과 유의점 Tip</li>
+                                        </ul>
+                                    </div>
+                                    <div class="cta-column">
+                                        <h4 class="cta-column-title">팀 구성원 팔로워십 분석</h4>
+                                        <ul class="cta-list-unified">
+                                            <li>팀 구성원의 팔로워십 유형</li>
+                                            <li>우리 팀의 팔로워십 맵</li>
+                                            <li>나의 리더십 스타일 X 팔로워십 스타일별 코칭 팁 및 유의점</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <button class="cta-button cta-button-primary" onclick="alert('팀 진단 문의: contact@link-team.com')">
+                                    <span>Link 팀 진단 알아보기</span>
+                                    <span class="cta-arrow">→</span>
+                                </button>
+                            </div>
+                        </section>
 
                         <div style="margin-top: var(--space-12); text-align: center;">
                             <button class="premium-btn premium-btn-secondary" onclick="resetAssessment()">
@@ -245,9 +324,9 @@
         </div>
     </div>
 
-    <script src="leadership-assessment.js?v=8"></script>
-    <script src="team-compatibility.js?v=8"></script>
-    <script src="mobile-native.js?v=15"></script>
+    <script src="leadership-assessment.js?v=13"></script>
+    <script src="team-compatibility.js?v=13"></script>
+    <script src="mobile-native.js?v=17"></script>
     <script>
         // Global Error Handler
         window.addEventListener('error', function(event) {
@@ -349,9 +428,15 @@
                 if (sectionId === 'results' || sectionId === 'welcome') {
                     // 결과 페이지나 시작 페이지에서는 모바일 네비게이션 숨김
                     mobileNav.hide();
-                } else {
-                    // 진단 페이지에서만 모바일 네비게이션 표시
+                } else if (sectionId === 'assessment') {
+                    // 진단 페이지에서는 모바일 네비게이션 표시
                     mobileNav.show();
+                    // 버튼 상태는 loadQuestion에서 업데이트됨
+                } else if (sectionId === 'followership') {
+                    // 팔로워십 선택 페이지에서도 모바일 네비게이션 표시
+                    mobileNav.show();
+                    // 팔로워십 페이지용 버튼 업데이트
+                    updateFollowershipNavigation();
                 }
             }
 
@@ -403,10 +488,8 @@
             if (mobileNav && window.innerWidth <= 768) {
                 const canGoPrev = true; // 항상 이전 버튼 활성화
                 const canGoNext = assessment.responses[question.id] !== undefined;
-                const isLastQuestion = index === assessment.getTotalQuestions() - 1;
-                const nextText = isLastQuestion ? '결과 보기' : '다음';
 
-                mobileNav.updateNavigation(canGoPrev, canGoNext, nextText);
+                mobileNav.updateNavigation(canGoPrev, canGoNext, '다음');
             }
         }
 
@@ -424,19 +507,20 @@
         function updateNextButton() {
             const question = assessment.getQuestion(currentQuestion);
             const hasResponse = assessment.responses[question.id] !== undefined;
-            const isLastQuestion = currentQuestion === assessment.getTotalQuestions() - 1;
+            const totalQuestions = assessment.getTotalQuestions();
+            const isLastQuestion = currentQuestion === totalQuestions - 1;
 
             const nextBtn = document.getElementById('nextBtn');
             const nextBtnText = document.getElementById('nextBtnText');
 
             nextBtn.disabled = !hasResponse;
-            nextBtnText.textContent = isLastQuestion ? '결과 보기' : '다음';
+            // 모든 질문에서 "다음" 표시 (팔로워십 선택 화면으로 이동)
+            nextBtnText.textContent = '다음';
 
             // 모바일 네비게이션도 업데이트 (모바일 화면에서만)
             if (mobileNav && window.innerWidth <= 768) {
                 const canGoPrev = true; // 항상 이전 버튼 활성화
-                const nextText = isLastQuestion ? '결과 보기' : '다음';
-                mobileNav.updateNavigation(canGoPrev, hasResponse, nextText);
+                mobileNav.updateNavigation(canGoPrev, hasResponse, '다음');
             }
         }
 
@@ -457,6 +541,12 @@
             }
         }
 
+        // Expose functions to window for mobile navigation
+        window.nextQuestion = nextQuestion;
+        window.previousQuestion = previousQuestion;
+        window.goBackToAssessment = goBackToAssessment;
+        window.showResultsPage = showResultsPage;
+
         function showResults() {
             const result = assessment.determineLeadershipType();
 
@@ -473,33 +563,253 @@
 
             // 리더십 유형 표시
             const leadershipTypeElement = document.getElementById('leadershipType');
-            const typeDescriptionElement = document.getElementById('typeDescription');
+            const leadershipSubtitleElement = document.getElementById('leadershipSubtitle');
+            const leadershipStrengthsElement = document.getElementById('leadershipStrengths');
+            const leadershipCautionsElement = document.getElementById('leadershipCautions');
 
             if (result.type && result.type.name) {
                 leadershipTypeElement.textContent = result.type.name;
-                typeDescriptionElement.textContent = result.type.description;
+                leadershipSubtitleElement.textContent = result.type.subtitle || '';
+
+                // 강점 표시
+                leadershipStrengthsElement.innerHTML = '';
+                if (result.type.strengths && result.type.strengths.length > 0) {
+                    result.type.strengths.forEach(strength => {
+                        const li = document.createElement('li');
+                        li.textContent = strength;
+                        leadershipStrengthsElement.appendChild(li);
+                    });
+                }
+
+                // 주의점 표시
+                leadershipCautionsElement.innerHTML = '';
+                if (result.type.cautions && result.type.cautions.length > 0) {
+                    result.type.cautions.forEach(caution => {
+                        const li = document.createElement('li');
+                        li.textContent = caution;
+                        leadershipCautionsElement.appendChild(li);
+                    });
+                }
+
                 console.log('✓ Successfully displayed leadership type:', result.type.name);
             } else {
                 // 문제가 있을 때 더 자세한 디버깅 정보 표시
                 const debugInfo = `디버그: 코드=${result.code}, 타입객체=${JSON.stringify(result.type)}`;
                 leadershipTypeElement.textContent = debugInfo;
-                typeDescriptionElement.textContent = `점수 - 공유:${result.scores.sharing.toFixed(1)}, 상호작용:${result.scores.interaction.toFixed(1)}, 성장:${result.scores.growth.toFixed(1)}`;
                 console.error('✗ Failed to display leadership type. Result.type:', result.type);
                 console.error('✗ Code lookup result:', assessment.leadershipTypes[result.code]);
             }
 
-            // 점수 텍스트 업데이트
-            document.getElementById('sharingScore').textContent = result.scores.sharing.toFixed(1);
-            document.getElementById('interactionScore').textContent = result.scores.interaction.toFixed(1);
-            document.getElementById('growthScore').textContent = result.scores.growth.toFixed(1);
-
             // 레이더 차트 업데이트
             updateRadarChart(result.scores);
 
-            // 팔로워십 옵션 생성
-            createFollowershipOptions();
+            // 팔로워십 선택 페이지로 이동
+            createFollowershipOptionsPage();
+            showSection('followership');
+        }
 
-            showSection('results');
+        function createFollowershipOptionsPage() {
+            const container = document.getElementById('followershipOptionsPage');
+            container.innerHTML = '';
+
+            const followershipTypes = teamCompatibility.followershipTypes;
+
+            Object.keys(followershipTypes).forEach(typeId => {
+                const type = followershipTypes[typeId];
+                const card = document.createElement('div');
+                card.className = 'followership-card';
+                card.setAttribute('data-type-id', typeId);
+
+                card.innerHTML = `
+                    <div class="followership-card-main">
+                        <div class="followership-checkbox">
+                            <input type="checkbox" id="follower_${typeId}" value="${typeId}" onchange="toggleFollowershipType('${typeId}')">
+                        </div>
+                        <div class="followership-info">
+                            <h4 class="followership-type-name">${type.name}</h4>
+                            <p class="followership-type-desc">${type.description}</p>
+                        </div>
+                    </div>
+                    <div class="member-name-input" id="memberInput_${typeId}" style="display: none;">
+                        <input type="text" placeholder="팀원 이름 입력 (여러 명은 쉼표(,)나 공백으로 구분)" class="member-name-field" id="memberName_${typeId}">
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            updateShowResultsButton();
+        }
+
+        function toggleFollowershipType(typeId) {
+            const checkbox = document.getElementById(`follower_${typeId}`);
+            const memberInput = document.getElementById(`memberInput_${typeId}`);
+
+            if (checkbox.checked) {
+                memberInput.style.display = 'block';
+                // 이미 선택된 항목이 아니면 추가
+                if (!selectedFollowerTypes.find(f => f.id === typeId)) {
+                    selectedFollowerTypes.push({ id: typeId, name: '', memberName: '' });
+                }
+            } else {
+                memberInput.style.display = 'none';
+                // 선택 해제 시 배열에서 제거
+                selectedFollowerTypes = selectedFollowerTypes.filter(f => f.id !== typeId);
+            }
+
+            updateShowResultsButton();
+            updateFollowershipNavigation(); // 모바일 네비게이션도 업데이트
+        }
+
+        function updateShowResultsButton() {
+            const btn = document.getElementById('showResultsBtn');
+            btn.disabled = selectedFollowerTypes.length === 0;
+        }
+
+        function updateFollowershipNavigation() {
+            // 모바일 네비게이션 버튼 업데이트
+            if (mobileNav && window.innerWidth <= 768) {
+                const canGoPrev = true; // 이전 버튼 항상 활성화
+                const canGoNext = selectedFollowerTypes.length > 0; // 최소 1개 선택 시 활성화
+                mobileNav.updateNavigation(canGoPrev, canGoNext, '결과 보기');
+            }
+        }
+
+        function goBackToAssessment() {
+            // 마지막 질문으로 돌아가기
+            showSection('assessment');
+            loadQuestion(assessment.getTotalQuestions() - 1);
+        }
+
+        function showResultsPage() {
+            try {
+                console.log('=== 결과 페이지로 이동 ===');
+                console.log('선택된 팔로워십 수:', selectedFollowerTypes.length);
+
+                if (selectedFollowerTypes.length === 0) {
+                    showErrorMessage('팔로워십 유형을 최소 1개 이상 선택해주세요.');
+                    return;
+                }
+
+                // 팀원 이름 수집 및 다중 이름 처리
+                const expandedFollowers = [];
+                selectedFollowerTypes.forEach(follower => {
+                    const nameInput = document.getElementById(`memberName_${follower.id}`);
+                    if (nameInput && nameInput.value.trim()) {
+                        // 쉼표(,) 또는 공백으로 구분하여 여러 이름 처리
+                        const names = nameInput.value
+                            .split(/[,\s]+/)  // 쉼표 또는 공백으로 분리
+                            .map(name => name.trim())
+                            .filter(name => name.length > 0);
+
+                        if (names.length > 0) {
+                            names.forEach(name => {
+                                expandedFollowers.push({
+                                    id: follower.id,
+                                    name: teamCompatibility.followershipTypes[follower.id].name,
+                                    memberName: name
+                                });
+                            });
+                        } else {
+                            expandedFollowers.push({
+                                id: follower.id,
+                                name: teamCompatibility.followershipTypes[follower.id].name,
+                                memberName: '팀원'
+                            });
+                        }
+                    } else {
+                        expandedFollowers.push({
+                            id: follower.id,
+                            name: teamCompatibility.followershipTypes[follower.id].name,
+                            memberName: '팀원'
+                        });
+                    }
+                });
+
+                selectedFollowerTypes = expandedFollowers;
+                console.log('확장된 팀원 정보:', selectedFollowerTypes);
+
+                // 궁합 분석 실행
+                analyzeCompatibilityAuto();
+
+                // 결과 페이지로 이동
+                showSection('results');
+            } catch (error) {
+                console.error('결과 페이지 이동 중 오류:', error);
+                showErrorMessage('결과 페이지로 이동 중 오류가 발생했습니다: ' + error.message);
+            }
+        }
+
+        function analyzeCompatibilityAuto() {
+            try {
+                const result = assessment.determineLeadershipType();
+                const compatibilityList = document.getElementById('compatibilityList');
+
+                compatibilityList.innerHTML = '';
+
+                console.log('=== 팔로워십 분석 시작 ===');
+                console.log('리더십 코드:', result.code);
+                console.log('선택된 팔로워십:', selectedFollowerTypes);
+
+                if (selectedFollowerTypes.length === 0) {
+                    compatibilityList.innerHTML = '<p class="empty-message">선택된 팀원이 없습니다.</p>';
+                    return;
+                }
+
+                // 동일한 팔로워십 유형끼리 그룹화
+                const groupedFollowers = {};
+                selectedFollowerTypes.forEach(follower => {
+                    if (!groupedFollowers[follower.id]) {
+                        groupedFollowers[follower.id] = [];
+                    }
+                    groupedFollowers[follower.id].push(follower.memberName);
+                });
+
+                // 그룹화된 데이터로 카드 생성
+                Object.keys(groupedFollowers).forEach(followerId => {
+                    const memberNames = groupedFollowers[followerId];
+                    const followerType = teamCompatibility.followershipTypes[followerId];
+                    const compatibility = teamCompatibility.analyzeCompatibility(result.code, followerId);
+
+                    console.log('분석 중:', followerId, memberNames);
+                    console.log('분석 결과:', compatibility);
+
+                    const card = document.createElement('div');
+                    card.className = 'compatibility-unified-card';
+
+                    // 팀원 이름들을 개별 배지로 표시
+                    const nameBadges = memberNames.map(name =>
+                        `<span class="member-name-badge">${name}</span>`
+                    ).join('');
+
+                    card.innerHTML = `
+                        <div class="compatibility-card-header">
+                            <div class="follower-info">
+                                <h4 class="follower-type-name">${followerType.name}</h4>
+                                <p class="follower-type-subtitle">${followerType.subtitle}</p>
+                            </div>
+                            <div class="member-names-container">${nameBadges}</div>
+                        </div>
+                        <div class="compatibility-analysis">
+                            <div class="analysis-row">
+                                <div class="analysis-label">강점</div>
+                                <div class="analysis-content">${compatibility.strengths[0]}</div>
+                            </div>
+                            <div class="analysis-row">
+                                <div class="analysis-label">주의</div>
+                                <div class="analysis-content">${compatibility.challenges[0]}</div>
+                            </div>
+                        </div>
+                    `;
+
+                    compatibilityList.appendChild(card);
+                });
+
+                console.log('=== 팔로워십 분석 완료 ===');
+            } catch (error) {
+                console.error('팔로워십 분석 중 오류:', error);
+                showErrorMessage('팔로워십 분석 중 오류가 발생했습니다: ' + error.message);
+            }
         }
 
         function updateRadarChart(scores) {
@@ -549,6 +859,77 @@
 
             // 인터랙티브 효과 추가
             addRadarChartInteraction(scores);
+        }
+
+        function displayLowerFactorScores(lowerFactorScores) {
+            const lowerFactorNames = {
+                's1_진행공유': '진행공유',
+                's2_목표공유': '목표공유',
+                's3_의견반영': '의견반영',
+                'i1_정서케어': '정서케어',
+                'i2_문제해결': '문제해결',
+                'i3_개방성': '개방성',
+                'i4_팀역동이해': '팀역동이해',
+                'g1_실패학습': '실패학습',
+                'g2_도전촉진': '도전촉진',
+                'g3_결과수준': '결과수준',
+                'g5_일의의미': '일의의미',
+                'g6_주도성촉진': '주도성촉진',
+                'g8_일의의미': '일의의미'
+            };
+
+            // 각 카테고리별로 하위요인 그룹화
+            const groupedFactors = {
+                '공유및참여': [],
+                '상호작용': [],
+                '성장촉진': []
+            };
+
+            Object.keys(lowerFactorScores).forEach(key => {
+                const factor = lowerFactorScores[key];
+                const upperFactor = factor.upperFactor;
+                groupedFactors[upperFactor].push({
+                    code: key,
+                    name: lowerFactorNames[key] || key,
+                    score: factor.average.toFixed(1)
+                });
+            });
+
+            // 각 점수 카드에 하위요인 추가
+            const categories = [
+                { id: 'sharing', upperFactor: '공유및참여' },
+                { id: 'interaction', upperFactor: '상호작용' },
+                { id: 'growth', upperFactor: '성장촉진' }
+            ];
+
+            categories.forEach(cat => {
+                const card = document.querySelector(`[data-category="${cat.id}"]`);
+                if (card) {
+                    // 기존 하위요인 정보 제거
+                    const existingDetail = card.querySelector('.lower-factors');
+                    if (existingDetail) existingDetail.remove();
+
+                    // 하위요인 정보 생성
+                    const lowerFactorsDiv = document.createElement('div');
+                    lowerFactorsDiv.className = 'lower-factors';
+                    lowerFactorsDiv.style.cssText = 'margin-top: 12px; font-size: 13px; color: var(--slate-600); line-height: 1.6;';
+
+                    const factors = groupedFactors[cat.upperFactor];
+                    if (factors && factors.length > 0) {
+                        factors.forEach(f => {
+                            const factorItem = document.createElement('div');
+                            factorItem.style.cssText = 'display: flex; justify-content: space-between; margin-bottom: 4px;';
+                            factorItem.innerHTML = `
+                                <span style="color: var(--slate-600);">${f.name}</span>
+                                <span style="font-weight: 600; color: var(--slate-700);">${f.score}</span>
+                            `;
+                            lowerFactorsDiv.appendChild(factorItem);
+                        });
+                    }
+
+                    card.appendChild(lowerFactorsDiv);
+                }
+            });
         }
 
         function animateRadarChart() {
@@ -1120,6 +1501,7 @@
         }
 
         function resetAssessment() {
+            // 진단 데이터 초기화
             assessment.reset();
             selectedFollowerTypes = [];
             currentQuestion = 0;
@@ -1130,12 +1512,49 @@
                 mobileInput = null;
             }
 
-            // 모바일 네비게이션 숨김 (destroy 대신 hide 사용)
+            // 모바일 네비게이션 숨김
             if (mobileNav) {
                 mobileNav.hide();
             }
 
-            document.getElementById('compatibilityResults').style.display = 'none';
+            // 팔로워십 체크박스 초기화
+            const checkboxes = document.querySelectorAll('.followership-checkbox input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            // 팀원 이름 입력 필드 초기화 및 숨김
+            const nameFields = document.querySelectorAll('.member-name-field');
+            nameFields.forEach(field => {
+                field.value = '';
+                field.style.display = 'none';
+            });
+
+            // 결과 영역 숨김 (안전하게 처리)
+            const compatibilityResults = document.getElementById('compatibilityResults');
+            if (compatibilityResults) {
+                compatibilityResults.style.display = 'none';
+            }
+
+            // 진행률 바 초기화
+            const progressBar = document.getElementById('progressBar');
+            const questionNumber = document.getElementById('questionNumber');
+            if (progressBar) progressBar.style.width = '0%';
+            if (questionNumber) questionNumber.textContent = '0 / 23';
+
+            // 팔로워십 옵션 페이지 초기화
+            const followershipContainer = document.getElementById('followershipOptionsPage');
+            if (followershipContainer) {
+                followershipContainer.innerHTML = '';
+            }
+
+            // 결과 보기 버튼 비활성화
+            const showResultsBtn = document.getElementById('showResultsBtn');
+            if (showResultsBtn) {
+                showResultsBtn.disabled = true;
+            }
+
+            // 웰컴 화면으로 이동
             showSection('welcome');
         }
 
@@ -1166,8 +1585,14 @@
                     }
                 }
 
+                // Ctrl/Cmd + Shift + F: 4.5 기준 랜덤 점수로 채우기
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'f') {
+                    e.preventDefault();
+                    console.log('4.5 기준 랜덤 점수 채우기 시작');
+                    fillAllQuestionsRandomly();
+                }
                 // Ctrl/Cmd + F: 모든 질문을 5점으로 빠르게 채우기
-                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+                else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
                     e.preventDefault();
                     console.log('모든 질문 5점 채우기 시작');
                     fillAllQuestionsWithScore(5);
@@ -1223,6 +1648,42 @@
             console.log(`모든 질문이 ${score}점으로 설정되었습니다. 이제 '다음' 버튼을 눌러 결과를 확인하거나 다음 질문으로 넘어가세요.`);
         }
 
+        // 모든 질문을 4.5 기준 랜덤 점수로 채우는 함수
+        function fillAllQuestionsRandomly() {
+            const totalQuestions = assessment.getTotalQuestions();
+            const baseScore = 4.5;
+            const scores = [];
+
+            // 모든 질문에 랜덤 점수 생성 및 기록
+            for (let i = 0; i < totalQuestions; i++) {
+                const question = assessment.getQuestion(i);
+
+                // 4.5를 중심으로 ±0.5~1.5 범위의 랜덤 값 생성
+                // 결과: 3~6 범위의 점수 (1~6 사이로 제한)
+                const randomOffset = (Math.random() * 2 - 1) * 1.5; // -1.5 ~ +1.5
+                let randomScore = baseScore + randomOffset;
+
+                // 1~6 범위로 제한하고 반올림
+                randomScore = Math.max(1, Math.min(6, Math.round(randomScore)));
+
+                assessment.recordResponse(question.id, randomScore);
+                scores.push(randomScore);
+            }
+
+            // 현재 질문의 UI 업데이트
+            if (mobileInput) {
+                const currentScore = scores[currentQuestion];
+                mobileInput.setValue(currentScore);
+            }
+            updateNextButton();
+
+            // 점수 분포 확인
+            const avg = (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2);
+            console.log(`모든 질문이 4.5 기준 랜덤 점수로 설정되었습니다.`);
+            console.log(`평균: ${avg}점, 범위: ${Math.min(...scores)}~${Math.max(...scores)}점`);
+            console.log(`점수 분포:`, scores);
+        }
+
         // 단축키 안내 함수 (콘솔에서 확인 가능)
         window.showTestShortcuts = function() {
             console.log(`
@@ -1234,6 +1695,7 @@
 • Ctrl/Cmd + 1~6: 현재 질문에 해당 점수 입력
 
 ⚡ 빠른 채우기:
+• Ctrl/Cmd + Shift + F: 4.5 기준 랜덤 점수로 채우기 (현실적인 테스트)
 • Ctrl/Cmd + F: 모든 질문을 5점으로 채우기
 • Ctrl/Cmd + H: 모든 질문을 고점수(6점)로 채우기
 • Ctrl/Cmd + L: 모든 질문을 저점수(2점)로 채우기

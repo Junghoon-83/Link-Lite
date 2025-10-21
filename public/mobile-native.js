@@ -572,13 +572,33 @@ class MobileNavigationManager {
 
         document.body.appendChild(this.navElement);
 
-        // Attach navigation events
+        // Attach navigation events - directly call navigation functions
         document.getElementById('mobileNavPrev').addEventListener('click', () => {
-            document.getElementById('prevBtn')?.click();
+            // 현재 활성화된 섹션 확인
+            const activeSection = document.querySelector('.premium-section.active');
+            if (!activeSection) return;
+
+            const sectionId = activeSection.id;
+
+            if (sectionId === 'assessment' && typeof window.previousQuestion === 'function') {
+                window.previousQuestion();
+            } else if (sectionId === 'followership' && typeof window.goBackToAssessment === 'function') {
+                window.goBackToAssessment();
+            }
         });
 
         document.getElementById('mobileNavNext').addEventListener('click', () => {
-            document.getElementById('nextBtn')?.click();
+            // 현재 활성화된 섹션 확인
+            const activeSection = document.querySelector('.premium-section.active');
+            if (!activeSection) return;
+
+            const sectionId = activeSection.id;
+
+            if (sectionId === 'assessment' && typeof window.nextQuestion === 'function') {
+                window.nextQuestion();
+            } else if (sectionId === 'followership' && typeof window.showResultsPage === 'function') {
+                window.showResultsPage();
+            }
         });
     }
 
