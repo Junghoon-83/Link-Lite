@@ -1749,7 +1749,7 @@ body::before {
 }
 
 .followership-type-desc {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
     color: var(--primary-600);
     line-height: 1.5;
     margin: 0;
@@ -1910,7 +1910,7 @@ body::before {
     }
 
     .followership-type-desc {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-base);
     }
 
     .compatibility-card {
