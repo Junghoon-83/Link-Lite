@@ -1749,7 +1749,7 @@ body::before {
 }
 
 .followership-type-desc {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
     color: var(--primary-600);
     line-height: 1.5;
     margin: 0;
@@ -1910,7 +1910,7 @@ body::before {
     }
 
     .followership-type-desc {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-base);
     }
 
     .compatibility-card {
@@ -2169,16 +2169,28 @@ body::before {
 }
 
 .cta-button-primary {
-    background: linear-gradient(135deg, var(--accent-500), var(--accent-600));
+    background: linear-gradient(135deg,
+        #475569 0%,
+        #334155 25%,
+        #5b21b6 50%,
+        #334155 75%,
+        #1e293b 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 8s ease infinite;
     color: white;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     padding: var(--space-5) var(--space-10);
     border-radius: var(--radius-full);
     font-size: var(--font-size-lg);
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3);
-    transition: all 0.3s ease;
+    box-shadow:
+        0 16px 48px rgba(71, 85, 105, 0.25),
+        0 8px 24px rgba(91, 33, 182, 0.15),
+        0 4px 12px rgba(51, 65, 85, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2189,8 +2201,14 @@ body::before {
 
 .cta-button-primary:hover,
 .cta-button-primary:focus {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(109, 40, 217, 0.4);
+    transform: translateY(-6px);
+    box-shadow:
+        0 24px 64px rgba(71, 85, 105, 0.3),
+        0 12px 32px rgba(91, 33, 182, 0.2),
+        0 6px 18px rgba(51, 65, 85, 0.15),
+        0 3px 10px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
     outline: none;
 }
 
