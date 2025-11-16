@@ -2012,6 +2012,7 @@ body::before {
     font-weight: 600;
     color: var(--primary-900);
     margin-bottom: var(--space-3);
+    text-align: left;
 }
 
 .detail-list {
