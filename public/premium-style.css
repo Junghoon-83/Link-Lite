@@ -2571,7 +2571,7 @@ body::before {
     font-weight: bold;
     margin-right: var(--space-2);
     flex-shrink: 0;
-    font-size: 1.2em;
+    font-size: 1em;
     line-height: 1.6;
 }
 
