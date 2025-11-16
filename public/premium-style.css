@@ -2027,7 +2027,7 @@ body::before {
     line-height: 1.6;
     word-break: keep-all;
     text-align: left;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-lg);
     display: flex;
     align-items: flex-start;
     gap: var(--space-2);
