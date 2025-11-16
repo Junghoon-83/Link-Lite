@@ -2553,7 +2553,7 @@ body::before {
 }
 
 .analysis-content {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
     color: var(--primary-700);
     line-height: 1.6;
     word-break: keep-all;
