@@ -397,6 +397,23 @@
         let mobileInput = null;
         let mobileNav = null;
 
+        // 비동기 데이터 로딩 초기화
+        async function initializeApp() {
+            try {
+                await Promise.all([
+                    assessment.init(),
+                    teamCompatibility.init()
+                ]);
+                console.log('App initialized successfully');
+            } catch (error) {
+                console.error('App initialization failed:', error);
+                showErrorMessage('데이터를 불러오는 중 오류가 발생했습니다. 페이지를 새로고침해주세요.');
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        initializeApp();
+
         function startAssessment() {
             try {
                 showSection('assessment');
