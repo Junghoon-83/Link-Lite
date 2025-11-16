@@ -2495,7 +2495,7 @@ body::before {
 }
 
 .follower-type-name {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-xl);
     font-weight: 600;
     color: var(--accent-600);
     margin: 0 0 var(--space-1) 0;
@@ -2503,7 +2503,7 @@ body::before {
 }
 
 .follower-type-subtitle {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-base);
     color: var(--primary-600);
     margin: 0;
     line-height: 1.6;
@@ -2967,11 +2967,11 @@ body::before {
     }
 
     .follower-type-name {
-        font-size: var(--font-size-base);
+        font-size: var(--font-size-lg);
     }
 
     .follower-type-subtitle {
-        font-size: 12px;
+        font-size: var(--font-size-sm);
     }
 
     .full-version-cta {
