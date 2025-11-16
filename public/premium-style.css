@@ -2539,7 +2539,8 @@ body::before {
 
 .analysis-row {
     display: flex;
-    gap: var(--space-3);
+    flex-direction: column;
+    gap: var(--space-2);
     align-items: flex-start;
 }
 
@@ -2547,17 +2548,17 @@ body::before {
     font-size: var(--font-size-base);
     font-weight: 600;
     color: var(--primary-900);
-    padding: var(--space-2) 0;
-    min-width: 60px;
+    padding: 0;
+    min-width: auto;
     flex-shrink: 0;
 }
 
 .analysis-content {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     color: var(--primary-700);
     line-height: 1.6;
     word-break: keep-all;
-    padding: var(--space-1) 0;
+    padding: 0;
     text-align: left;
     flex: 1;
     display: flex;
