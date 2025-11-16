@@ -120,7 +120,6 @@
                     <div class="premium-question-card">
                         <div class="question-meta">
                             <div class="question-number" id="questionNumber"></div>
-                            <div class="question-category" id="questionCategory"></div>
                         </div>
 
                         <div class="question-text" id="questionText"></div>
@@ -453,7 +452,6 @@
 
             // 질문 정보 업데이트
             document.getElementById('questionNumber').textContent = `${index + 1} / ${totalQuestions}`;
-            document.getElementById('questionCategory').textContent = getCategoryName(question.category);
             document.getElementById('questionText').textContent = question.text;
 
             // 진행률 업데이트
