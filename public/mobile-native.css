@@ -751,7 +751,8 @@
         display: none;
     }
 
-    /* 팔로워십 선택 화면과 결과 화면에서는 버튼 표시 */
+    /* 진단, 팔로워십 선택, 결과 화면에서는 버튼 표시 */
+    #assessment .premium-nav,
     #followership .premium-nav,
     #results .premium-nav {
         display: flex;
