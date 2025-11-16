@@ -650,6 +650,17 @@
                     </div>
                 `;
 
+                // 카드 전체 클릭 시 체크박스 토글 (이름 입력 필드 제외)
+                card.addEventListener('click', (e) => {
+                    // 체크박스나 이름 입력 필드 클릭 시에는 기본 동작 유지
+                    if (e.target.type === 'checkbox' || e.target.type === 'text') {
+                        return;
+                    }
+                    const checkbox = document.getElementById(`follower_${typeId}`);
+                    checkbox.checked = !checkbox.checked;
+                    toggleFollowershipType(typeId);
+                });
+
                 container.appendChild(card);
             });
 
@@ -659,15 +670,18 @@
         function toggleFollowershipType(typeId) {
             const checkbox = document.getElementById(`follower_${typeId}`);
             const memberInput = document.getElementById(`memberInput_${typeId}`);
+            const card = checkbox.closest('.followership-card');
 
             if (checkbox.checked) {
                 memberInput.style.display = 'block';
+                card.classList.add('selected');
                 // 이미 선택된 항목이 아니면 추가
                 if (!selectedFollowerTypes.find(f => f.id === typeId)) {
                     selectedFollowerTypes.push({ id: typeId, name: '', memberName: '' });
                 }
             } else {
                 memberInput.style.display = 'none';
+                card.classList.remove('selected');
                 // 선택 해제 시 배열에서 제거
                 selectedFollowerTypes = selectedFollowerTypes.filter(f => f.id !== typeId);
             }
