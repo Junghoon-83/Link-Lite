@@ -252,34 +252,7 @@
                             <div id="compatibilityList" class="compatibility-list-container"></div>
                         </section>
 
-                        <!-- 3. 팔로워십 유형 안내 -->
-                        <section class="results-section">
-                            <h2 class="results-main-title">팔로워십 유형 안내</h2>
-                            <div class="followership-guide-table">
-                                <div class="guide-row">
-                                    <div class="guide-type">Driver</div>
-                                    <div class="guide-desc">모호함 속에서 길을 먼저 내는 추진형</div>
-                                </div>
-                                <div class="guide-row">
-                                    <div class="guide-type">Doer</div>
-                                    <div class="guide-desc">역할이 분명할 때 빠르고 정확한 실행형</div>
-                                </div>
-                                <div class="guide-row">
-                                    <div class="guide-type">Supporter</div>
-                                    <div class="guide-desc">업무 관계의 빈틈을 메워 흐름을 지키는 연결형</div>
-                                </div>
-                                <div class="guide-row">
-                                    <div class="guide-type">Thinker</div>
-                                    <div class="guide-desc">깊이 파고들어 본질을 파악하는 탐구형</div>
-                                </div>
-                                <div class="guide-row">
-                                    <div class="guide-type">Follower</div>
-                                    <div class="guide-desc">최근 동기, 몰입이 낮아 재점화가 필요한 대기형</div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- 4. 통합 CTA -->
+                        <!-- 3. 통합 CTA -->
                         <section class="results-section final-cta-section">
                             <div class="full-version-cta-unified">
                                 <div class="cta-header-line"></div>
@@ -650,6 +623,17 @@
                     </div>
                 `;
 
+                // 카드 전체 클릭 시 체크박스 토글 (이름 입력 필드 제외)
+                card.addEventListener('click', (e) => {
+                    // 체크박스나 이름 입력 필드 클릭 시에는 기본 동작 유지
+                    if (e.target.type === 'checkbox' || e.target.type === 'text') {
+                        return;
+                    }
+                    const checkbox = document.getElementById(`follower_${typeId}`);
+                    checkbox.checked = !checkbox.checked;
+                    toggleFollowershipType(typeId);
+                });
+
                 container.appendChild(card);
             });
 
@@ -659,15 +643,18 @@
         function toggleFollowershipType(typeId) {
             const checkbox = document.getElementById(`follower_${typeId}`);
             const memberInput = document.getElementById(`memberInput_${typeId}`);
+            const card = checkbox.closest('.followership-card');
 
             if (checkbox.checked) {
                 memberInput.style.display = 'block';
+                card.classList.add('selected');
                 // 이미 선택된 항목이 아니면 추가
                 if (!selectedFollowerTypes.find(f => f.id === typeId)) {
                     selectedFollowerTypes.push({ id: typeId, name: '', memberName: '' });
                 }
             } else {
                 memberInput.style.display = 'none';
+                card.classList.remove('selected');
                 // 선택 해제 시 배열에서 제거
                 selectedFollowerTypes = selectedFollowerTypes.filter(f => f.id !== typeId);
             }
@@ -1085,7 +1072,7 @@
                     }
 
                     .section-title {
-                        font-size: var(--font-size-2xl);
+                        font-size: var(--font-size-3xl);
                         font-weight: 600;
                         color: var(--primary-900);
                         margin-bottom: var(--space-4);
@@ -1096,6 +1083,8 @@
                         color: var(--primary-600);
                         text-align: center;
                         margin-bottom: var(--space-8);
+                        font-size: var(--font-size-lg);
+                        line-height: 1.6;
                     }
 
                     .followership-grid {
@@ -1136,15 +1125,15 @@
 
                     .followership-name {
                         font-weight: 600;
-                        font-size: var(--font-size-base);
-                        margin-bottom: var(--space-1);
+                        font-size: var(--font-size-xl);
+                        margin-bottom: var(--space-2);
                         color: var(--primary-700);
                     }
 
                     .followership-desc {
-                        font-size: var(--font-size-sm);
+                        font-size: var(--font-size-base);
                         opacity: 0.9;
-                        line-height: 1.3;
+                        line-height: 1.5;
                         color: var(--primary-600);
                     }
 
@@ -1196,13 +1185,13 @@
                         margin-bottom: var(--space-2);
                         color: var(--primary-900);
                         font-weight: 600;
-                        font-size: var(--font-size-lg);
+                        font-size: var(--font-size-xl);
                     }
 
                     .compatibility-message {
                         color: var(--primary-600);
-                        font-size: var(--font-size-sm);
-                        line-height: 1.5;
+                        font-size: var(--font-size-base);
+                        line-height: 1.6;
                     }
 
                     .score-circle {
@@ -1316,12 +1305,12 @@
                         }
 
                         .compatibility-info h4 {
-                            font-size: var(--font-size-base);
+                            font-size: var(--font-size-lg);
                             margin-bottom: var(--space-1);
                         }
 
                         .compatibility-message {
-                            font-size: var(--font-size-xs);
+                            font-size: var(--font-size-sm);
                         }
 
                         .score-circle {
@@ -1331,19 +1320,19 @@
                         }
 
                         .followership-card {
-                            padding: var(--space-2) var(--space-3);
+                            padding: var(--space-3) var(--space-4);
                         }
 
                         .followership-name {
-                            font-size: var(--font-size-base);
+                            font-size: var(--font-size-lg);
                         }
 
                         .followership-desc {
-                            font-size: var(--font-size-sm);
+                            font-size: var(--font-size-base);
                         }
 
                         .member-name-input {
-                            font-size: var(--font-size-xs);
+                            font-size: var(--font-size-sm);
                             padding: var(--space-2);
                         }
                     }
@@ -1373,13 +1362,13 @@
                         }
 
                         .compatibility-info h4 {
-                            font-size: var(--font-size-base);
+                            font-size: var(--font-size-lg);
                             line-height: 1.3;
                         }
 
                         .compatibility-message {
-                            font-size: var(--font-size-xs);
-                            line-height: 1.4;
+                            font-size: var(--font-size-sm);
+                            line-height: 1.5;
                         }
 
                         .followership-card {
