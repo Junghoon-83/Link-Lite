@@ -373,11 +373,24 @@
         // 비동기 데이터 로딩 초기화
         async function initializeApp() {
             try {
+                // 시작 버튼 비활성화
+                const startBtn = document.querySelector('.premium-btn');
+                if (startBtn) {
+                    startBtn.disabled = true;
+                    startBtn.textContent = '데이터 로딩 중...';
+                }
+
                 await Promise.all([
                     assessment.init(),
                     teamCompatibility.init()
                 ]);
                 console.log('App initialized successfully');
+
+                // 시작 버튼 활성화
+                if (startBtn) {
+                    startBtn.disabled = false;
+                    startBtn.innerHTML = '<span>진단 시작</span><span>→</span>';
+                }
             } catch (error) {
                 console.error('App initialization failed:', error);
                 showErrorMessage('데이터를 불러오는 중 오류가 발생했습니다. 페이지를 새로고침해주세요.');
@@ -388,6 +401,11 @@
         initializeApp();
 
         function startAssessment() {
+            // 초기화 완료 확인
+            if (!assessment.isInitialized || !teamCompatibility.isInitialized) {
+                showErrorMessage('데이터가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.');
+                return;
+            }
             try {
                 showSection('assessment');
 
@@ -615,7 +633,7 @@
                         </div>
                         <div class="followership-info">
                             <h4 class="followership-type-name">${type.name}</h4>
-                            <p class="followership-type-desc">${type.description}</p>
+                            <p class="followership-type-desc">${type.subtitle}</p>
                         </div>
                     </div>
                     <div class="member-name-input" id="memberInput_${typeId}" style="display: none;">
