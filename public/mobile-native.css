@@ -750,6 +750,15 @@
     .premium-nav {
         display: none;
     }
+
+    /* 팔로워십 선택 화면과 결과 화면에서는 버튼 표시 */
+    #followership .premium-nav,
+    #results .premium-nav {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        padding: var(--space-4) 0;
+    }
 }
 
 /* 태블릿 (481px ~ 768px) */
