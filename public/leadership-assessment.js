@@ -26,10 +26,10 @@ class LeadershipAssessment {
             { id: 17, category: 'interaction', upperFactor: '상호작용', lowerFactor: 'i3_개방성', text: '업무 진행 시 힘든 부분이나 애로 사항 등에 대해서 나를 포함한 팀 모두가 자유롭게 이야기하는 분위기이다.' },
             { id: 18, category: 'growth', upperFactor: '성장촉진', lowerFactor: 'g3_결과수준', text: '업무 결과물에 대한 기준을 일관되게 적용하여 팀원들이 기대되는 결과물의 질적 수준을 이해할 수 있도록 촉진한다.' },
             { id: 19, category: 'interaction', upperFactor: '상호작용', lowerFactor: 'i4_팀역동이해', text: '서로 다른 성향/업무 스타일의 팀원들이 서로를 잘 이해하고 업무를 진행할 수 있도록 리더로서 중간에서 이해를 돕는 편이다.' },
-            { id: 20, category: 'growth', upperFactor: '성장촉진', lowerFactor: 'g6_주도성촉진', text: '내가 요청하기 이전에도, 팀원들이 업무 진행과 관련된 내용을 먼저 다가와 소통할 수 있도록 자주 촉진한다.' },
+            { id: 20, category: 'growth', upperFactor: '성장촉진', lowerFactor: 'g4_주도성촉진', text: '내가 요청하기 이전에도, 팀원들이 업무 진행과 관련된 내용을 먼저 다가와 소통할 수 있도록 자주 촉진한다.' },
             { id: 21, category: 'interaction', upperFactor: '상호작용', lowerFactor: 'i4_팀역동이해', text: '팀원들의 각기 다른 성향과 특징을 이해하기 위해서 다양한 방법을 통해 (예-1:1 미팅, 팀 활동 등) 소통하고자 노력하는 편이다.' },
             { id: 22, category: 'growth', upperFactor: '성장촉진', lowerFactor: 'g5_일의의미', text: '단순히 업무를 잘하는 것뿐만 아니라, 현재 우리가 하는 일의 의미를 이해할 수 있도록 팀원과 대화하는 편이다.' },
-            { id: 23, category: 'growth', upperFactor: '성장촉진', lowerFactor: 'g8_일의의미', text: '나는 팀원이 현재 진행하는 일이 업무적으로 성장하는데 어떤 도움을 줄 수 있는지 대화하는 편이다.' }
+            { id: 23, category: 'growth', upperFactor: '성장촉진', lowerFactor: 'g5_일의의미', text: '나는 팀원이 현재 진행하는 일이 업무적으로 성장하는데 어떤 도움을 줄 수 있는지 대화하는 편이다.' }
         ];
 
         this.scaleLabels = [
