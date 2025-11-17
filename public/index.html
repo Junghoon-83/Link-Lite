@@ -379,6 +379,7 @@
         let selectedFollowerTypes = []; // { id: string, name: string, memberName: string }
         let mobileInput = null;
         let mobileNav = null;
+        let currentLeadershipCode = null; // 현재 리더십 유형 코드 저장
 
         // 비동기 데이터 로딩 초기화
         async function initializeApp() {
@@ -565,6 +566,7 @@
 
         function showResults() {
             const result = assessment.determineLeadershipType();
+            currentLeadershipCode = result.code; // 전역 변수에 저장
 
             // 더 자세한 디버깅용 로그
             console.log('=== LEADERSHIP TYPE DEBUG ===');
@@ -998,6 +1000,13 @@
 
                 // 궁합 분석 실행
                 analyzeCompatibilityAuto();
+
+                // 리더십 팁이 로드되었는지 확인하고 필요시 다시 로드
+                const tipsContainer = document.getElementById('leadershipTipsContainer');
+                if (tipsContainer && tipsContainer.children.length === 0 && currentLeadershipCode) {
+                    console.log('리더십 팁 재로드:', currentLeadershipCode);
+                    loadLeadershipTips(currentLeadershipCode);
+                }
 
                 // 결과 페이지로 이동
                 showSection('results');
