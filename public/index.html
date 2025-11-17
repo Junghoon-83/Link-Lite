@@ -809,25 +809,12 @@
                 <div class="tip-card-content" style="display: none;">
                     <div class="tip-tabs">
                         <button class="tip-tab active" data-tab="why">왜 필요할까요?</button>
-                        <button class="tip-tab" data-tab="when">언제 필요할까요?</button>
                         <button class="tip-tab" data-tab="how">이렇게 해보세요</button>
                     </div>
                     <div class="tip-tab-content">
                         <div class="tip-tab-panel active" data-panel="why">
                             <div class="panel-content why-panel">
                                 <p class="why-text">${tip.why}</p>
-                            </div>
-                        </div>
-                        <div class="tip-tab-panel" data-panel="when">
-                            <div class="panel-content when-panel">
-                                <ul class="when-list">
-                                    ${tip.when.map((item, i) => `
-                                        <li class="when-item">
-                                            <span class="when-icon">✓</span>
-                                            <span class="when-text">${item}</span>
-                                        </li>
-                                    `).join('')}
-                                </ul>
                             </div>
                         </div>
                         <div class="tip-tab-panel" data-panel="how">
