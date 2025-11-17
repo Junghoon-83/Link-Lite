@@ -231,12 +231,18 @@
 
                                 <!-- 강점과 주의사항 -->
                                 <div class="leadership-details">
-                                    <div class="detail-section">
-                                        <h4 class="detail-title">강점</h4>
+                                    <div class="detail-section strength-section">
+                                        <h4 class="detail-title">
+                                            <span class="detail-title-icon">✓</span>
+                                            강점
+                                        </h4>
                                         <ul id="leadershipStrengths" class="detail-list"></ul>
                                     </div>
-                                    <div class="detail-section">
-                                        <h4 class="detail-title">주의</h4>
+                                    <div class="detail-section caution-section">
+                                        <h4 class="detail-title">
+                                            <span class="detail-title-icon">⚠</span>
+                                            주의
+                                        </h4>
                                         <ul id="leadershipCautions" class="detail-list"></ul>
                                     </div>
                                 </div>
@@ -322,7 +328,7 @@
             <button class="inquiry-modal-close" onclick="closeInquiryModal()">&times;</button>
 
             <div id="inquiryForm" class="inquiry-form">
-                <h3 class="inquiry-title">Link 팀 진단 문의하기</h3>
+                <h3 class="inquiry-title">Link 팀 진단 상담 신청</h3>
                 <p class="inquiry-desc">관심을 가져주셔서 감사합니다. 아래 정보를 남겨주시면 담당자가 연락드리겠습니다.</p>
 
                 <div class="inquiry-field">
@@ -367,12 +373,12 @@
                     </div>
                 </div>
 
-                <button class="inquiry-submit" onclick="submitInquiry()">문의하기</button>
+                <button class="inquiry-submit" onclick="submitInquiry()">상담 신청하기</button>
             </div>
 
             <div id="inquirySuccess" class="inquiry-success" style="display: none;">
                 <div class="success-icon">✓</div>
-                <h3 class="success-title">문의가 접수되었습니다</h3>
+                <h3 class="success-title">상담 신청이 완료되었습니다</h3>
                 <p class="success-message">입력하신 이메일로 상세 안내를 보내드리겠습니다.<br>빠른 시일 내에 담당자가 연락드리겠습니다.</p>
                 <button class="inquiry-close-btn" onclick="closeInquiryModal()">확인</button>
             </div>
@@ -1123,14 +1129,14 @@
                             </div>
                             <div class="member-names-container">${nameBadges}</div>
                         </div>
-                        <div class="compatibility-analysis">
-                            <div class="analysis-row">
-                                <div class="analysis-label">강점</div>
-                                <div class="analysis-content">${compatibility.strengths[0]}</div>
+                        <div class="compatibility-analysis-grid">
+                            <div class="analysis-box analysis-strength">
+                                <div class="analysis-box-label"><span class="analysis-icon">✓</span> 강점</div>
+                                <div class="analysis-box-content">${compatibility.strengths[0]}</div>
                             </div>
-                            <div class="analysis-row">
-                                <div class="analysis-label">주의</div>
-                                <div class="analysis-content">${compatibility.challenges[0]}</div>
+                            <div class="analysis-box analysis-caution">
+                                <div class="analysis-box-label"><span class="analysis-icon">⚠</span> 주의</div>
+                                <div class="analysis-box-content">${compatibility.challenges[0]}</div>
                             </div>
                         </div>
                     `;

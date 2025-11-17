@@ -2034,6 +2034,17 @@ body::before {
     background: var(--primary-50);
     border-radius: var(--radius-lg);
     padding: var(--space-4);
+    border-left: 4px solid var(--primary-300);
+}
+
+.detail-section.strength-section {
+    background: rgba(16, 185, 129, 0.08);
+    border-left-color: var(--success-400);
+}
+
+.detail-section.caution-section {
+    background: rgba(245, 158, 11, 0.08);
+    border-left-color: var(--warning-400);
 }
 
 .detail-title {
@@ -2042,6 +2053,22 @@ body::before {
     color: var(--primary-900);
     margin-bottom: var(--space-3);
     text-align: left;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.detail-title-icon {
+    font-size: var(--font-size-lg);
+    line-height: 1;
+}
+
+.strength-section .detail-title-icon {
+    color: var(--success-500);
+}
+
+.caution-section .detail-title-icon {
+    color: var(--warning-500);
 }
 
 .detail-list {
@@ -2070,6 +2097,16 @@ body::before {
     flex-shrink: 0;
     line-height: 1.6;
     margin-top: 0;
+}
+
+.strength-section .detail-list li::before {
+    content: '✓';
+    color: var(--success-500);
+}
+
+.caution-section .detail-list li::before {
+    content: '!';
+    color: var(--warning-500);
 }
 
 /* 통합 CTA 섹션 */
@@ -2637,6 +2674,66 @@ body::before {
     flex-shrink: 0;
     font-size: 1em;
     line-height: 1.6;
+}
+
+/* 팀 궁합 좌우 배치 레이아웃 */
+.compatibility-analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    padding: var(--space-4);
+}
+
+.analysis-box {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary-300);
+    background: var(--primary-50);
+}
+
+.analysis-box.analysis-strength {
+    background: rgba(16, 185, 129, 0.06);
+    border-left-color: var(--success-400);
+}
+
+.analysis-box.analysis-caution {
+    background: rgba(245, 158, 11, 0.06);
+    border-left-color: var(--warning-400);
+}
+
+.analysis-box-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.analysis-strength .analysis-box-label {
+    color: var(--success-600);
+}
+
+.analysis-caution .analysis-box-label {
+    color: var(--warning-600);
+}
+
+.analysis-icon {
+    font-size: var(--font-size-base);
+}
+
+.analysis-box-content {
+    font-size: var(--font-size-sm);
+    color: var(--primary-700);
+    line-height: 1.5;
+    word-break: keep-all;
+}
+
+@media (max-width: 480px) {
+    .compatibility-analysis-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-2);
+    }
 }
 
 .empty-message {
