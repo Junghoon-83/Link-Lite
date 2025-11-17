@@ -1124,8 +1124,11 @@
                     card.innerHTML = `
                         <div class="compatibility-card-header">
                             <div class="follower-info">
-                                <h4 class="follower-type-name">${followerType.name}</h4>
-                                <p class="follower-type-subtitle">${followerType.subtitle}</p>
+                                <div class="follower-type-line">
+                                    <h4 class="follower-type-name">${followerType.name}</h4>
+                                    <span class="follower-type-divider">-</span>
+                                    <span class="follower-type-subtitle">${followerType.subtitle}</span>
+                                </div>
                             </div>
                             <div class="member-names-container">${nameBadges}</div>
                         </div>

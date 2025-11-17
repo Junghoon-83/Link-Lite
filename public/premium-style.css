@@ -2597,12 +2597,24 @@ body::before {
     text-align: left;
 }
 
+.follower-type-line {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
 .follower-type-name {
     font-size: var(--font-size-xl);
     font-weight: 600;
     color: var(--accent-600);
-    margin: 0 0 var(--space-1) 0;
+    margin: 0;
     text-align: left;
+}
+
+.follower-type-divider {
+    color: var(--primary-400);
+    font-weight: 400;
 }
 
 .follower-type-subtitle {
@@ -2952,6 +2964,10 @@ body::before {
     .follower-info {
         text-align: center;
         width: 100%;
+    }
+
+    .follower-type-line {
+        justify-content: center;
     }
 
     .member-names-container {
