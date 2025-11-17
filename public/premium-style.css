@@ -3066,14 +3066,17 @@ body::before {
 .situation-chip {
     background: white;
     border: 2px solid var(--primary-200);
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-xl);
     padding: var(--space-2) var(--space-4);
     font-size: var(--font-size-sm);
     font-weight: 500;
     color: var(--primary-600);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    white-space: nowrap;
+    white-space: normal;
+    word-break: keep-all;
+    text-align: center;
+    line-height: 1.4;
 }
 
 .situation-chip:hover {
@@ -3094,20 +3097,20 @@ body::before {
 .filter-result-message {
     margin-top: var(--space-4);
     padding: var(--space-3) var(--space-4);
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0.04) 100%);
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(34, 197, 94, 0.3);
+    border: 1px solid rgba(139, 92, 246, 0.2);
     text-align: center;
     font-size: var(--font-size-sm);
     font-weight: 600;
-    color: #16a34a;
+    color: var(--primary-700);
     animation: fadeIn 0.3s ease-out;
 }
 
 .filter-result-message .result-count {
     font-size: var(--font-size-lg);
     font-weight: 700;
-    color: #15803d;
+    color: var(--accent-600);
 }
 
 /* 팁 카드 컨테이너 */
@@ -3212,19 +3215,24 @@ body::before {
 /* 카드 컨텐츠 */
 .tip-card-content {
     border-top: 1px solid var(--primary-200);
-    animation: slideDown 0.3s ease-out;
-    padding: var(--space-6);
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.4s ease-out 0.1s,
+                padding-top 0.4s ease-out,
+                padding-bottom 0.4s ease-out;
 }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.tip-card.expanded .tip-card-content {
+    max-height: 3000px;
+    opacity: 1;
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-6);
 }
 
 /* 팁 섹션 */
@@ -3347,7 +3355,7 @@ body::before {
     display: inline-block;
     background: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%);
     color: white;
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     font-weight: 700;
     padding: var(--space-1) var(--space-3);
     border-radius: var(--radius-full);
@@ -3372,7 +3380,7 @@ body::before {
 }
 
 .action-label {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     font-weight: 700;
     color: var(--accent-600);
     text-transform: uppercase;
@@ -3381,7 +3389,7 @@ body::before {
 }
 
 .action-text {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
     color: var(--primary-700);
     line-height: 1.7;
     text-align: left;
@@ -3395,7 +3403,7 @@ body::before {
 }
 
 .example-label {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     font-weight: 700;
     color: var(--accent-600);
     text-transform: uppercase;
@@ -3404,7 +3412,7 @@ body::before {
 }
 
 .example-text {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
     color: var(--accent-600);
     line-height: 1.6;
     font-style: italic;
@@ -3423,7 +3431,7 @@ body::before {
 
     .situation-chip {
         padding: var(--space-2) var(--space-3);
-        font-size: var(--font-size-xs);
+        font-size: var(--font-size-sm);
     }
 
     .tip-card-header {
@@ -3440,8 +3448,9 @@ body::before {
         font-size: var(--font-size-base);
     }
 
-    .tip-card-content {
-        padding: var(--space-4);
+    .tip-card.expanded .tip-card-content {
+        padding-left: var(--space-4);
+        padding-right: var(--space-4);
     }
 
     .tip-section-title {
@@ -3457,11 +3466,11 @@ body::before {
     }
 
     .action-text {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-base);
     }
 
     .example-text {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-base);
     }
 }
 
@@ -3489,8 +3498,9 @@ body::before {
         font-size: var(--font-size-sm);
     }
 
-    .tip-card-content {
-        padding: var(--space-3);
+    .tip-card.expanded .tip-card-content {
+        padding-left: var(--space-3);
+        padding-right: var(--space-3);
     }
 
     .tip-section {

@@ -806,7 +806,7 @@
                         </svg>
                     </button>
                 </div>
-                <div class="tip-card-content" style="display: none;">
+                <div class="tip-card-content">
                     <div class="tip-section why-section">
                         <h4 class="tip-section-title">왜 필요할까요?</h4>
                         <div class="panel-content why-panel">
@@ -837,11 +837,9 @@
 
             // 카드 토글 이벤트
             const toggleBtn = card.querySelector('.tip-card-toggle');
-            const content = card.querySelector('.tip-card-content');
 
             toggleBtn.addEventListener('click', () => {
-                const isOpen = content.style.display !== 'none';
-                content.style.display = isOpen ? 'none' : 'block';
+                const isOpen = card.classList.contains('expanded');
                 toggleBtn.setAttribute('aria-expanded', !isOpen);
                 card.classList.toggle('expanded', !isOpen);
             });
