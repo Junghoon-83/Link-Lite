@@ -3021,215 +3021,508 @@ body::before {
 }
 
 /* ======================
-   리더십 팁 아코디언
+   리더십 팁 Progressive Disclosure Card UI
    ====================== */
 .leadership-tips-container {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-6);
 }
 
-.tip-accordion {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: var(--radius-xl);
-    border: 1px solid var(--primary-200);
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.tip-accordion-button {
-    width: 100%;
-    background: linear-gradient(135deg,
-        #475569 0%,
-        #334155 25%,
-        #5b21b6 50%,
-        #334155 75%,
-        #1e293b 100%);
-    background-size: 400% 400%;
-    animation: gradientShift 8s ease infinite;
-    color: white;
-    border: none;
-    padding: var(--space-5) var(--space-6);
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-align: left;
-    transition: all 0.3s ease;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    outline: none;
-}
-
-.tip-accordion-button:hover,
-.tip-accordion-button:focus {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(91, 33, 182, 0.3);
-    outline: none;
-}
-
-.tip-accordion-button.active {
-    background: linear-gradient(135deg,
-        #5b21b6 0%,
-        #4c1d95 50%,
-        #3b0764 100%);
-}
-
-.accordion-icon {
-    font-size: var(--font-size-sm);
-    transition: transform 0.3s ease;
-}
-
-.tip-accordion-content {
+/* 상황별 필터 UI */
+.situation-filter-wrapper {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(91, 33, 182, 0.08) 100%);
+    border-radius: var(--radius-2xl);
     padding: var(--space-6);
-    background: white;
-    border-top: 1px solid var(--primary-200);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    margin-bottom: var(--space-4);
 }
 
-.tip-section {
-    margin-bottom: var(--space-6);
+.situation-filter-header {
+    text-align: center;
+    margin-bottom: var(--space-5);
 }
 
-.tip-section:last-child {
-    margin-bottom: 0;
-}
-
-.tip-section-title {
-    font-size: var(--font-size-lg);
+.situation-filter-title {
+    font-size: var(--font-size-xl);
     font-weight: 700;
-    color: var(--accent-600);
-    margin-bottom: var(--space-3);
-    text-align: left;
+    color: var(--primary-900);
+    margin: 0 0 var(--space-2) 0;
 }
 
-.tip-section-text {
-    font-size: var(--font-size-base);
-    color: var(--primary-700);
-    line-height: 1.7;
-    text-align: left;
-    word-break: keep-all;
-}
-
-.tip-when-list {
-    list-style: none;
-    padding: 0;
+.situation-filter-desc {
+    font-size: var(--font-size-sm);
+    color: var(--primary-500);
     margin: 0;
 }
 
-.tip-when-list li {
-    padding: var(--space-2) 0;
-    color: var(--primary-700);
-    line-height: 1.6;
-    font-size: var(--font-size-base);
+.situation-filter-chips {
     display: flex;
-    align-items: flex-start;
-    gap: var(--space-2);
-    text-align: left;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: center;
 }
 
-.tip-when-list li::before {
-    content: '•';
-    color: var(--accent-500);
-    font-weight: bold;
-    font-size: 1em;
-    flex-shrink: 0;
-    line-height: 1.6;
+.situation-chip {
+    background: white;
+    border: 2px solid var(--primary-200);
+    border-radius: var(--radius-full);
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--primary-600);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
 }
 
-.tip-actions {
+.situation-chip:hover {
+    border-color: var(--accent-400);
+    color: var(--accent-600);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+}
+
+.situation-chip.active {
+    background: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%);
+    border-color: var(--accent-600);
+    color: white;
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+}
+
+/* 팁 카드 컨테이너 */
+.tip-cards-container {
     display: flex;
     flex-direction: column;
     gap: var(--space-5);
 }
 
-.tip-action-item {
-    background: var(--primary-50);
-    border-radius: var(--radius-lg);
-    padding: var(--space-4);
-    border-left: 4px solid var(--accent-500);
+/* 팁 카드 */
+.tip-card {
+    background: white;
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--primary-200);
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.action-situation {
-    font-size: var(--font-size-base);
+.tip-card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.tip-card.highlighted {
+    border-color: var(--accent-400);
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+}
+
+.tip-card.expanded {
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+}
+
+/* 카드 헤더 */
+.tip-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-6);
+    background: linear-gradient(135deg, var(--primary-50) 0%, white 100%);
+    cursor: pointer;
+}
+
+.tip-card-number {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%);
+    color: white;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.tip-card-title {
+    flex-grow: 1;
+    margin: 0;
+    font-size: var(--font-size-lg);
     font-weight: 600;
     color: var(--primary-900);
-    margin-bottom: var(--space-2);
     text-align: left;
+    line-height: 1.4;
 }
 
-.action-behavior {
+.tip-card-toggle {
+    flex-shrink: 0;
+    background: transparent;
+    border: 2px solid var(--primary-300);
+    border-radius: var(--radius-full);
+    padding: var(--space-2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tip-card-toggle:hover {
+    border-color: var(--accent-500);
+    background: rgba(139, 92, 246, 0.1);
+}
+
+.tip-card.expanded .tip-card-toggle {
+    background: var(--accent-500);
+    border-color: var(--accent-500);
+}
+
+.tip-card.expanded .tip-card-toggle .toggle-icon {
+    stroke: white;
+    transform: rotate(180deg);
+}
+
+.toggle-icon {
+    color: var(--primary-500);
+    transition: all 0.3s ease;
+}
+
+/* 카드 컨텐츠 */
+.tip-card-content {
+    border-top: 1px solid var(--primary-200);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 탭 네비게이션 */
+.tip-tabs {
+    display: flex;
+    background: var(--primary-100);
+    padding: var(--space-2);
+    gap: var(--space-2);
+}
+
+.tip-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--primary-500);
+    cursor: pointer;
+    border-radius: var(--radius-lg);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.tip-tab:hover {
+    color: var(--accent-600);
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.tip-tab.active {
+    background: white;
+    color: var(--accent-600);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 탭 패널 */
+.tip-tab-content {
+    padding: 0;
+}
+
+.tip-tab-panel {
+    display: none;
+    padding: var(--space-6);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.tip-tab-panel.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* WHY 패널 */
+.why-panel {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.03) 0%, transparent 100%);
+    border-radius: var(--radius-xl);
+    padding: var(--space-4);
+}
+
+.why-text {
+    font-size: var(--font-size-base);
+    color: var(--primary-700);
+    line-height: 1.8;
+    margin: 0;
+    text-align: left;
+    word-break: keep-all;
+}
+
+/* WHEN 패널 */
+.when-panel {
+    padding: var(--space-2);
+}
+
+.when-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.when-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(34, 197, 94, 0.03) 100%);
+    border-radius: var(--radius-lg);
+    border-left: 4px solid #22c55e;
+    transition: all 0.3s ease;
+}
+
+.when-item:hover {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(34, 197, 94, 0.05) 100%);
+    transform: translateX(4px);
+}
+
+.when-icon {
+    color: #22c55e;
+    font-weight: 700;
+    font-size: var(--font-size-base);
+    flex-shrink: 0;
+}
+
+.when-text {
     font-size: var(--font-size-base);
     color: var(--primary-700);
     line-height: 1.6;
-    margin-bottom: var(--space-2);
     text-align: left;
 }
 
-.action-example {
-    font-size: var(--font-size-sm);
+/* HOW 패널 (액션 카드) */
+.how-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.action-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: var(--space-5);
+    border: 1px solid var(--primary-200);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+.action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-400) 0%, var(--accent-600) 100%);
+}
+
+.action-step-number {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%);
+    color: white;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-3);
+    letter-spacing: 0.5px;
+}
+
+.action-situation-text {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--primary-900);
+    margin-bottom: var(--space-4);
+    line-height: 1.5;
+    text-align: left;
+}
+
+.action-detail {
+    background: var(--primary-50);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.action-label {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: var(--accent-600);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--space-2);
+}
+
+.action-text {
+    font-size: var(--font-size-base);
+    color: var(--primary-700);
+    line-height: 1.7;
+    text-align: left;
+}
+
+.action-example-box {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0.04) 100%);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.example-label {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: var(--accent-600);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--space-2);
+}
+
+.example-text {
+    font-size: var(--font-size-base);
     color: var(--accent-600);
     line-height: 1.6;
     font-style: italic;
     text-align: left;
-    background: rgba(139, 92, 246, 0.05);
-    padding: var(--space-3);
-    border-radius: var(--radius-md);
 }
 
-/* 반응형 아코디언 스타일 */
+/* 반응형 스타일 */
 @media (max-width: 768px) {
-    .tip-accordion-button {
-        padding: var(--space-4) var(--space-5);
-        font-size: var(--font-size-base);
-    }
-
-    .tip-accordion-content {
+    .situation-filter-wrapper {
         padding: var(--space-4);
     }
 
-    .tip-section-title {
+    .situation-filter-title {
+        font-size: var(--font-size-lg);
+    }
+
+    .situation-chip {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--font-size-xs);
+    }
+
+    .tip-card-header {
+        padding: var(--space-4) var(--space-5);
+    }
+
+    .tip-card-number {
+        width: 36px;
+        height: 36px;
         font-size: var(--font-size-base);
     }
 
-    .tip-section-text {
-        font-size: var(--font-size-sm);
+    .tip-card-title {
+        font-size: var(--font-size-base);
     }
 
-    .tip-when-list li {
-        font-size: var(--font-size-sm);
-    }
-
-    .action-situation {
-        font-size: var(--font-size-sm);
-    }
-
-    .action-behavior {
-        font-size: var(--font-size-sm);
-    }
-
-    .action-example {
+    .tip-tab {
+        padding: var(--space-2) var(--space-3);
         font-size: var(--font-size-xs);
+    }
+
+    .tip-tab-panel {
+        padding: var(--space-4);
+    }
+
+    .why-text {
+        font-size: var(--font-size-sm);
+    }
+
+    .when-text {
+        font-size: var(--font-size-sm);
+    }
+
+    .action-situation-text {
+        font-size: var(--font-size-sm);
+    }
+
+    .action-text {
+        font-size: var(--font-size-sm);
+    }
+
+    .example-text {
+        font-size: var(--font-size-sm);
     }
 }
 
 @media (max-width: 480px) {
-    .tip-accordion-button {
-        padding: var(--space-3) var(--space-4);
-        font-size: var(--font-size-sm);
-    }
-
-    .tip-accordion-content {
+    .situation-filter-wrapper {
         padding: var(--space-3);
     }
 
-    .tip-section {
-        margin-bottom: var(--space-4);
+    .situation-filter-chips {
+        gap: var(--space-2);
     }
 
-    .tip-action-item {
+    .tip-card-header {
+        padding: var(--space-3) var(--space-4);
+        gap: var(--space-3);
+    }
+
+    .tip-card-number {
+        width: 32px;
+        height: 32px;
+        font-size: var(--font-size-sm);
+    }
+
+    .tip-card-title {
+        font-size: var(--font-size-sm);
+    }
+
+    .tip-tabs {
+        padding: var(--space-1);
+        gap: var(--space-1);
+    }
+
+    .tip-tab {
+        padding: var(--space-2);
+    }
+
+    .tip-tab-panel {
+        padding: var(--space-3);
+    }
+
+    .action-card {
+        padding: var(--space-4);
+    }
+
+    .action-detail {
+        padding: var(--space-3);
+    }
+
+    .action-example-box {
         padding: var(--space-3);
     }
 }
