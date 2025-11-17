@@ -3019,3 +3019,217 @@ body::before {
         gap: var(--space-1);
     }
 }
+
+/* ======================
+   리더십 팁 아코디언
+   ====================== */
+.leadership-tips-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.tip-accordion {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--primary-200);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.tip-accordion-button {
+    width: 100%;
+    background: linear-gradient(135deg,
+        #475569 0%,
+        #334155 25%,
+        #5b21b6 50%,
+        #334155 75%,
+        #1e293b 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 8s ease infinite;
+    color: white;
+    border: none;
+    padding: var(--space-5) var(--space-6);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    transition: all 0.3s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+.tip-accordion-button:hover,
+.tip-accordion-button:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(91, 33, 182, 0.3);
+    outline: none;
+}
+
+.tip-accordion-button.active {
+    background: linear-gradient(135deg,
+        #5b21b6 0%,
+        #4c1d95 50%,
+        #3b0764 100%);
+}
+
+.accordion-icon {
+    font-size: var(--font-size-sm);
+    transition: transform 0.3s ease;
+}
+
+.tip-accordion-content {
+    padding: var(--space-6);
+    background: white;
+    border-top: 1px solid var(--primary-200);
+}
+
+.tip-section {
+    margin-bottom: var(--space-6);
+}
+
+.tip-section:last-child {
+    margin-bottom: 0;
+}
+
+.tip-section-title {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--accent-600);
+    margin-bottom: var(--space-3);
+    text-align: left;
+}
+
+.tip-section-text {
+    font-size: var(--font-size-base);
+    color: var(--primary-700);
+    line-height: 1.7;
+    text-align: left;
+    word-break: keep-all;
+}
+
+.tip-when-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tip-when-list li {
+    padding: var(--space-2) 0;
+    color: var(--primary-700);
+    line-height: 1.6;
+    font-size: var(--font-size-base);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    text-align: left;
+}
+
+.tip-when-list li::before {
+    content: '•';
+    color: var(--accent-500);
+    font-weight: bold;
+    font-size: 1em;
+    flex-shrink: 0;
+    line-height: 1.6;
+}
+
+.tip-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.tip-action-item {
+    background: var(--primary-50);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    border-left: 4px solid var(--accent-500);
+}
+
+.action-situation {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--primary-900);
+    margin-bottom: var(--space-2);
+    text-align: left;
+}
+
+.action-behavior {
+    font-size: var(--font-size-base);
+    color: var(--primary-700);
+    line-height: 1.6;
+    margin-bottom: var(--space-2);
+    text-align: left;
+}
+
+.action-example {
+    font-size: var(--font-size-sm);
+    color: var(--accent-600);
+    line-height: 1.6;
+    font-style: italic;
+    text-align: left;
+    background: rgba(139, 92, 246, 0.05);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+}
+
+/* 반응형 아코디언 스타일 */
+@media (max-width: 768px) {
+    .tip-accordion-button {
+        padding: var(--space-4) var(--space-5);
+        font-size: var(--font-size-base);
+    }
+
+    .tip-accordion-content {
+        padding: var(--space-4);
+    }
+
+    .tip-section-title {
+        font-size: var(--font-size-base);
+    }
+
+    .tip-section-text {
+        font-size: var(--font-size-sm);
+    }
+
+    .tip-when-list li {
+        font-size: var(--font-size-sm);
+    }
+
+    .action-situation {
+        font-size: var(--font-size-sm);
+    }
+
+    .action-behavior {
+        font-size: var(--font-size-sm);
+    }
+
+    .action-example {
+        font-size: var(--font-size-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .tip-accordion-button {
+        padding: var(--space-3) var(--space-4);
+        font-size: var(--font-size-sm);
+    }
+
+    .tip-accordion-content {
+        padding: var(--space-3);
+    }
+
+    .tip-section {
+        margin-bottom: var(--space-4);
+    }
+
+    .tip-action-item {
+        padding: var(--space-3);
+    }
+}
