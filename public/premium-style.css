@@ -2612,11 +2612,6 @@ body::before {
     text-align: left;
 }
 
-.follower-type-divider {
-    color: var(--primary-400);
-    font-weight: 400;
-}
-
 .follower-type-subtitle {
     font-size: var(--font-size-base);
     color: var(--primary-600);
