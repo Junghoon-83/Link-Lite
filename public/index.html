@@ -352,6 +352,21 @@
                     </select>
                 </div>
 
+                <div class="inquiry-consent">
+                    <label class="consent-checkbox">
+                        <input type="checkbox" id="inquiryConsent" checked>
+                        <span class="consent-text">
+                            맞춤형 상담을 위해 진단 결과를 함께 전달합니다
+                            <button type="button" class="consent-detail-btn" onclick="toggleConsentDetail()">상세보기</button>
+                        </span>
+                    </label>
+                    <div id="consentDetail" class="consent-detail" style="display: none;">
+                        <p>수집 정보: 리더십 유형, SIG 점수</p>
+                        <p>이용 목적: 맞춤형 팀 진단 상담 제공</p>
+                        <p>보유 기간: 상담 완료 후 1년</p>
+                    </div>
+                </div>
+
                 <button class="inquiry-submit" onclick="submitInquiry()">문의하기</button>
             </div>
 
@@ -1849,6 +1864,7 @@
             const name = document.getElementById('inquiryName').value.trim();
             const company = document.getElementById('inquiryCompany').value.trim();
             const teamSize = document.getElementById('inquiryTeamSize').value;
+            const consentChecked = document.getElementById('inquiryConsent').checked;
 
             // 이메일 필수 검증
             if (!email) {
@@ -1863,21 +1879,44 @@
                 return;
             }
 
-            // 데이터 저장 (실제 구현 시 서버로 전송)
+            // 기본 데이터
             const inquiryData = {
                 email: email,
                 name: name || '미입력',
                 company: company || '미입력',
                 teamSize: teamSize || '미선택',
                 timestamp: new Date().toISOString(),
-                leadershipType: currentLeadershipCode || '미진단'
+                consentGiven: consentChecked
             };
+
+            // 동의한 경우 진단 결과 포함
+            if (consentChecked && assessment) {
+                const result = assessment.determineLeadershipType();
+                inquiryData.diagnosisData = {
+                    leadershipType: currentLeadershipCode || '미진단',
+                    scores: result ? {
+                        S: result.scores.S,
+                        I: result.scores.I,
+                        G: result.scores.G
+                    } : null,
+                    selectedFollowerTypes: selectedFollowerTypes || []
+                };
+            }
 
             console.log('문의 데이터:', inquiryData);
 
             // 성공 화면 표시
             document.getElementById('inquiryForm').style.display = 'none';
             document.getElementById('inquirySuccess').style.display = 'block';
+        }
+
+        function toggleConsentDetail() {
+            const detail = document.getElementById('consentDetail');
+            if (detail.style.display === 'none') {
+                detail.style.display = 'block';
+            } else {
+                detail.style.display = 'none';
+            }
         }
 
         // 모달 외부 클릭 시 닫기
