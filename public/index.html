@@ -288,7 +288,7 @@
                                     </div>
                                 </div>
 
-                                <button class="cta-button-primary" onclick="alert('팀 진단 문의: contact@link-team.com')">
+                                <button class="cta-button-primary" onclick="openInquiryModal()">
                                     <span>Link 팀 진단 알아보기</span>
                                     <span class="cta-arrow">→</span>
                                 </button>
@@ -298,6 +298,14 @@
                         <!-- 하단 푸터 영역 -->
                         <footer class="results-footer">
                             <div class="footer-content">
+                                <button class="retake-link" onclick="resetAssessment()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                                        <path d="M3 3v5h5"/>
+                                    </svg>
+                                    다시 진단하기
+                                </button>
+                                <div class="footer-divider"></div>
                                 <p class="footer-brand">Link-Lite</p>
                                 <p class="footer-tagline">팀 기반 성장을 위한 리더십 진단</p>
                             </div>
@@ -308,14 +316,68 @@
         </div>
     </div>
 
-    <!-- 플로팅 다시 진단하기 버튼 -->
-    <button class="fab-retake" id="fabRetake" onclick="resetAssessment()" title="다시 진단하기">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-            <path d="M3 3v5h5"/>
-        </svg>
-        <span class="fab-label">다시 진단</span>
-    </button>
+    <!-- Link 팀 진단 문의 모달 -->
+    <div id="inquiryModal" class="inquiry-modal">
+        <div class="inquiry-modal-content">
+            <button class="inquiry-modal-close" onclick="closeInquiryModal()">&times;</button>
+
+            <div id="inquiryForm" class="inquiry-form">
+                <h3 class="inquiry-title">Link 팀 진단 문의하기</h3>
+                <p class="inquiry-desc">관심을 가져주셔서 감사합니다. 아래 정보를 남겨주시면 담당자가 연락드리겠습니다.</p>
+
+                <div class="inquiry-field">
+                    <label for="inquiryEmail">이메일 <span class="required">*</span></label>
+                    <input type="email" id="inquiryEmail" placeholder="example@company.com" required>
+                </div>
+
+                <div class="inquiry-field">
+                    <label for="inquiryName">이름</label>
+                    <input type="text" id="inquiryName" placeholder="홍길동">
+                </div>
+
+                <div class="inquiry-field">
+                    <label for="inquiryCompany">회사/조직명</label>
+                    <input type="text" id="inquiryCompany" placeholder="회사명">
+                </div>
+
+                <div class="inquiry-field">
+                    <label for="inquiryTeamSize">팀 규모</label>
+                    <select id="inquiryTeamSize">
+                        <option value="">선택해주세요</option>
+                        <option value="1-5">1-5명</option>
+                        <option value="6-10">6-10명</option>
+                        <option value="11-20">11-20명</option>
+                        <option value="21-50">21-50명</option>
+                        <option value="50+">50명 이상</option>
+                    </select>
+                </div>
+
+                <div class="inquiry-consent">
+                    <label class="consent-checkbox">
+                        <input type="checkbox" id="inquiryConsent" checked>
+                        <span class="consent-text">
+                            맞춤형 상담을 위해 진단 결과를 함께 전달합니다
+                            <button type="button" class="consent-detail-btn" onclick="toggleConsentDetail()">상세보기</button>
+                        </span>
+                    </label>
+                    <div id="consentDetail" class="consent-detail" style="display: none;">
+                        <p>수집 정보: 리더십 유형, SIG 점수</p>
+                        <p>이용 목적: 맞춤형 팀 진단 상담 제공</p>
+                        <p>보유 기간: 상담 완료 후 1년</p>
+                    </div>
+                </div>
+
+                <button class="inquiry-submit" onclick="submitInquiry()">문의하기</button>
+            </div>
+
+            <div id="inquirySuccess" class="inquiry-success" style="display: none;">
+                <div class="success-icon">✓</div>
+                <h3 class="success-title">문의가 접수되었습니다</h3>
+                <p class="success-message">입력하신 이메일로 상세 안내를 보내드리겠습니다.<br>빠른 시일 내에 담당자가 연락드리겠습니다.</p>
+                <button class="inquiry-close-btn" onclick="closeInquiryModal()">확인</button>
+            </div>
+        </div>
+    </div>
 
     <script src="leadership-assessment.js?v=14"></script>
     <script src="team-compatibility.js?v=14"></script>
@@ -466,19 +528,6 @@
                     mobileNav.show();
                     // 팔로워십 페이지용 버튼 업데이트
                     updateFollowershipNavigation();
-                }
-            }
-
-            // 플로팅 다시 진단하기 버튼 표시/숨김
-            const fabRetake = document.getElementById('fabRetake');
-            if (fabRetake) {
-                if (sectionId === 'results') {
-                    // 결과 페이지에서 약간의 딜레이 후 FAB 표시
-                    setTimeout(() => {
-                        fabRetake.classList.add('visible');
-                    }, 1000);
-                } else {
-                    fabRetake.classList.remove('visible');
                 }
             }
 
@@ -1786,6 +1835,98 @@
             return 'score-poor';
         }
 
+        // Link 팀 진단 문의 모달 함수
+        function openInquiryModal() {
+            const modal = document.getElementById('inquiryModal');
+            const form = document.getElementById('inquiryForm');
+            const success = document.getElementById('inquirySuccess');
+
+            // 폼 초기화
+            document.getElementById('inquiryEmail').value = '';
+            document.getElementById('inquiryName').value = '';
+            document.getElementById('inquiryCompany').value = '';
+            document.getElementById('inquiryTeamSize').value = '';
+
+            form.style.display = 'block';
+            success.style.display = 'none';
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeInquiryModal() {
+            const modal = document.getElementById('inquiryModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function submitInquiry() {
+            const email = document.getElementById('inquiryEmail').value.trim();
+            const name = document.getElementById('inquiryName').value.trim();
+            const company = document.getElementById('inquiryCompany').value.trim();
+            const teamSize = document.getElementById('inquiryTeamSize').value;
+            const consentChecked = document.getElementById('inquiryConsent').checked;
+
+            // 이메일 필수 검증
+            if (!email) {
+                alert('이메일을 입력해주세요.');
+                return;
+            }
+
+            // 이메일 형식 검증
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('올바른 이메일 형식을 입력해주세요.');
+                return;
+            }
+
+            // 기본 데이터
+            const inquiryData = {
+                email: email,
+                name: name || '미입력',
+                company: company || '미입력',
+                teamSize: teamSize || '미선택',
+                timestamp: new Date().toISOString(),
+                consentGiven: consentChecked
+            };
+
+            // 동의한 경우 진단 결과 포함
+            if (consentChecked && assessment) {
+                const result = assessment.determineLeadershipType();
+                inquiryData.diagnosisData = {
+                    leadershipType: currentLeadershipCode || '미진단',
+                    scores: result ? {
+                        S: result.scores.S,
+                        I: result.scores.I,
+                        G: result.scores.G
+                    } : null,
+                    selectedFollowerTypes: selectedFollowerTypes || []
+                };
+            }
+
+            console.log('문의 데이터:', inquiryData);
+
+            // 성공 화면 표시
+            document.getElementById('inquiryForm').style.display = 'none';
+            document.getElementById('inquirySuccess').style.display = 'block';
+        }
+
+        function toggleConsentDetail() {
+            const detail = document.getElementById('consentDetail');
+            if (detail.style.display === 'none') {
+                detail.style.display = 'block';
+            } else {
+                detail.style.display = 'none';
+            }
+        }
+
+        // 모달 외부 클릭 시 닫기
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('inquiryModal');
+            if (e.target === modal) {
+                closeInquiryModal();
+            }
+        });
+
         function resetAssessment() {
             // 진단 데이터 초기화
             assessment.reset();
@@ -1801,12 +1942,6 @@
             // 모바일 네비게이션 숨김
             if (mobileNav) {
                 mobileNav.hide();
-            }
-
-            // 플로팅 다시 진단하기 버튼 숨김
-            const fabRetake = document.getElementById('fabRetake');
-            if (fabRetake) {
-                fabRetake.classList.remove('visible');
             }
 
             // 팔로워십 체크박스 초기화
