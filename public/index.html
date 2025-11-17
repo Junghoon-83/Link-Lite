@@ -807,33 +807,29 @@
                     </button>
                 </div>
                 <div class="tip-card-content" style="display: none;">
-                    <div class="tip-tabs">
-                        <button class="tip-tab active" data-tab="why">왜 필요할까요?</button>
-                        <button class="tip-tab" data-tab="how">이렇게 해보세요</button>
-                    </div>
-                    <div class="tip-tab-content">
-                        <div class="tip-tab-panel active" data-panel="why">
-                            <div class="panel-content why-panel">
-                                <p class="why-text">${tip.why}</p>
-                            </div>
+                    <div class="tip-section why-section">
+                        <h4 class="tip-section-title">왜 필요할까요?</h4>
+                        <div class="panel-content why-panel">
+                            <p class="why-text">${tip.why}</p>
                         </div>
-                        <div class="tip-tab-panel" data-panel="how">
-                            <div class="panel-content how-panel">
-                                ${tip.actions.map((action, i) => `
-                                    <div class="action-card">
-                                        <div class="action-step-number">Step ${i + 1}</div>
-                                        <div class="action-situation-text">${action.situation}</div>
-                                        <div class="action-detail">
-                                            <div class="action-label">실행 방법</div>
-                                            <div class="action-text">${action.action}</div>
-                                        </div>
-                                        <div class="action-example-box">
-                                            <div class="example-label">예시 문장</div>
-                                            <div class="example-text">"${action.example}"</div>
-                                        </div>
+                    </div>
+                    <div class="tip-section how-section">
+                        <h4 class="tip-section-title">이렇게 해보세요</h4>
+                        <div class="panel-content how-panel">
+                            ${tip.actions.map((action, i) => `
+                                <div class="action-card">
+                                    <div class="action-step-number">Step ${i + 1}</div>
+                                    <div class="action-situation-text">${action.situation}</div>
+                                    <div class="action-detail">
+                                        <div class="action-label">실행 방법</div>
+                                        <div class="action-text">${action.action}</div>
                                     </div>
-                                `).join('')}
-                            </div>
+                                    <div class="action-example-box">
+                                        <div class="example-label">예시 문장</div>
+                                        <div class="example-text">"${action.example}"</div>
+                                    </div>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>
                 </div>
@@ -848,27 +844,6 @@
                 content.style.display = isOpen ? 'none' : 'block';
                 toggleBtn.setAttribute('aria-expanded', !isOpen);
                 card.classList.toggle('expanded', !isOpen);
-            });
-
-            // 탭 전환 이벤트
-            const tabs = card.querySelectorAll('.tip-tab');
-            const panels = card.querySelectorAll('.tip-tab-panel');
-
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const targetTab = tab.dataset.tab;
-
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-
-                    panels.forEach(panel => {
-                        if (panel.dataset.panel === targetTab) {
-                            panel.classList.add('active');
-                        } else {
-                            panel.classList.remove('active');
-                        }
-                    });
-                });
             });
 
             return card;
