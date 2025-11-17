@@ -2680,59 +2680,93 @@ body::before {
 .compatibility-analysis-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-3);
+    gap: var(--space-4);
     padding: var(--space-4);
 }
 
 .analysis-box {
-    padding: var(--space-3);
-    border-radius: var(--radius-md);
-    border-left: 3px solid var(--primary-300);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--primary-300);
     background: var(--primary-50);
 }
 
 .analysis-box.analysis-strength {
-    background: rgba(16, 185, 129, 0.06);
+    background: rgba(16, 185, 129, 0.08);
     border-left-color: var(--success-400);
 }
 
 .analysis-box.analysis-caution {
-    background: rgba(245, 158, 11, 0.06);
+    background: rgba(245, 158, 11, 0.08);
     border-left-color: var(--warning-400);
 }
 
 .analysis-box-label {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     font-weight: 600;
-    margin-bottom: var(--space-2);
+    color: var(--primary-900);
+    margin-bottom: var(--space-3);
     display: flex;
     align-items: center;
-    gap: var(--space-1);
+    gap: var(--space-2);
 }
 
 .analysis-strength .analysis-box-label {
-    color: var(--success-600);
+    color: var(--primary-900);
 }
 
 .analysis-caution .analysis-box-label {
-    color: var(--warning-600);
+    color: var(--primary-900);
+}
+
+.analysis-strength .analysis-icon {
+    color: var(--success-500);
+}
+
+.analysis-caution .analysis-icon {
+    color: var(--warning-500);
 }
 
 .analysis-icon {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
 }
 
 .analysis-box-content {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     color: var(--primary-700);
-    line-height: 1.5;
+    line-height: 1.6;
     word-break: keep-all;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .compatibility-analysis-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+        padding: var(--space-4);
+    }
+
+    .analysis-box {
+        padding: var(--space-3);
+    }
+
+    .analysis-box-label {
+        margin-bottom: var(--space-2);
+    }
+
+    .analysis-box-content {
+        font-size: var(--font-size-sm);
+    }
 }
 
 @media (max-width: 480px) {
     .compatibility-analysis-grid {
-        grid-template-columns: 1fr;
-        gap: var(--space-2);
+        gap: var(--space-3);
+        padding: var(--space-3);
+    }
+
+    .analysis-box-label {
+        font-size: var(--font-size-sm);
     }
 }
 
