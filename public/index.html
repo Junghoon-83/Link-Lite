@@ -644,8 +644,8 @@
             return leadershipTipsData;
         }
 
-        // 현재 활성화된 상황 필터
-        let activeWhenFilter = null;
+        // 현재 활성화된 상황 필터 (복수 선택 지원)
+        let activeWhenFilters = [];
         let currentTipsData = null;
 
         async function loadLeadershipTips(leadershipCode) {
@@ -704,36 +704,46 @@
                 }
             });
 
+            // 필터 초기화
+            activeWhenFilters = [];
+
             const filterWrapper = document.createElement('div');
             filterWrapper.className = 'situation-filter-wrapper';
 
             filterWrapper.innerHTML = `
                 <div class="situation-filter-header">
                     <h4 class="situation-filter-title">지금 어떤 상황인가요?</h4>
-                    <p class="situation-filter-desc">상황을 선택하면 관련 팁을 추천해드립니다</p>
+                    <p class="situation-filter-desc">해당하는 상황을 선택하세요 (복수 선택 가능)</p>
                 </div>
                 <div class="situation-filter-chips" id="situationFilterChips">
-                    <button class="situation-chip active" data-situation="all">
-                        전체 보기
-                    </button>
                     ${allSituations.map(situation => `
                         <button class="situation-chip" data-situation="${situation}">
                             ${situation}
                         </button>
                     `).join('')}
                 </div>
+                <div class="filter-result-message" id="filterResultMessage" style="display: none;">
+                    <span class="result-count"></span>개의 추천 팁이 있습니다
+                </div>
             `;
 
-            // 필터 클릭 이벤트
+            // 필터 클릭 이벤트 (토글 방식)
             setTimeout(() => {
                 const chips = filterWrapper.querySelectorAll('.situation-chip');
                 chips.forEach(chip => {
                     chip.addEventListener('click', () => {
-                        chips.forEach(c => c.classList.remove('active'));
-                        chip.classList.add('active');
+                        const situation = chip.dataset.situation;
 
-                        const selectedSituation = chip.dataset.situation;
-                        filterTipsBySituation(selectedSituation);
+                        // 토글: 이미 선택되었으면 제거, 아니면 추가
+                        if (chip.classList.contains('active')) {
+                            chip.classList.remove('active');
+                            activeWhenFilters = activeWhenFilters.filter(s => s !== situation);
+                        } else {
+                            chip.classList.add('active');
+                            activeWhenFilters.push(situation);
+                        }
+
+                        filterTipsByMultipleSituations();
                     });
                 });
             }, 0);
@@ -741,23 +751,27 @@
             return filterWrapper;
         }
 
-        function filterTipsBySituation(situation) {
-            activeWhenFilter = situation === 'all' ? null : situation;
-
+        function filterTipsByMultipleSituations() {
             const cards = document.querySelectorAll('.tip-card');
+            const messageEl = document.getElementById('filterResultMessage');
+            let matchCount = 0;
+
             cards.forEach(card => {
                 const tipIndex = parseInt(card.dataset.tipIndex);
                 const tip = currentTipsData.tips[tipIndex];
 
-                if (situation === 'all') {
+                if (activeWhenFilters.length === 0) {
+                    // 선택된 필터가 없으면 모든 카드 표시
                     card.style.display = 'block';
                     card.classList.remove('filtered-out', 'highlighted');
                 } else {
-                    const matches = tip.when && tip.when.includes(situation);
+                    // 선택된 상황 중 하나라도 포함되면 표시
+                    const matches = tip.when && activeWhenFilters.some(filter => tip.when.includes(filter));
                     if (matches) {
                         card.style.display = 'block';
                         card.classList.remove('filtered-out');
                         card.classList.add('highlighted');
+                        matchCount++;
                     } else {
                         card.style.display = 'none';
                         card.classList.add('filtered-out');
@@ -765,6 +779,16 @@
                     }
                 }
             });
+
+            // 결과 메시지 표시
+            if (messageEl) {
+                if (activeWhenFilters.length > 0) {
+                    messageEl.style.display = 'block';
+                    messageEl.querySelector('.result-count').textContent = matchCount;
+                } else {
+                    messageEl.style.display = 'none';
+                }
+            }
         }
 
         function createTipCard(tip, index) {

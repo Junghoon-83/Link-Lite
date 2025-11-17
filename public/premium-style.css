@@ -3090,6 +3090,26 @@ body::before {
     box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
 }
 
+/* 필터 결과 메시지 */
+.filter-result-message {
+    margin-top: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    text-align: center;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: #16a34a;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.filter-result-message .result-count {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: #15803d;
+}
+
 /* 팁 카드 컨테이너 */
 .tip-cards-container {
     display: flex;
