@@ -2676,6 +2676,66 @@ body::before {
     line-height: 1.6;
 }
 
+/* 팀 궁합 좌우 배치 레이아웃 */
+.compatibility-analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    padding: var(--space-4);
+}
+
+.analysis-box {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--primary-300);
+    background: var(--primary-50);
+}
+
+.analysis-box.analysis-strength {
+    background: rgba(16, 185, 129, 0.06);
+    border-left-color: var(--success-400);
+}
+
+.analysis-box.analysis-caution {
+    background: rgba(245, 158, 11, 0.06);
+    border-left-color: var(--warning-400);
+}
+
+.analysis-box-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.analysis-strength .analysis-box-label {
+    color: var(--success-600);
+}
+
+.analysis-caution .analysis-box-label {
+    color: var(--warning-600);
+}
+
+.analysis-icon {
+    font-size: var(--font-size-base);
+}
+
+.analysis-box-content {
+    font-size: var(--font-size-sm);
+    color: var(--primary-700);
+    line-height: 1.5;
+    word-break: keep-all;
+}
+
+@media (max-width: 480px) {
+    .compatibility-analysis-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-2);
+    }
+}
+
 .empty-message {
     text-align: center;
     color: var(--primary-600);
