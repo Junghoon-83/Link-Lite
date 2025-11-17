@@ -379,6 +379,7 @@
         let selectedFollowerTypes = []; // { id: string, name: string, memberName: string }
         let mobileInput = null;
         let mobileNav = null;
+        let currentLeadershipCode = null; // 현재 리더십 유형 코드 저장
 
         // 비동기 데이터 로딩 초기화
         async function initializeApp() {
@@ -565,6 +566,7 @@
 
         function showResults() {
             const result = assessment.determineLeadershipType();
+            currentLeadershipCode = result.code; // 전역 변수에 저장
 
             // 더 자세한 디버깅용 로그
             console.log('=== LEADERSHIP TYPE DEBUG ===');
@@ -642,8 +644,8 @@
             return leadershipTipsData;
         }
 
-        // 현재 활성화된 상황 필터
-        let activeWhenFilter = null;
+        // 현재 활성화된 상황 필터 (복수 선택 지원)
+        let activeWhenFilters = [];
         let currentTipsData = null;
 
         async function loadLeadershipTips(leadershipCode) {
@@ -702,36 +704,46 @@
                 }
             });
 
+            // 필터 초기화
+            activeWhenFilters = [];
+
             const filterWrapper = document.createElement('div');
             filterWrapper.className = 'situation-filter-wrapper';
 
             filterWrapper.innerHTML = `
                 <div class="situation-filter-header">
                     <h4 class="situation-filter-title">지금 어떤 상황인가요?</h4>
-                    <p class="situation-filter-desc">상황을 선택하면 관련 팁을 추천해드립니다</p>
+                    <p class="situation-filter-desc">해당하는 상황을 선택하세요 (복수 선택 가능)</p>
                 </div>
                 <div class="situation-filter-chips" id="situationFilterChips">
-                    <button class="situation-chip active" data-situation="all">
-                        전체 보기
-                    </button>
                     ${allSituations.map(situation => `
                         <button class="situation-chip" data-situation="${situation}">
                             ${situation}
                         </button>
                     `).join('')}
                 </div>
+                <div class="filter-result-message" id="filterResultMessage" style="display: none;">
+                    <span class="result-count"></span>개의 추천 팁이 있습니다
+                </div>
             `;
 
-            // 필터 클릭 이벤트
+            // 필터 클릭 이벤트 (토글 방식)
             setTimeout(() => {
                 const chips = filterWrapper.querySelectorAll('.situation-chip');
                 chips.forEach(chip => {
                     chip.addEventListener('click', () => {
-                        chips.forEach(c => c.classList.remove('active'));
-                        chip.classList.add('active');
+                        const situation = chip.dataset.situation;
 
-                        const selectedSituation = chip.dataset.situation;
-                        filterTipsBySituation(selectedSituation);
+                        // 토글: 이미 선택되었으면 제거, 아니면 추가
+                        if (chip.classList.contains('active')) {
+                            chip.classList.remove('active');
+                            activeWhenFilters = activeWhenFilters.filter(s => s !== situation);
+                        } else {
+                            chip.classList.add('active');
+                            activeWhenFilters.push(situation);
+                        }
+
+                        filterTipsByMultipleSituations();
                     });
                 });
             }, 0);
@@ -739,23 +751,27 @@
             return filterWrapper;
         }
 
-        function filterTipsBySituation(situation) {
-            activeWhenFilter = situation === 'all' ? null : situation;
-
+        function filterTipsByMultipleSituations() {
             const cards = document.querySelectorAll('.tip-card');
+            const messageEl = document.getElementById('filterResultMessage');
+            let matchCount = 0;
+
             cards.forEach(card => {
                 const tipIndex = parseInt(card.dataset.tipIndex);
                 const tip = currentTipsData.tips[tipIndex];
 
-                if (situation === 'all') {
+                if (activeWhenFilters.length === 0) {
+                    // 선택된 필터가 없으면 모든 카드 표시
                     card.style.display = 'block';
                     card.classList.remove('filtered-out', 'highlighted');
                 } else {
-                    const matches = tip.when && tip.when.includes(situation);
+                    // 선택된 상황 중 하나라도 포함되면 표시
+                    const matches = tip.when && activeWhenFilters.some(filter => tip.when.includes(filter));
                     if (matches) {
                         card.style.display = 'block';
                         card.classList.remove('filtered-out');
                         card.classList.add('highlighted');
+                        matchCount++;
                     } else {
                         card.style.display = 'none';
                         card.classList.add('filtered-out');
@@ -763,6 +779,16 @@
                     }
                 }
             });
+
+            // 결과 메시지 표시
+            if (messageEl) {
+                if (activeWhenFilters.length > 0) {
+                    messageEl.style.display = 'block';
+                    messageEl.querySelector('.result-count').textContent = matchCount;
+                } else {
+                    messageEl.style.display = 'none';
+                }
+            }
         }
 
         function createTipCard(tip, index) {
@@ -781,46 +807,29 @@
                     </button>
                 </div>
                 <div class="tip-card-content" style="display: none;">
-                    <div class="tip-tabs">
-                        <button class="tip-tab active" data-tab="why">왜 필요할까요?</button>
-                        <button class="tip-tab" data-tab="when">언제 필요할까요?</button>
-                        <button class="tip-tab" data-tab="how">이렇게 해보세요</button>
+                    <div class="tip-section why-section">
+                        <h4 class="tip-section-title">왜 필요할까요?</h4>
+                        <div class="panel-content why-panel">
+                            <p class="why-text">${tip.why}</p>
+                        </div>
                     </div>
-                    <div class="tip-tab-content">
-                        <div class="tip-tab-panel active" data-panel="why">
-                            <div class="panel-content why-panel">
-                                <p class="why-text">${tip.why}</p>
-                            </div>
-                        </div>
-                        <div class="tip-tab-panel" data-panel="when">
-                            <div class="panel-content when-panel">
-                                <ul class="when-list">
-                                    ${tip.when.map((item, i) => `
-                                        <li class="when-item">
-                                            <span class="when-icon">✓</span>
-                                            <span class="when-text">${item}</span>
-                                        </li>
-                                    `).join('')}
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="tip-tab-panel" data-panel="how">
-                            <div class="panel-content how-panel">
-                                ${tip.actions.map((action, i) => `
-                                    <div class="action-card">
-                                        <div class="action-step-number">Step ${i + 1}</div>
-                                        <div class="action-situation-text">${action.situation}</div>
-                                        <div class="action-detail">
-                                            <div class="action-label">실행 방법</div>
-                                            <div class="action-text">${action.action}</div>
-                                        </div>
-                                        <div class="action-example-box">
-                                            <div class="example-label">예시 문장</div>
-                                            <div class="example-text">"${action.example}"</div>
-                                        </div>
+                    <div class="tip-section how-section">
+                        <h4 class="tip-section-title">이렇게 해보세요</h4>
+                        <div class="panel-content how-panel">
+                            ${tip.actions.map((action, i) => `
+                                <div class="action-card">
+                                    <div class="action-step-number">Step ${i + 1}</div>
+                                    <div class="action-situation-text">${action.situation}</div>
+                                    <div class="action-detail">
+                                        <div class="action-label">실행 방법</div>
+                                        <div class="action-text">${action.action}</div>
                                     </div>
-                                `).join('')}
-                            </div>
+                                    <div class="action-example-box">
+                                        <div class="example-label">예시 문장</div>
+                                        <div class="example-text">"${action.example}"</div>
+                                    </div>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>
                 </div>
@@ -835,27 +844,6 @@
                 content.style.display = isOpen ? 'none' : 'block';
                 toggleBtn.setAttribute('aria-expanded', !isOpen);
                 card.classList.toggle('expanded', !isOpen);
-            });
-
-            // 탭 전환 이벤트
-            const tabs = card.querySelectorAll('.tip-tab');
-            const panels = card.querySelectorAll('.tip-tab-panel');
-
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const targetTab = tab.dataset.tab;
-
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-
-                    panels.forEach(panel => {
-                        if (panel.dataset.panel === targetTab) {
-                            panel.classList.add('active');
-                        } else {
-                            panel.classList.remove('active');
-                        }
-                    });
-                });
             });
 
             return card;
@@ -998,6 +986,13 @@
 
                 // 궁합 분석 실행
                 analyzeCompatibilityAuto();
+
+                // 리더십 팁이 로드되었는지 확인하고 필요시 다시 로드
+                const tipsContainer = document.getElementById('leadershipTipsContainer');
+                if (tipsContainer && tipsContainer.children.length === 0 && currentLeadershipCode) {
+                    console.log('리더십 팁 재로드:', currentLeadershipCode);
+                    loadLeadershipTips(currentLeadershipCode);
+                }
 
                 // 결과 페이지로 이동
                 showSection('results');

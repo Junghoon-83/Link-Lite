@@ -3090,6 +3090,26 @@ body::before {
     box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
 }
 
+/* 필터 결과 메시지 */
+.filter-result-message {
+    margin-top: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    text-align: center;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: #16a34a;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.filter-result-message .result-count {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: #15803d;
+}
+
 /* 팁 카드 컨테이너 */
 .tip-cards-container {
     display: flex;
@@ -3193,6 +3213,7 @@ body::before {
 .tip-card-content {
     border-top: 1px solid var(--primary-200);
     animation: slideDown 0.3s ease-out;
+    padding: var(--space-6);
 }
 
 @keyframes slideDown {
@@ -3206,61 +3227,33 @@ body::before {
     }
 }
 
-/* 탭 네비게이션 */
-.tip-tabs {
+/* 팁 섹션 */
+.tip-section {
+    margin-bottom: var(--space-6);
+}
+
+.tip-section:last-child {
+    margin-bottom: 0;
+}
+
+.tip-section-title {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--accent-600);
+    margin: 0 0 var(--space-4) 0;
+    text-align: left;
     display: flex;
-    background: var(--primary-100);
-    padding: var(--space-2);
+    align-items: center;
     gap: var(--space-2);
 }
 
-.tip-tab {
-    flex: 1;
-    background: transparent;
-    border: none;
-    padding: var(--space-3) var(--space-4);
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    color: var(--primary-500);
-    cursor: pointer;
-    border-radius: var(--radius-lg);
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.tip-tab:hover {
-    color: var(--accent-600);
-    background: rgba(255, 255, 255, 0.5);
-}
-
-.tip-tab.active {
-    background: white;
-    color: var(--accent-600);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* 탭 패널 */
-.tip-tab-content {
-    padding: 0;
-}
-
-.tip-tab-panel {
-    display: none;
-    padding: var(--space-6);
-    animation: fadeIn 0.3s ease-out;
-}
-
-.tip-tab-panel.active {
-    display: block;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+.tip-section-title::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%);
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
 }
 
 /* WHY 패널 */
@@ -3447,20 +3440,15 @@ body::before {
         font-size: var(--font-size-base);
     }
 
-    .tip-tab {
-        padding: var(--space-2) var(--space-3);
-        font-size: var(--font-size-xs);
-    }
-
-    .tip-tab-panel {
+    .tip-card-content {
         padding: var(--space-4);
     }
 
-    .why-text {
-        font-size: var(--font-size-sm);
+    .tip-section-title {
+        font-size: var(--font-size-base);
     }
 
-    .when-text {
+    .why-text {
         font-size: var(--font-size-sm);
     }
 
@@ -3501,17 +3489,12 @@ body::before {
         font-size: var(--font-size-sm);
     }
 
-    .tip-tabs {
-        padding: var(--space-1);
-        gap: var(--space-1);
-    }
-
-    .tip-tab {
-        padding: var(--space-2);
-    }
-
-    .tip-tab-panel {
+    .tip-card-content {
         padding: var(--space-3);
+    }
+
+    .tip-section {
+        margin-bottom: var(--space-4);
     }
 
     .action-card {
