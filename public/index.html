@@ -40,7 +40,7 @@
     <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="premium-style.css?v=1761005326">
+    <link rel="stylesheet" href="premium-style.css?v=1761005329">
     <link rel="stylesheet" href="mobile-native.css?v=1759492238">
 
     <!-- Theme Color -->
@@ -244,6 +244,16 @@
 
                         </section>
 
+                        <!-- 나의 리더십 더 알아보기 -->
+                        <section class="results-section">
+                            <h2 class="results-main-title">나의 리더십 더 알아보기</h2>
+                            <p class="results-intro" id="leadershipMoreIntro"></p>
+
+                            <div class="leadership-tips-container" id="leadershipTipsContainer">
+                                <!-- 동적으로 생성될 아코디언 버튼들 -->
+                            </div>
+                        </section>
+
                         <!-- 2. 팀 궁합 분석 맛보기 -->
                         <section class="results-section">
                             <h2 class="results-main-title">팀 궁합 분석 맛보기</h2>
@@ -278,7 +288,7 @@
                                     </div>
                                 </div>
 
-                                <button class="cta-button cta-button-primary" onclick="alert('팀 진단 문의: contact@link-team.com')">
+                                <button class="cta-button-primary" onclick="alert('팀 진단 문의: contact@link-team.com')">
                                     <span>Link 팀 진단 알아보기</span>
                                     <span class="cta-arrow">→</span>
                                 </button>
@@ -609,9 +619,127 @@
             // 레이더 차트 업데이트
             updateRadarChart(result.scores);
 
+            // 리더십 팁 로드
+            loadLeadershipTips(result.code);
+
             // 팔로워십 선택 페이지로 이동
             createFollowershipOptionsPage();
             showSection('followership');
+        }
+
+        // 리더십 팁 데이터 저장
+        let leadershipTipsData = null;
+
+        async function loadLeadershipTipsData() {
+            if (!leadershipTipsData) {
+                try {
+                    const response = await fetch('data/leadership-tips.json');
+                    leadershipTipsData = await response.json();
+                } catch (error) {
+                    console.error('리더십 팁 데이터 로드 실패:', error);
+                }
+            }
+            return leadershipTipsData;
+        }
+
+        async function loadLeadershipTips(leadershipCode) {
+            const tipsData = await loadLeadershipTipsData();
+            if (!tipsData || !tipsData[leadershipCode]) {
+                console.warn('리더십 팁 데이터를 찾을 수 없습니다:', leadershipCode);
+                return;
+            }
+
+            const typeData = tipsData[leadershipCode];
+
+            // 소개 문구 설정
+            const introElement = document.getElementById('leadershipMoreIntro');
+            if (introElement) {
+                introElement.textContent = typeData.intro;
+            }
+
+            // 팁 아코디언 생성
+            const container = document.getElementById('leadershipTipsContainer');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            if (typeData.tips && typeData.tips.length > 0) {
+                typeData.tips.forEach((tip, index) => {
+                    const accordion = createTipAccordion(tip, index);
+                    container.appendChild(accordion);
+                });
+            } else {
+                container.innerHTML = '<p class="empty-message">추가 팁이 준비 중입니다.</p>';
+            }
+        }
+
+        function createTipAccordion(tip, index) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'tip-accordion';
+
+            const button = document.createElement('button');
+            button.className = 'tip-accordion-button';
+            button.innerHTML = `
+                <span>${tip.title}</span>
+                <span class="accordion-icon">▼</span>
+            `;
+
+            const content = document.createElement('div');
+            content.className = 'tip-accordion-content';
+            content.style.display = 'none';
+
+            // 왜 필요할까요?
+            let contentHTML = `
+                <div class="tip-section">
+                    <h4 class="tip-section-title">왜 필요할까요?</h4>
+                    <p class="tip-section-text">${tip.why}</p>
+                </div>
+            `;
+
+            // 언제 필요할까요?
+            if (tip.when && tip.when.length > 0) {
+                contentHTML += `
+                    <div class="tip-section">
+                        <h4 class="tip-section-title">언제 필요할까요?</h4>
+                        <ul class="tip-when-list">
+                            ${tip.when.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            // 이렇게 해보세요
+            if (tip.actions && tip.actions.length > 0) {
+                contentHTML += `
+                    <div class="tip-section">
+                        <h4 class="tip-section-title">이렇게 해보세요</h4>
+                        <div class="tip-actions">
+                            ${tip.actions.map(action => `
+                                <div class="tip-action-item">
+                                    <p class="action-situation">${action.situation}</p>
+                                    <p class="action-behavior"><strong>행동:</strong> ${action.action}</p>
+                                    <p class="action-example"><strong>예시 문장:</strong> "${action.example}"</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = contentHTML;
+
+            // 토글 이벤트
+            button.addEventListener('click', () => {
+                const isOpen = content.style.display !== 'none';
+                content.style.display = isOpen ? 'none' : 'block';
+                button.querySelector('.accordion-icon').textContent = isOpen ? '▼' : '▲';
+                button.classList.toggle('active', !isOpen);
+            });
+
+            wrapper.appendChild(button);
+            wrapper.appendChild(content);
+
+            return wrapper;
         }
 
         function createFollowershipOptionsPage() {
