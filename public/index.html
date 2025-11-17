@@ -295,16 +295,27 @@
                             </div>
                         </section>
 
-                        <div style="margin-top: var(--space-12); text-align: center;">
-                            <button class="premium-btn premium-btn-secondary" onclick="resetAssessment()">
-                                ↻ 다시 진단하기
-                            </button>
-                        </div>
+                        <!-- 하단 푸터 영역 -->
+                        <footer class="results-footer">
+                            <div class="footer-content">
+                                <p class="footer-brand">Link-Lite</p>
+                                <p class="footer-tagline">팀 기반 성장을 위한 리더십 진단</p>
+                            </div>
+                        </footer>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- 플로팅 다시 진단하기 버튼 -->
+    <button class="fab-retake" id="fabRetake" onclick="resetAssessment()" title="다시 진단하기">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+        </svg>
+        <span class="fab-label">다시 진단</span>
+    </button>
 
     <script src="leadership-assessment.js?v=14"></script>
     <script src="team-compatibility.js?v=14"></script>
@@ -455,6 +466,19 @@
                     mobileNav.show();
                     // 팔로워십 페이지용 버튼 업데이트
                     updateFollowershipNavigation();
+                }
+            }
+
+            // 플로팅 다시 진단하기 버튼 표시/숨김
+            const fabRetake = document.getElementById('fabRetake');
+            if (fabRetake) {
+                if (sectionId === 'results') {
+                    // 결과 페이지에서 약간의 딜레이 후 FAB 표시
+                    setTimeout(() => {
+                        fabRetake.classList.add('visible');
+                    }, 1000);
+                } else {
+                    fabRetake.classList.remove('visible');
                 }
             }
 
@@ -1777,6 +1801,12 @@
             // 모바일 네비게이션 숨김
             if (mobileNav) {
                 mobileNav.hide();
+            }
+
+            // 플로팅 다시 진단하기 버튼 숨김
+            const fabRetake = document.getElementById('fabRetake');
+            if (fabRetake) {
+                fabRetake.classList.remove('visible');
             }
 
             // 팔로워십 체크박스 초기화
