@@ -689,8 +689,11 @@ body::before {
     color: var(--primary-900);
     font-weight: 600;
     line-height: 1.5;
-    min-height: auto;
-    display: block;
+    min-height: 4.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     padding: 0 0 var(--space-3);
     margin-bottom: var(--space-3);
 }
@@ -1392,6 +1395,11 @@ body::before {
         max-width: 26rem;
     }
 
+    .question-text {
+        min-height: 6em;
+        font-size: var(--font-size-lg);
+    }
+
     .welcome-description {
         font-size: var(--font-size-lg);
         margin-bottom: var(--space-8);
@@ -1474,6 +1482,11 @@ body::before {
     .glass-header .description {
         font-size: var(--font-size-sm);
         max-width: 24rem;
+    }
+
+    .question-text {
+        min-height: 7em;
+        font-size: var(--font-size-base);
     }
 
     .welcome-description {
