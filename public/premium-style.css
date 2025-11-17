@@ -2582,16 +2582,18 @@ body::before {
 
 .compatibility-card-header {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-start;
     padding: var(--space-6);
     background: linear-gradient(135deg, rgba(248, 250, 252, 1), rgba(241, 245, 249, 1));
     border-bottom: 1px solid var(--primary-100);
-    gap: var(--space-4);
+    gap: var(--space-3);
 }
 
 .follower-info {
     flex: 1;
+    min-width: 200px;
     text-align: left;
 }
 
@@ -2617,6 +2619,7 @@ body::before {
     flex-wrap: wrap;
     gap: var(--space-2);
     align-items: center;
+    justify-content: flex-end;
 }
 
 .member-name-badge {
