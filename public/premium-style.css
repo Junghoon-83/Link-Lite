@@ -2582,25 +2582,39 @@ body::before {
 
 .compatibility-card-header {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-start;
     padding: var(--space-6);
     background: linear-gradient(135deg, rgba(248, 250, 252, 1), rgba(241, 245, 249, 1));
     border-bottom: 1px solid var(--primary-100);
-    gap: var(--space-4);
+    gap: var(--space-3);
 }
 
 .follower-info {
     flex: 1;
+    min-width: 200px;
     text-align: left;
+}
+
+.follower-type-line {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-2);
 }
 
 .follower-type-name {
     font-size: var(--font-size-xl);
     font-weight: 600;
     color: var(--accent-600);
-    margin: 0 0 var(--space-1) 0;
+    margin: 0;
     text-align: left;
+}
+
+.follower-type-divider {
+    color: var(--primary-400);
+    font-weight: 400;
 }
 
 .follower-type-subtitle {
@@ -2617,6 +2631,7 @@ body::before {
     flex-wrap: wrap;
     gap: var(--space-2);
     align-items: center;
+    justify-content: flex-end;
 }
 
 .member-name-badge {
@@ -2949,6 +2964,10 @@ body::before {
     .follower-info {
         text-align: center;
         width: 100%;
+    }
+
+    .follower-type-line {
+        justify-content: center;
     }
 
     .member-names-container {
