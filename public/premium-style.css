@@ -3549,63 +3549,6 @@ body::before {
     }
 }
 
-/* ========================================
-   Floating Action Button (FAB) - 다시 진단하기
-   ======================================== */
-
-.fab-retake {
-    position: fixed;
-    bottom: var(--space-10);
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    background: rgba(255, 255, 255, 0.9);
-    color: var(--primary-500);
-    border: 1px solid var(--primary-200);
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-sm);
-    font-weight: 500;
-    cursor: pointer;
-    box-shadow: var(--shadow-md);
-    backdrop-filter: blur(8px);
-    transition: all 0.2s ease;
-    z-index: 1000;
-    opacity: 0;
-    pointer-events: none;
-    visibility: hidden;
-}
-
-.fab-retake.visible {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-    pointer-events: auto;
-    visibility: visible;
-}
-
-.fab-retake:hover {
-    background: rgba(255, 255, 255, 1);
-    color: var(--primary-700);
-    border-color: var(--primary-300);
-    box-shadow: var(--shadow-lg);
-}
-
-.fab-retake:active {
-    transform: translateX(-50%) scale(0.98);
-}
-
-.fab-retake svg {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-}
-
-.fab-label {
-    white-space: nowrap;
-}
-
 /* Results Footer */
 .results-footer {
     margin-top: var(--space-16);
@@ -3622,6 +3565,44 @@ body::before {
     margin: 0 auto;
 }
 
+.retake-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: none;
+    border: none;
+    color: var(--primary-500);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+    margin-bottom: var(--space-4);
+}
+
+.retake-link:hover {
+    color: var(--primary-700);
+    background: rgba(100, 116, 139, 0.08);
+}
+
+.retake-link:active {
+    transform: scale(0.98);
+}
+
+.retake-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.footer-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--primary-200);
+    margin: 0 auto var(--space-4);
+}
+
 .footer-brand {
     font-size: var(--font-size-lg);
     font-weight: 700;
@@ -3636,23 +3617,15 @@ body::before {
     margin: 0;
 }
 
-/* Mobile FAB adjustments */
+/* Mobile Footer adjustments */
 @media (max-width: 768px) {
-    .fab-retake {
-        bottom: var(--space-6);
-        right: var(--space-4);
-        padding: var(--space-2) var(--space-3);
-        font-size: var(--font-size-xs);
-    }
-
-    .fab-retake svg {
-        width: 18px;
-        height: 18px;
-    }
-
     .results-footer {
         margin-top: var(--space-12);
         padding: var(--space-6) var(--space-4);
+    }
+
+    .retake-link {
+        font-size: var(--font-size-xs);
     }
 
     .footer-brand {
@@ -3665,11 +3638,6 @@ body::before {
 }
 
 @media (max-width: 480px) {
-    .fab-retake {
-        bottom: var(--space-4);
-        right: var(--space-3);
-    }
-
     .results-footer {
         margin-top: var(--space-10);
         padding: var(--space-5) var(--space-3);
