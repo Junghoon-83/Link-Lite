@@ -43,6 +43,19 @@ class LeadershipAssessment {
     }
 
     recordResponse(questionId, score) {
+        // 점수 검증
+        if (typeof score !== 'number' || score < 1 || score > 6) {
+            console.error(`Invalid score: ${score} for question ${questionId}`);
+            return;
+        }
+
+        // questionId 검증
+        const question = this.questions.find(q => q.id === questionId);
+        if (!question) {
+            console.error(`Invalid question ID: ${questionId}`);
+            return;
+        }
+
         this.responses[questionId] = score;
     }
 
