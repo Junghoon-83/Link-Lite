@@ -663,13 +663,17 @@ class MobileNavigationManager {
 
     hide() {
         if (this.navElement) {
+            console.log('🙈 모바일 네비게이션 숨김');
             this.navElement.style.display = 'none';
         }
     }
 
     show() {
         if (this.navElement) {
+            console.log('👁️ 모바일 네비게이션 표시');
             this.navElement.style.display = 'flex';
+        } else {
+            console.log('❌ 모바일 네비게이션 요소 없음');
         }
     }
 
