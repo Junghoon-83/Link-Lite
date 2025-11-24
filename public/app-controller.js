@@ -409,10 +409,25 @@ class AppController {
 
             // 체크박스 이벤트
             const checkbox = card.querySelector('input[type="checkbox"]');
+            const label = card.querySelector('.followership-card-main');
+
             console.log(`체크박스 이벤트 등록: ${typeId}`, checkbox);
+
+            // 체크박스 change 이벤트
             this.eventManager.add(checkbox, 'change', () => {
                 console.log(`체크박스 change 이벤트 발생: ${typeId}`);
                 this.toggleFollowershipType(typeId);
+            });
+
+            // 카드 전체 클릭 시 체크박스 토글 (모바일 터치 향상)
+            this.eventManager.add(label, 'click', (e) => {
+                // 체크박스 자체를 클릭한 경우는 제외 (중복 방지)
+                if (e.target === checkbox) {
+                    return;
+                }
+
+                console.log(`카드 영역 클릭 → 체크박스 토글: ${typeId}`);
+                checkbox.click(); // 체크박스 클릭을 프로그래밍적으로 트리거
             });
 
             container.appendChild(card);
