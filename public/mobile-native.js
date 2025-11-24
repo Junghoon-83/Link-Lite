@@ -588,15 +588,19 @@ class MobileNavigationManager {
         });
 
         document.getElementById('mobileNavNext').addEventListener('click', () => {
+            console.log('=== 모바일 다음 버튼 클릭 ===');
             // 현재 활성화된 섹션 확인
             const activeSection = document.querySelector('.premium-section.active');
+            console.log('활성 섹션:', activeSection?.id);
             if (!activeSection) return;
 
             const sectionId = activeSection.id;
 
             if (sectionId === 'assessment' && typeof window.nextQuestion === 'function') {
+                console.log('→ window.nextQuestion() 호출');
                 window.nextQuestion();
             } else if (sectionId === 'followership' && typeof window.showResultsPage === 'function') {
+                console.log('→ window.showResultsPage() 호출');
                 window.showResultsPage();
             }
         });
