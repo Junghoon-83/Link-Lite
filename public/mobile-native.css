@@ -4,15 +4,15 @@
    버튼 표시 제어: 모바일/데스크톱 분리
    ======================================== */
 
-/* 모바일: 데스크톱 버튼 숨김 */
+/* 모바일: 인라인 데스크톱 버튼 숨김 */
 @media (max-width: 768px) {
-    #assessment .premium-btn,
-    #followership .premium-btn {
+    #assessment .premium-nav,
+    #followership .premium-nav {
         display: none !important;
     }
 }
 
-/* 데스크톱: 모바일 네비게이션 숨김 */
+/* 데스크톱: 모바일 하단 네비게이션 숨김 */
 @media (min-width: 769px) {
     .mobile-nav {
         display: none !important;
