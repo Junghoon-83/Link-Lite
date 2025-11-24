@@ -569,6 +569,15 @@ class AppController {
             // 결과 페이지로 이동 (섹션 전환만 - 새 페이지 리로드 없음)
             this.showSection('results');
 
+            // 확실하게 팔로워십 섹션 숨기기
+            setTimeout(() => {
+                const followershipSection = document.getElementById('followership');
+                if (followershipSection && followershipSection.classList.contains('active')) {
+                    console.warn('⚠️ 팔로워십 섹션이 여전히 활성화되어 있음 - 강제 제거');
+                    followershipSection.classList.remove('active');
+                }
+            }, 200);
+
             console.log('✓ 결과 페이지 표시 완료');
         } catch (error) {
             console.error('❌ 결과 페이지 표시 중 오류:', error);
