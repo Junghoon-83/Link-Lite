@@ -408,6 +408,7 @@ class AppController {
             this.state.selectedFollowers = this.state.selectedFollowers.filter(f => f.id !== typeId);
         }
 
+        // 결과 보기 버튼 상태 업데이트
         this.updateShowResultsButton();
     }
 
@@ -423,18 +424,23 @@ class AppController {
     // ========================================
 
     showResultsPage() {
+        console.log('=== AppController.showResultsPage 시작 ===');
+        console.log('selectedFollowers:', this.state.selectedFollowers);
+        console.log('currentLeadershipCode:', this.state.currentLeadershipCode);
+
         // 팔로워십 선택 확인
         if (this.state.selectedFollowers.length === 0) {
             this.showErrorMessage('팔로워십 유형을 최소 1개 이상 선택해주세요.');
             return;
         }
 
-        console.log('=== AppController.showResultsPage 호출 ===');
-        console.log('선택된 팔로워십:', this.state.selectedFollowers);
+        console.log('✓ 팔로워십 선택 확인 완료');
 
         // 전역 변수 업데이트 (하위 호환성)
         window.selectedFollowerTypes = this.state.selectedFollowers;
         window.currentLeadershipCode = this.state.currentLeadershipCode;
+
+        console.log('✓ 전역 변수 업데이트 완료');
 
         // 팀원 이름 수집 및 다중 이름 처리
         const expandedFollowers = [];
@@ -472,32 +478,48 @@ class AppController {
 
         this.state.selectedFollowers = expandedFollowers;
         window.selectedFollowerTypes = expandedFollowers;
-        console.log('확장된 팀원 정보:', expandedFollowers);
+        console.log('✓ 확장된 팀원 정보:', expandedFollowers);
 
         // index.html의 전역 함수들 호출
         try {
+            console.log('=== 궁합 분석 시작 ===');
+            console.log('analyzeCompatibilityAuto 함수 존재:', typeof window.analyzeCompatibilityAuto);
+
             // 궁합 분석 실행
             if (typeof window.analyzeCompatibilityAuto === 'function') {
+                console.log('✓ analyzeCompatibilityAuto() 호출');
                 window.analyzeCompatibilityAuto();
+            } else {
+                console.error('❌ analyzeCompatibilityAuto 함수가 없음');
             }
 
+            console.log('=== 리더십 팁 로드 ===');
             // 리더십 팁 로드
             const tipsContainer = document.getElementById('leadershipTipsContainer');
-            if (tipsContainer && tipsContainer.children.length === 0 && this.state.currentLeadershipCode) {
-                console.log('리더십 팁 로드:', this.state.currentLeadershipCode);
+            console.log('tipsContainer:', tipsContainer);
+            console.log('currentLeadershipCode:', this.state.currentLeadershipCode);
+
+            if (tipsContainer && this.state.currentLeadershipCode) {
+                console.log('✓ loadLeadershipTips() 호출:', this.state.currentLeadershipCode);
                 if (typeof window.loadLeadershipTips === 'function') {
                     window.loadLeadershipTips(this.state.currentLeadershipCode);
+                } else {
+                    console.error('❌ loadLeadershipTips 함수가 없음');
                 }
             }
 
+            console.log('=== 결과 페이지로 이동 ===');
             // 결과 페이지로 이동
             this.showSection('results');
 
             // 애널리틱스 추적
             this.analyticsManager.trackFollowershipSelection(expandedFollowers);
+
+            console.log('✓ 결과 페이지 표시 완료');
         } catch (error) {
-            console.error('결과 페이지 표시 중 오류:', error);
-            this.showErrorMessage('결과 페이지 표시 중 오류가 발생했습니다.');
+            console.error('❌ 결과 페이지 표시 중 오류:', error);
+            console.error('에러 스택:', error.stack);
+            this.showErrorMessage('결과 페이지 표시 중 오류가 발생했습니다: ' + error.message);
         }
     }
 
