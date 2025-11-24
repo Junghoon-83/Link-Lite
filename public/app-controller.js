@@ -196,6 +196,12 @@ class AppController {
         if (progressBar) {
             const progress = ((index + 1) / this.assessment.getTotalQuestions()) * 100;
             progressBar.style.width = `${progress}%`;
+
+            // 접근성: 진행률 업데이트
+            const progressContainer = progressBar.parentElement;
+            if (progressContainer) {
+                progressContainer.setAttribute('aria-valuenow', Math.round(progress));
+            }
         }
 
         // 이전 응답 표시

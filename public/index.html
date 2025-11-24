@@ -69,16 +69,16 @@
     </style>
 </head>
 <body class="welcome-page">
-    <div class="premium-container">
+    <div class="premium-container" role="main" aria-label="링커십 진단 애플리케이션">
         <div class="glass-card" style="max-width: 900px; width: 100%; margin-left: auto; margin-right: auto;">
-            <div class="glass-header">
+            <header class="glass-header" role="banner">
                 <h1>Link-Lite</h1>
                 <p class="subtitle">간편한 리더십 진단 & 팀 궁합 체크</p>
-            </div>
+            </header>
 
-            <div class="premium-content">
+            <div class="premium-content" role="main">
                 <!-- 시작 화면 -->
-                <div id="welcome" class="premium-section active">
+                <div id="welcome" class="premium-section active" role="region" aria-label="시작 화면">
                     <div class="welcome-section">
                         <h2 class="welcome-title">일일이 챙겨야 팀이 움직이나요?</h2>
                         <p class="welcome-subtitle">AI 시대 새로운 리더십, 링커십(Linkership)</p>
@@ -88,23 +88,23 @@
                             팀 실행력을 높일 인사이트를 발견하세요.
                         </p>
 
-                        <div class="feature-grid">
-                            <div class="feature-item">
-                                <div class="feature-icon-modern analytics"></div>
+                        <div class="feature-grid" role="list" aria-label="진단 기능">
+                            <div class="feature-item" role="listitem">
+                                <div class="feature-icon-modern analytics" aria-hidden="true"></div>
                                 <div class="feature-content">
                                     <h3 class="feature-title">SIG 모델 진단</h3>
                                     <p class="feature-description">공유·상호작용·성장 영역 분석</p>
                                 </div>
                             </div>
-                            <div class="feature-item">
-                                <div class="feature-icon-modern collaboration"></div>
+                            <div class="feature-item" role="listitem">
+                                <div class="feature-icon-modern collaboration" aria-hidden="true"></div>
                                 <div class="feature-content">
                                     <h3 class="feature-title">팔로워십 매칭</h3>
                                     <p class="feature-description">팀원 유형별 맞춤 코칭 전략</p>
                                 </div>
                             </div>
-                            <div class="feature-item">
-                                <div class="feature-icon-modern insights"></div>
+                            <div class="feature-item" role="listitem">
+                                <div class="feature-icon-modern insights" aria-hidden="true"></div>
                                 <div class="feature-content">
                                     <h3 class="feature-title">링커십 전환</h3>
                                     <p class="feature-description">연결자로서의 실행 가이드</p>
@@ -112,64 +112,64 @@
                             </div>
                         </div>
 
-                        <button class="premium-btn" id="startBtn">
+                        <button class="premium-btn" id="startBtn" aria-label="리더십 진단 시작하기">
                             <span>진단 시작</span>
-                            <span>→</span>
+                            <span aria-hidden="true">→</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- 진단 화면 -->
-                <div id="assessment" class="premium-section">
-                    <div class="premium-progress">
+                <div id="assessment" class="premium-section" role="region" aria-label="진단 화면">
+                    <div class="premium-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="진단 진행률">
                         <div class="premium-progress-fill" id="progressBar"></div>
                     </div>
 
-                    <div class="premium-question-card">
+                    <div class="premium-question-card" role="form" aria-label="리더십 진단 질문">
                         <div class="question-meta">
-                            <div class="question-number" id="questionNumber"></div>
+                            <div class="question-number" id="questionNumber" aria-live="polite"></div>
                         </div>
 
-                        <div class="question-text" id="questionText"></div>
+                        <div class="question-text" id="questionText" aria-live="polite"></div>
 
-                        <div id="interactiveInput"></div>
+                        <div id="interactiveInput" role="group" aria-label="점수 선택"></div>
                     </div>
 
-                    <div class="premium-nav">
-                        <button class="premium-btn premium-btn-secondary" id="prevBtn" disabled>
-                            ← 이전
+                    <nav class="premium-nav" role="navigation" aria-label="진단 네비게이션">
+                        <button class="premium-btn premium-btn-secondary" id="prevBtn" disabled aria-label="이전 질문으로 이동">
+                            <span aria-hidden="true">←</span> 이전
                         </button>
-                        <button class="premium-btn" id="nextBtn" disabled>
+                        <button class="premium-btn" id="nextBtn" disabled aria-label="다음 질문으로 이동">
                             <span id="nextBtnText">다음</span>
-                            <span>→</span>
+                            <span aria-hidden="true">→</span>
                         </button>
-                    </div>
+                    </nav>
                 </div>
 
                 <!-- 팔로워십 선택 화면 -->
-                <div id="followership" class="premium-section">
+                <div id="followership" class="premium-section" role="region" aria-label="팔로워십 선택 화면">
                     <div class="followership-selection">
                         <div class="section-header">
                             <h2 class="section-title">팀원의 팔로워십 유형을 선택하세요</h2>
                             <p class="section-description">팀원의 유형에 따라 리더십 궁합과 맞춤형 코칭 전략을 제시합니다.<br>최소 1명 이상의 팀원을 선택해주세요.</p>
                         </div>
 
-                        <div class="followership-grid" id="followershipOptionsPage"></div>
+                        <div class="followership-grid" id="followershipOptionsPage" role="group" aria-label="팔로워십 유형 선택"></div>
 
-                        <div class="premium-nav" style="margin-top: var(--space-10);">
-                            <button class="premium-btn premium-btn-secondary" id="backToAssessmentBtn">
-                                ← 이전
+                        <nav class="premium-nav" style="margin-top: var(--space-10);" role="navigation" aria-label="팔로워십 네비게이션">
+                            <button class="premium-btn premium-btn-secondary" id="backToAssessmentBtn" aria-label="진단 화면으로 돌아가기">
+                                <span aria-hidden="true">←</span> 이전
                             </button>
-                            <button class="premium-btn" id="showResultsBtn" disabled>
+                            <button class="premium-btn" id="showResultsBtn" disabled aria-label="진단 결과 보기">
                                 <span>결과 보기</span>
-                                <span>→</span>
+                                <span aria-hidden="true">→</span>
                             </button>
-                        </div>
+                        </nav>
                     </div>
                 </div>
 
                 <!-- 결과 화면 -->
-                <div id="results" class="premium-section">
+                <div id="results" class="premium-section" role="region" aria-label="진단 결과 화면">
                     <div class="premium-results">
                         <!-- 1. 나의 리더십 특징 -->
                         <section class="results-section">
@@ -302,18 +302,18 @@
                                     </div>
                                 </div>
 
-                                <button class="cta-button-primary" id="openInquiryBtn">
+                                <button class="cta-button-primary" id="openInquiryBtn" aria-label="Link 팀 진단 상담 신청하기">
                                     <span>Link 팀 진단 알아보기</span>
-                                    <span class="cta-arrow">→</span>
+                                    <span class="cta-arrow" aria-hidden="true">→</span>
                                 </button>
                             </div>
                         </section>
 
                         <!-- 하단 푸터 영역 -->
-                        <footer class="results-footer">
+                        <footer class="results-footer" role="contentinfo">
                             <div class="footer-content">
-                                <button class="retake-link" id="retakeBtn">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <button class="retake-link" id="retakeBtn" aria-label="진단 다시 시작하기">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                         <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                                         <path d="M3 3v5h5"/>
                                     </svg>
@@ -331,12 +331,12 @@
     </div>
 
     <!-- Link 팀 진단 문의 모달 -->
-    <div id="inquiryModal" class="inquiry-modal">
+    <div id="inquiryModal" class="inquiry-modal" role="dialog" aria-labelledby="inquiryTitle" aria-modal="true">
         <div class="inquiry-modal-content">
-            <button class="inquiry-modal-close" id="closeInquiryBtn">&times;</button>
+            <button class="inquiry-modal-close" id="closeInquiryBtn" aria-label="문의 창 닫기">&times;</button>
 
             <div id="inquiryForm" class="inquiry-form">
-                <h3 class="inquiry-title">Link 팀 진단 상담 신청</h3>
+                <h3 class="inquiry-title" id="inquiryTitle">Link 팀 진단 상담 신청</h3>
                 <p class="inquiry-desc">관심을 가져주셔서 감사합니다. 아래 정보를 남겨주시면 담당자가 연락드리겠습니다.</p>
 
                 <div class="inquiry-field">
@@ -381,14 +381,14 @@
                     </div>
                 </div>
 
-                <button class="inquiry-submit" id="submitInquiryBtn">상담 신청하기</button>
+                <button class="inquiry-submit" id="submitInquiryBtn" aria-label="상담 신청 제출하기">상담 신청하기</button>
             </div>
 
-            <div id="inquirySuccess" class="inquiry-success" style="display: none;">
-                <div class="success-icon">✓</div>
+            <div id="inquirySuccess" class="inquiry-success" style="display: none;" role="alert" aria-live="polite">
+                <div class="success-icon" aria-hidden="true">✓</div>
                 <h3 class="success-title">상담 신청이 완료되었습니다</h3>
                 <p class="success-message">입력하신 이메일로 상세 안내를 보내드리겠습니다.<br>빠른 시일 내에 담당자가 연락드리겠습니다.</p>
-                <button class="inquiry-close-btn" id="closeSuccessBtn">확인</button>
+                <button class="inquiry-close-btn" id="closeSuccessBtn" aria-label="확인 및 닫기">확인</button>
             </div>
         </div>
     </div>
