@@ -655,82 +655,8 @@
         });
 
         // ========================================
-        // DEPRECATED: 아래 함수들은 AppController로 이동됨
-        // 전역 window 객체에 wrapper 함수가 연결되어 AppController 메서드를 호출함
+        // Utility Functions
         // ========================================
-
-        // Deprecated: AppController.showSection()으로 대체됨
-        // window.showSection = () => app.showSection() 형태로 연결됨
-        /*
-        function showSection(sectionId) {
-            // 모든 섹션 숨기기
-            document.querySelectorAll('.premium-section').forEach(section => {
-                section.classList.remove('active');
-            });
-
-            // body 클래스 변경 (페이지별 레이아웃)
-            document.body.className = sectionId === 'welcome' ? 'welcome-page' : 'content-page';
-
-            // 모바일 네비게이션 표시/숨김 처리
-            if (mobileNav) {
-                if (sectionId === 'results' || sectionId === 'welcome') {
-                    mobileNav.hide();
-                } else if (sectionId === 'assessment') {
-                    mobileNav.show();
-                } else if (sectionId === 'followership') {
-                    mobileNav.show();
-                    updateFollowershipNavigation();
-                }
-            }
-
-            // 새 섹션 표시
-            setTimeout(() => {
-                document.getElementById(sectionId).classList.add('active');
-            }, 150);
-        }
-        */
-
-        // Deprecated: AppController.loadQuestion()으로 대체됨
-        /*
-        function loadQuestion(index) {
-            currentQuestion = index;
-            const question = assessment.getQuestion(index);
-            const totalQuestions = assessment.getTotalQuestions();
-
-            document.getElementById('questionNumber').textContent = `${index + 1} / ${totalQuestions}`;
-            document.getElementById('questionText').textContent = question.text;
-
-            const progress = ((index + 1) / totalQuestions) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-
-            const inputContainer = document.getElementById('interactiveInput');
-
-            if (mobileInput) {
-                mobileInput.destroy();
-            }
-
-            const currentResponse = assessment.responses[question.id];
-            mobileInput = new MobileNativeInput(inputContainer, {
-                defaultValue: currentResponse,
-                min: 1,
-                max: 6,
-                onChange: (value) => {
-                    assessment.recordResponse(question.id, value);
-                    updateNextButton();
-                }
-            });
-
-            document.getElementById('prevBtn').disabled = false;
-            updateNextButton();
-
-            if (mobileNav && window.innerWidth <= 768) {
-                const canGoPrev = true;
-                const canGoNext = assessment.responses[question.id] !== undefined;
-
-                mobileNav.updateNavigation(canGoPrev, canGoNext, '다음');
-            }
-        }
-        */
 
         function getCategoryName(category) {
             const names = {
@@ -741,35 +667,9 @@
             return names[category] || category;
         }
 
-        // selectScale 함수는 더 이상 필요하지 않음 (인터랙티브 입력에서 처리)
-
-        // Deprecated: AppController.updateNextButton()으로 대체됨
-        /*
-        function updateNextButton() {
-            const question = assessment.getQuestion(currentQuestion);
-            const hasResponse = assessment.responses[question.id] !== undefined;
-            const totalQuestions = assessment.getTotalQuestions();
-            const isLastQuestion = currentQuestion === totalQuestions - 1;
-
-            const nextBtn = document.getElementById('nextBtn');
-            const nextBtnText = document.getElementById('nextBtnText');
-
-            nextBtn.disabled = !hasResponse;
-            nextBtnText.textContent = '다음';
-
-            if (mobileNav && window.innerWidth <= 768) {
-                const canGoPrev = true;
-                mobileNav.updateNavigation(canGoPrev, hasResponse, '다음');
-            }
-        }
-        */
-
         // ========================================
-        // DEPRECATED: 전역 함수 연결
-        // 이 코드들은 DOMContentLoaded 리스너에서 처리됨
+        // Results Display Functions
         // ========================================
-        // window.goBackToAssessment = goBackToAssessment;
-        // window.showResultsPage = showResultsPage;
 
         function showResults() {
             const result = assessment.determineLeadershipType();
@@ -1141,70 +1041,6 @@
             loadQuestion(assessment.getTotalQuestions() - 1);
         }
 
-        // Deprecated: AppController.showResultsPage()로 대체됨
-        // 팀원 이름 처리, 궁합 분석, 리더십 팁 로드 로직이 AppController에 구현됨
-        /*
-        function showResultsPage() {
-            try {
-                console.log('=== 결과 페이지로 이동 ===');
-                console.log('선택된 팔로워십 수:', selectedFollowerTypes.length);
-
-                if (selectedFollowerTypes.length === 0) {
-                    showErrorMessage('팔로워십 유형을 최소 1개 이상 선택해주세요.');
-                    return;
-                }
-
-                const expandedFollowers = [];
-                selectedFollowerTypes.forEach(follower => {
-                    const nameInput = document.getElementById(`memberName_${follower.id}`);
-                    if (nameInput && nameInput.value.trim()) {
-                        const names = nameInput.value
-                            .split(/[,\s]+/)
-                            .map(name => name.trim())
-                            .filter(name => name.length > 0);
-
-                        if (names.length > 0) {
-                            names.forEach(name => {
-                                expandedFollowers.push({
-                                    id: follower.id,
-                                    name: teamCompatibility.followershipTypes[follower.id].name,
-                                    memberName: name
-                                });
-                            });
-                        } else {
-                            expandedFollowers.push({
-                                id: follower.id,
-                                name: teamCompatibility.followershipTypes[follower.id].name,
-                                memberName: '팀원'
-                            });
-                        }
-                    } else {
-                        expandedFollowers.push({
-                            id: follower.id,
-                            name: teamCompatibility.followershipTypes[follower.id].name,
-                            memberName: '팀원'
-                        });
-                    }
-                });
-
-                selectedFollowerTypes = expandedFollowers;
-                console.log('확장된 팀원 정보:', selectedFollowerTypes);
-
-                analyzeCompatibilityAuto();
-
-                const tipsContainer = document.getElementById('leadershipTipsContainer');
-                if (tipsContainer && tipsContainer.children.length === 0 && currentLeadershipCode) {
-                    console.log('리더십 팁 재로드:', currentLeadershipCode);
-                    loadLeadershipTips(currentLeadershipCode);
-                }
-
-                showSection('results');
-            } catch (error) {
-                console.error('결과 페이지 이동 중 오류:', error);
-                showErrorMessage('결과 페이지로 이동 중 오류가 발생했습니다: ' + error.message);
-            }
-        }
-        */
 
         function analyzeCompatibilityAuto() {
             try {
@@ -2062,67 +1898,9 @@
             }
         });
 
-        // Deprecated: AppController.resetAssessment()로 대체됨
-        // window.resetAssessment = () => app.resetAssessment() 형태로 연결됨
-        /*
-        function resetAssessment() {
-            // 진단 데이터 초기화
-            assessment.reset();
-            selectedFollowerTypes = [];
-            currentQuestion = 0;
-
-            // 모바일 입력 정리
-            if (mobileInput) {
-                mobileInput.destroy();
-                mobileInput = null;
-            }
-
-            // 모바일 네비게이션 숨김
-            if (mobileNav) {
-                mobileNav.hide();
-            }
-
-            // 팔로워십 체크박스 초기화
-            const checkboxes = document.querySelectorAll('.followership-checkbox input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
-
-            // 팀원 이름 입력 필드 초기화 및 숨김
-            const nameFields = document.querySelectorAll('.member-name-field');
-            nameFields.forEach(field => {
-                field.value = '';
-                field.style.display = 'none';
-            });
-
-            // 결과 영역 숨김 (안전하게 처리)
-            const compatibilityResults = document.getElementById('compatibilityResults');
-            if (compatibilityResults) {
-                compatibilityResults.style.display = 'none';
-            }
-
-            // 진행률 바 초기화
-            const progressBar = document.getElementById('progressBar');
-            const questionNumber = document.getElementById('questionNumber');
-            if (progressBar) progressBar.style.width = '0%';
-            if (questionNumber) questionNumber.textContent = '0 / 23';
-
-            // 팔로워십 옵션 페이지 초기화
-            const followershipContainer = document.getElementById('followershipOptionsPage');
-            if (followershipContainer) {
-                followershipContainer.innerHTML = '';
-            }
-
-            // 결과 보기 버튼 비활성화
-            const showResultsBtn = document.getElementById('showResultsBtn');
-            if (showResultsBtn) {
-                showResultsBtn.disabled = true;
-            }
-
-            // 웰컴 화면으로 이동
-            showSection('welcome');
-        }
-        */
+        // ========================================
+        // Keyboard Shortcuts for Testing
+        // ========================================
 
         // 테스트용 단축키 기능 (AppController 메서드 사용)
         document.addEventListener('keydown', function(e) {
