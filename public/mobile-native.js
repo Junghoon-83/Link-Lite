@@ -560,11 +560,18 @@ class MobileNavigationManager {
 
     createMobileNavigation() {
         // Only create mobile nav for mobile screens
-        if (!this.isFixedNav) return;
+        if (!this.isFixedNav) {
+            console.log('❌ 모바일 네비게이션 생성 안 함: width =', window.innerWidth);
+            return;
+        }
 
         // Check if mobile nav already exists
-        if (document.querySelector('.mobile-nav')) return;
+        if (document.querySelector('.mobile-nav')) {
+            console.log('⚠️ 모바일 네비게이션 이미 존재');
+            return;
+        }
 
+        console.log('✅ 모바일 네비게이션 생성 시작');
         this.navElement = document.createElement('div');
         this.navElement.className = 'mobile-nav';
         this.navElement.innerHTML = `
@@ -579,6 +586,7 @@ class MobileNavigationManager {
         `;
 
         document.body.appendChild(this.navElement);
+        console.log('✅ 모바일 네비게이션 DOM에 추가 완료');
 
         // Attach navigation events - directly call navigation functions
         document.getElementById('mobileNavPrev').addEventListener('click', () => {
