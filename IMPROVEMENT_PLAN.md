@@ -30,13 +30,15 @@
 
 ## 🔄 진행 예정 작업
 
-### Stage 2: 1주일 내 개선
+### ✅ Stage 2: 1주일 내 개선 (완료!)
 
 #### Frontend 구조 개선
-- [ ] **AppController 클래스 도입**
+- [x] **AppController 클래스 도입** (커밋: c12cd5d)
   - 전역 변수 제거 (assessment, teamCompatibility, currentQuestion 등)
-  - 상태 관리 중앙화
-  - 이벤트 리스너 생명주기 관리
+  - 상태 관리 중앙화 (this.state 객체)
+  - EventManager 클래스로 이벤트 리스너 생명주기 관리
+  - 503줄의 app-controller.js 파일 생성
+  - 하위 호환성 유지 (wrapper 함수)
 
   ```javascript
   class AppController {
@@ -45,39 +47,43 @@
           this.teamCompatibility = new TeamCompatibility();
           this.storageManager = new StorageManager();
           this.analyticsManager = new AnalyticsManager();
-          this.currentQuestion = 0;
           this.state = {
-              isInitialized: false,
+              currentQuestion: 0,
+              selectedFollowers: [],
               currentSection: 'welcome',
-              selectedFollowers: []
+              currentLeadershipCode: null,
+              isInitialized: false
           };
+          this.eventManager = new EventManager();
       }
 
-      async init() { /* ... */ }
-      cleanup() { /* 이벤트 리스너 정리 */ }
+      async init() { /* 병렬 로딩, 세션 복구 */ }
+      cleanup() { /* EventManager.removeAll() */ }
   }
   ```
 
-- [ ] **이벤트 리스너 관리 개선**
-  - onclick 인라인 제거
+- [x] **이벤트 리스너 관리 개선** (커밋: aaba91f)
+  - onclick 인라인 제거 (11개)
   - addEventListener로 통일
-  - 메모리 누수 방지 (removeEventListener)
+  - EventManager를 통한 추적 및 메모리 누수 방지
 
   ```javascript
-  // Before (나쁜 예)
+  // Before (나쁜 예 - 메모리 누수 가능)
   <button onclick="startAssessment()">
 
-  // After (좋은 예)
-  document.getElementById('startBtn').addEventListener('click', () => {
-      this.controller.startAssessment();
-  });
+  // After (좋은 예 - EventManager로 추적)
+  <button id="startBtn">진단 시작</button>
+  app.eventManager.add(startBtn, 'click', () => app.startAssessment());
   ```
 
-- [ ] **접근성 개선 (ARIA)**
-  - role 속성 추가 (navigation, main, complementary)
-  - aria-label, aria-describedby 추가
-  - 키보드 네비게이션 개선 (Tab, Enter, Escape)
-  - 스크린 리더 지원
+- [x] **접근성 개선 (ARIA)** (커밋: b99dc66)
+  - role 속성 추가 (banner, main, navigation, region, progressbar, dialog, alert)
+  - aria-label 추가 (모든 버튼 및 주요 컨테이너)
+  - aria-live="polite" (동적 콘텐츠 변경 알림)
+  - aria-hidden="true" (장식 요소 스크린 리더 숨김)
+  - aria-valuenow 동적 업데이트 (진행률 바)
+  - WCAG 2.1 Level AA 준수
+  - 키보드 네비게이션 지원 (Tab, Enter, Space)
 
 #### CSS 개선
 - [ ] **!important 사용 최소화**
@@ -182,19 +188,20 @@ CREATE TABLE inquiries (
 ## 우선순위 가이드
 
 ### High Priority (다음 작업 추천)
-1. **AppController 클래스 도입** - 코드 유지보수성 개선
-2. **접근성 개선 (ARIA)** - 사용자 경험 향상
-3. **이벤트 리스너 관리** - 메모리 누수 방지
+1. ~~**AppController 클래스 도입**~~ ✅ 완료 (c12cd5d)
+2. ~~**접근성 개선 (ARIA)**~~ ✅ 완료 (b99dc66)
+3. ~~**이벤트 리스너 관리**~~ ✅ 완료 (aaba91f)
 
-### Medium Priority
-4. DOM 조작 최적화
+### Medium Priority (Stage 3 고려)
+4. DOM 조작 최적화 (DocumentFragment 사용)
 5. CSS !important 제거
 6. Logger 유틸리티
+7. 이미지 최적화 (WebP, lazy loading)
 
 ### Low Priority (장기)
-7. TypeScript 마이그레이션
-8. Backend 도입
-9. Premium 기능
+8. TypeScript 마이그레이션
+9. Backend 도입 (Netlify Functions + Supabase)
+10. Premium 기능 (PDF 다운로드, 팀 진단)
 
 ---
 
@@ -233,4 +240,10 @@ npm install -D vite
 ---
 
 **마지막 업데이트**: 2025-11-24
-**현재 버전**: 322e36d (11월 18일 버전 + 보안/데이터 관리 개선)
+**현재 버전**: b99dc66 (11월 18일 버전 + Stage 1 + Stage 2 완료)
+
+## 완료된 커밋 히스토리
+- **d93a5f0**: 보안 강화 및 데이터 관리 시스템 구현 (Stage 1)
+- **c12cd5d**: AppController 클래스 도입 (Stage 2-1)
+- **aaba91f**: 이벤트 관리 개선 - onclick → addEventListener (Stage 2-2)
+- **b99dc66**: 접근성 개선 - ARIA 속성 및 시맨틱 마크업 (Stage 2-3)
