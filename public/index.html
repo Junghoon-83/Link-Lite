@@ -504,14 +504,46 @@
 
         // 페이지 로드 시 초기화 - DOMContentLoaded 대기
         document.addEventListener('DOMContentLoaded', async function() {
-            // MobileNativeInput 클래스가 로드될 때까지 대기
-            if (typeof MobileNativeInput === 'undefined') {
-                console.error('MobileNativeInput이 정의되지 않았습니다. mobile-native.js 로드를 확인하세요.');
+            console.log('=== 초기화 디버깅 시작 ===');
+
+            // 필수 클래스 로드 확인
+            const requiredClasses = {
+                'LeadershipAssessment': typeof LeadershipAssessment,
+                'TeamCompatibility': typeof TeamCompatibility,
+                'StorageManager': typeof StorageManager,
+                'AnalyticsManager': typeof AnalyticsManager,
+                'MobileNativeInput': typeof MobileNativeInput,
+                'MobileNavigationManager': typeof MobileNavigationManager,
+                'AppController': typeof AppController,
+                'EventManager': typeof EventManager
+            };
+
+            console.log('클래스 로드 상태:', requiredClasses);
+
+            // 누락된 클래스 확인
+            const missingClasses = Object.entries(requiredClasses)
+                .filter(([name, type]) => type === 'undefined')
+                .map(([name]) => name);
+
+            if (missingClasses.length > 0) {
+                console.error('❌ 누락된 클래스:', missingClasses);
+                alert(`필수 클래스가 로드되지 않았습니다:\n${missingClasses.join('\n')}\n\n페이지를 새로고침하거나 캐시를 지워주세요.`);
                 return;
             }
 
-            app = new AppController();
-            await app.init();
+            console.log('✓ 모든 필수 클래스 로드 완료');
+
+            try {
+                app = new AppController();
+                console.log('✓ AppController 인스턴스 생성 완료');
+
+                await app.init();
+                console.log('✓ AppController 초기화 완료');
+            } catch (error) {
+                console.error('❌ AppController 초기화 실패:', error);
+                alert('앱 초기화 중 오류가 발생했습니다.\n\n에러 내용: ' + error.message + '\n\n브라우저 콘솔을 확인해주세요.');
+                return;
+            }
 
             // 전역 함수를 app 메서드에 연결 (기존 코드 호환성 유지)
             window.startAssessment = () => app.startAssessment();
