@@ -96,8 +96,8 @@ class MobileNativeInput {
                 0 4px 10px rgba(0, 0, 0, 0.08),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;` :
             `background: linear-gradient(145deg,
-                rgba(255, 255, 255, 0.98),
-                rgba(248, 250, 252, 0.95)) !important;
+                rgba(242, 244, 247, 0.95),
+                rgba(236, 239, 244, 0.92)) !important;
              backdrop-filter: blur(20px) !important;
              color: #4f46e5 !important;
              border: none !important;
