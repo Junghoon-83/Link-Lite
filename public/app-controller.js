@@ -529,22 +529,11 @@ class AppController {
         try {
             console.log('=== 결과 화면 렌더링 시작 ===');
 
-            // 1. 팀원 궁합 분석 (AppController 내부 메서드 사용)
-            this._analyzeTeamCompatibility(leadershipResult, expandedFollowers);
+            // 1. 리더십 결과 표시 (AppController 내부 메서드 사용)
+            this._displayLeadershipResults(leadershipResult);
 
-            // 2. 리더십 결과 표시 (전역 함수 사용 - 다음 단계에서 통합 예정)
-            if (typeof window.showResults === 'function') {
-                console.log('✓ showResults() 호출');
-                window.showResults();
-            } else {
-                console.warn('⚠️ showResults 함수 없음 - 대체 방법 사용');
-                if (typeof window.updateRadarChart === 'function') {
-                    window.updateRadarChart(leadershipResult.scores);
-                }
-                if (typeof window.loadLeadershipTips === 'function') {
-                    window.loadLeadershipTips(leadershipResult.code);
-                }
-            }
+            // 2. 팀원 궁합 분석 (AppController 내부 메서드 사용)
+            this._analyzeTeamCompatibility(leadershipResult, expandedFollowers);
 
             console.log('=== 결과 페이지로 이동 ===');
 
@@ -636,6 +625,65 @@ class AppController {
         });
 
         console.log('✓ 팔로워십 분석 완료');
+    }
+
+    _displayLeadershipResults(leadershipResult) {
+        console.log('=== _displayLeadershipResults 시작 ===');
+        console.log('리더십 결과:', leadershipResult);
+
+        // 리더십 유형 표시
+        const leadershipTypeElement = document.getElementById('leadershipType');
+        const leadershipSubtitleElement = document.getElementById('leadershipSubtitle');
+        const leadershipStrengthsElement = document.getElementById('leadershipStrengths');
+        const leadershipCautionsElement = document.getElementById('leadershipCautions');
+
+        if (!leadershipTypeElement || !leadershipSubtitleElement ||
+            !leadershipStrengthsElement || !leadershipCautionsElement) {
+            console.error('❌ 리더십 결과 표시 엘리먼트를 찾을 수 없음');
+            return;
+        }
+
+        if (leadershipResult.type && leadershipResult.type.name) {
+            leadershipTypeElement.textContent = leadershipResult.type.name;
+            leadershipSubtitleElement.textContent = leadershipResult.type.subtitle || '';
+
+            // 강점 표시
+            leadershipStrengthsElement.innerHTML = '';
+            if (leadershipResult.type.strengths && leadershipResult.type.strengths.length > 0) {
+                leadershipResult.type.strengths.forEach(strength => {
+                    const li = document.createElement('li');
+                    li.textContent = strength;
+                    leadershipStrengthsElement.appendChild(li);
+                });
+            }
+
+            // 주의점 표시
+            leadershipCautionsElement.innerHTML = '';
+            if (leadershipResult.type.cautions && leadershipResult.type.cautions.length > 0) {
+                leadershipResult.type.cautions.forEach(caution => {
+                    const li = document.createElement('li');
+                    li.textContent = caution;
+                    leadershipCautionsElement.appendChild(li);
+                });
+            }
+
+            console.log('✓ 리더십 유형 표시 완료:', leadershipResult.type.name);
+        } else {
+            console.error('❌ 리더십 유형 정보 없음:', leadershipResult);
+            leadershipTypeElement.textContent = '리더십 유형 정보를 불러올 수 없습니다';
+        }
+
+        // 레이더 차트 업데이트 (전역 함수 사용)
+        if (typeof window.updateRadarChart === 'function') {
+            window.updateRadarChart(leadershipResult.scores);
+        }
+
+        // 리더십 팁 로드 (전역 함수 사용)
+        if (typeof window.loadLeadershipTips === 'function') {
+            window.loadLeadershipTips(leadershipResult.code);
+        }
+
+        console.log('✓ 리더십 결과 표시 완료');
     }
 
     // ========================================

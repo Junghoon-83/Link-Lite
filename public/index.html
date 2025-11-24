@@ -671,69 +671,11 @@
         // Results Display Functions
         // ========================================
 
+        // DEPRECATED: AppController._displayLeadershipResults()로 이동됨
+        // 하위 호환성을 위한 래퍼 함수
         function showResults() {
-            const result = assessment.determineLeadershipType();
-            currentLeadershipCode = result.code; // 전역 변수에 저장
-
-            // 더 자세한 디버깅용 로그
-            console.log('=== LEADERSHIP TYPE DEBUG ===');
-            console.log('Assessment object:', assessment);
-            console.log('Assessment result:', result);
-            console.log('Type code:', result.code);
-            console.log('Type object:', result.type);
-            console.log('Scores:', result.scores);
-            console.log('Available leadership types:', assessment.leadershipTypes);
-            console.log('Type found in leadershipTypes:', assessment.leadershipTypes[result.code]);
-            console.log('=============================');
-
-            // 리더십 유형 표시
-            const leadershipTypeElement = document.getElementById('leadershipType');
-            const leadershipSubtitleElement = document.getElementById('leadershipSubtitle');
-            const leadershipStrengthsElement = document.getElementById('leadershipStrengths');
-            const leadershipCautionsElement = document.getElementById('leadershipCautions');
-
-            if (result.type && result.type.name) {
-                leadershipTypeElement.textContent = result.type.name;
-                leadershipSubtitleElement.textContent = result.type.subtitle || '';
-
-                // 강점 표시
-                leadershipStrengthsElement.innerHTML = '';
-                if (result.type.strengths && result.type.strengths.length > 0) {
-                    result.type.strengths.forEach(strength => {
-                        const li = document.createElement('li');
-                        li.textContent = strength;
-                        leadershipStrengthsElement.appendChild(li);
-                    });
-                }
-
-                // 주의점 표시
-                leadershipCautionsElement.innerHTML = '';
-                if (result.type.cautions && result.type.cautions.length > 0) {
-                    result.type.cautions.forEach(caution => {
-                        const li = document.createElement('li');
-                        li.textContent = caution;
-                        leadershipCautionsElement.appendChild(li);
-                    });
-                }
-
-                console.log('✓ Successfully displayed leadership type:', result.type.name);
-            } else {
-                // 문제가 있을 때 더 자세한 디버깅 정보 표시
-                const debugInfo = `디버그: 코드=${result.code}, 타입객체=${JSON.stringify(result.type)}`;
-                leadershipTypeElement.textContent = debugInfo;
-                console.error('✗ Failed to display leadership type. Result.type:', result.type);
-                console.error('✗ Code lookup result:', assessment.leadershipTypes[result.code]);
-            }
-
-            // 레이더 차트 업데이트
-            updateRadarChart(result.scores);
-
-            // 리더십 팁 로드
-            loadLeadershipTips(result.code);
-
-            // 팔로워십 선택 페이지로 이동
-            createFollowershipOptionsPage();
-            showSection('followership');
+            console.warn('⚠️ showResults()는 deprecated됨 - AppController가 직접 호출함');
+            // AppController.showResultsPage()에서 직접 처리하므로 여기서는 아무것도 하지 않음
         }
 
         // 리더십 팁 데이터 저장
