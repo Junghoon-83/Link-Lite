@@ -1,5 +1,24 @@
 /* Mobile-Native Professional Input System */
 
+/* ========================================
+   버튼 표시 제어: 모바일/데스크톱 분리
+   ======================================== */
+
+/* 모바일: 데스크톱 버튼 숨김 */
+@media (max-width: 768px) {
+    #assessment .premium-btn,
+    #followership .premium-btn {
+        display: none !important;
+    }
+}
+
+/* 데스크톱: 모바일 네비게이션 숨김 */
+@media (min-width: 769px) {
+    .mobile-nav {
+        display: none !important;
+    }
+}
+
 /* 터치 존만 강력하게 애니메이션 비활성화 */
 .touch-zone,
 .touch-zone::before,
