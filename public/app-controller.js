@@ -538,31 +538,26 @@ class AppController {
                 console.error('❌ analyzeCompatibilityAuto 함수가 없음');
             }
 
-            console.log('=== 레이더 차트 업데이트 ===');
-            // 레이더 차트 업데이트
-            const result = this.assessment.determineLeadershipType();
-            console.log('리더십 결과:', result);
-            console.log('점수:', result.scores);
-
-            if (typeof window.updateRadarChart === 'function') {
-                console.log('✓ updateRadarChart() 호출');
-                window.updateRadarChart(result.scores);
+            console.log('=== 리더십 결과 표시 ===');
+            // showResults() 함수 호출 - 리더십 유형, 강점, 주의점, 레이더 차트 모두 표시
+            if (typeof window.showResults === 'function') {
+                console.log('✓ showResults() 호출');
+                window.showResults();
             } else {
-                console.error('❌ updateRadarChart 함수가 없음');
-            }
+                console.error('❌ showResults 함수가 없음');
 
-            console.log('=== 리더십 팁 로드 ===');
-            // 리더십 팁 로드
-            const tipsContainer = document.getElementById('leadershipTipsContainer');
-            console.log('tipsContainer:', tipsContainer);
-            console.log('currentLeadershipCode:', this.state.currentLeadershipCode);
+                // 폴백: 개별적으로 호출
+                const result = this.assessment.determineLeadershipType();
+                console.log('리더십 결과:', result);
 
-            if (tipsContainer && this.state.currentLeadershipCode) {
-                console.log('✓ loadLeadershipTips() 호출:', this.state.currentLeadershipCode);
+                if (typeof window.updateRadarChart === 'function') {
+                    console.log('✓ updateRadarChart() 호출');
+                    window.updateRadarChart(result.scores);
+                }
+
                 if (typeof window.loadLeadershipTips === 'function') {
+                    console.log('✓ loadLeadershipTips() 호출');
                     window.loadLeadershipTips(this.state.currentLeadershipCode);
-                } else {
-                    console.error('❌ loadLeadershipTips 함수가 없음');
                 }
             }
 
