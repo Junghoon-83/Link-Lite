@@ -538,6 +538,19 @@ class AppController {
                 console.error('❌ analyzeCompatibilityAuto 함수가 없음');
             }
 
+            console.log('=== 레이더 차트 업데이트 ===');
+            // 레이더 차트 업데이트
+            const result = this.assessment.determineLeadershipType();
+            console.log('리더십 결과:', result);
+            console.log('점수:', result.scores);
+
+            if (typeof window.updateRadarChart === 'function') {
+                console.log('✓ updateRadarChart() 호출');
+                window.updateRadarChart(result.scores);
+            } else {
+                console.error('❌ updateRadarChart 함수가 없음');
+            }
+
             console.log('=== 리더십 팁 로드 ===');
             // 리더십 팁 로드
             const tipsContainer = document.getElementById('leadershipTipsContainer');
