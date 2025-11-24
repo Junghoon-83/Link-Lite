@@ -22,25 +22,33 @@ class StorageManager {
         const storedVersion = localStorage.getItem(this.STORAGE_KEYS.APP_VERSION);
 
         if (storedVersion !== this.APP_VERSION) {
-            console.log(`버전 변경 감지: ${storedVersion} → ${this.APP_VERSION}`);
+            if (typeof logger !== 'undefined') {
+                logger.log(`버전 변경 감지: ${storedVersion} → ${this.APP_VERSION}`);
+            }
 
             // 버전별 마이그레이션 실행
             this._migrateData(storedVersion, this.APP_VERSION);
 
             // 새 버전 저장
             localStorage.setItem(this.STORAGE_KEYS.APP_VERSION, this.APP_VERSION);
-            console.log('✓ 버전 업데이트 완료');
+            if (typeof logger !== 'undefined') {
+                logger.log('✓ 버전 업데이트 완료');
+            }
         }
     }
 
     _migrateData(fromVersion, toVersion) {
         // 첫 설치 (버전 정보 없음)
         if (!fromVersion) {
-            console.log('첫 설치: 데이터 초기화');
+            if (typeof logger !== 'undefined') {
+                logger.log('첫 설치: 데이터 초기화');
+            }
             return;
         }
 
-        console.log(`데이터 마이그레이션 시작: ${fromVersion} → ${toVersion}`);
+        if (typeof logger !== 'undefined') {
+            logger.log(`데이터 마이그레이션 시작: ${fromVersion} → ${toVersion}`);
+        }
 
         try {
             // 버전별 마이그레이션 로직
@@ -48,14 +56,24 @@ class StorageManager {
                 this._migrateFrom1to2();
             } else if (this._isBreakingChange(fromVersion, toVersion)) {
                 // 호환되지 않는 변경: 데이터 백업 후 초기화
-                console.warn('호환되지 않는 버전 변경: 데이터 백업 및 초기화');
+                if (typeof logger !== 'undefined') {
+                    logger.warn('호환되지 않는 버전 변경: 데이터 백업 및 초기화');
+                } else {
+                    console.warn('호환되지 않는 버전 변경: 데이터 백업 및 초기화');
+                }
                 this._backupAndClear(fromVersion);
             } else {
                 // 하위 호환 가능: 데이터 유지
-                console.log('하위 호환 가능: 데이터 유지');
+                if (typeof logger !== 'undefined') {
+                    logger.log('하위 호환 가능: 데이터 유지');
+                }
             }
         } catch (error) {
-            console.error('마이그레이션 실패:', error);
+            if (typeof logger !== 'undefined') {
+                logger.error('마이그레이션 실패:', error);
+            } else {
+                console.error('마이그레이션 실패:', error);
+            }
             // 마이그레이션 실패 시 안전하게 초기화
             this._backupAndClear(fromVersion);
         }
@@ -69,7 +87,9 @@ class StorageManager {
     }
 
     _migrateFrom1to2() {
-        console.log('1.0.0 → 2.0.0 마이그레이션 실행');
+        if (typeof logger !== 'undefined') {
+            logger.log('1.0.0 → 2.0.0 마이그레이션 실행');
+        }
 
         // 예시: 구버전 데이터 구조 변환
         const oldResults = localStorage.getItem('old_results_key');
@@ -80,9 +100,15 @@ class StorageManager {
                 const newResults = this._convertResultFormat(parsed);
                 localStorage.setItem(this.STORAGE_KEYS.RESULTS_HISTORY, JSON.stringify(newResults));
                 localStorage.removeItem('old_results_key');
-                console.log('✓ 결과 데이터 변환 완료');
+                if (typeof logger !== 'undefined') {
+                    logger.log('✓ 결과 데이터 변환 완료');
+                }
             } catch (e) {
-                console.error('결과 데이터 변환 실패:', e);
+                if (typeof logger !== 'undefined') {
+                    logger.error('결과 데이터 변환 실패:', e);
+                } else {
+                    console.error('결과 데이터 변환 실패:', e);
+                }
             }
         }
     }
@@ -112,7 +138,9 @@ class StorageManager {
         // 백업 저장 (7일 보관)
         const backupKey = `linkLite_backup_${fromVersion}`;
         localStorage.setItem(backupKey, JSON.stringify(backup));
-        console.log(`✓ 데이터 백업 완료: ${backupKey}`);
+        if (typeof logger !== 'undefined') {
+            logger.log(`✓ 데이터 백업 완료: ${backupKey}`);
+        }
 
         // 현재 데이터 삭제
         Object.values(this.STORAGE_KEYS).forEach(key => {
@@ -120,7 +148,9 @@ class StorageManager {
                 localStorage.removeItem(key);
             }
         });
-        console.log('✓ LocalStorage 초기화 완료');
+        if (typeof logger !== 'undefined') {
+            logger.log('✓ LocalStorage 초기화 완료');
+        }
     }
 
     // ========================================
@@ -139,9 +169,15 @@ class StorageManager {
 
         try {
             localStorage.setItem(this.STORAGE_KEYS.CURRENT_SESSION, JSON.stringify(session));
-            console.log('세션 저장 완료:', session.id);
+            if (typeof logger !== 'undefined') {
+                logger.log('세션 저장 완료:', session.id);
+            }
         } catch (e) {
-            console.error('LocalStorage 저장 실패:', e);
+            if (typeof logger !== 'undefined') {
+                logger.error('LocalStorage 저장 실패:', e);
+            } else {
+                console.error('LocalStorage 저장 실패:', e);
+            }
             // Quota 초과 시 오래된 결과 삭제
             this._cleanupOldResults();
         }
@@ -162,7 +198,11 @@ class StorageManager {
 
             return session;
         } catch (e) {
-            console.error('세션 복구 실패:', e);
+            if (typeof logger !== 'undefined') {
+                logger.error('세션 복구 실패:', e);
+            } else {
+                console.error('세션 복구 실패:', e);
+            }
             return null;
         }
     }
@@ -208,10 +248,16 @@ class StorageManager {
             // 현재 세션 클리어
             this.clearCurrentSession();
 
-            console.log('결과 저장 완료:', result.id);
+            if (typeof logger !== 'undefined') {
+                logger.log('결과 저장 완료:', result.id);
+            }
             return result.id;
         } catch (e) {
-            console.error('결과 저장 실패:', e);
+            if (typeof logger !== 'undefined') {
+                logger.error('결과 저장 실패:', e);
+            } else {
+                console.error('결과 저장 실패:', e);
+            }
             this._cleanupOldResults();
             return null;
         }
@@ -237,7 +283,11 @@ class StorageManager {
 
             return validHistory;
         } catch (e) {
-            console.error('히스토리 조회 실패:', e);
+            if (typeof logger !== 'undefined') {
+                logger.error('히스토리 조회 실패:', e);
+            } else {
+                console.error('히스토리 조회 실패:', e);
+            }
             return [];
         }
     }
@@ -255,7 +305,11 @@ class StorageManager {
         try {
             localStorage.setItem(this.STORAGE_KEYS.USER_PREFERENCES, JSON.stringify(prefs));
         } catch (e) {
-            console.error('설정 저장 실패:', e);
+            if (typeof logger !== 'undefined') {
+                logger.error('설정 저장 실패:', e);
+            } else {
+                console.error('설정 저장 실패:', e);
+            }
         }
     }
 
@@ -280,7 +334,9 @@ class StorageManager {
         Object.values(this.STORAGE_KEYS).forEach(key => {
             localStorage.removeItem(key);
         });
-        console.log('모든 로컬 데이터 삭제 완료');
+        if (typeof logger !== 'undefined') {
+            logger.log('모든 로컬 데이터 삭제 완료');
+        }
     }
 
     _cleanupOldResults() {

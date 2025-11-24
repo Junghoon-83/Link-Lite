@@ -39,12 +39,9 @@ class MobileNativeInput {
         this.feedbackProgress = this.container.querySelector('.feedback-progress');
         this.selectedDisplay = this.container.querySelector('.selected-value-display');
 
-        // 강제로 모든 터치 존의 애니메이션 비활성화
+        // CSS 클래스로 터치 존 애니메이션 비활성화
         this.touchZones.forEach(zone => {
-            zone.style.setProperty('transform', 'none', 'important');
-            zone.style.setProperty('scale', '1', 'important');
-            zone.style.setProperty('animation', 'none', 'important');
-            zone.style.setProperty('transition', 'none', 'important');
+            zone.classList.add('fixed-touch-zone');
         });
 
         if (this.value) {
@@ -206,13 +203,8 @@ class MobileNativeInput {
     }
 
     forceNoAnimation(zone) {
-        zone.style.setProperty('transform', 'none', 'important');
-        zone.style.setProperty('scale', '1', 'important');
-        zone.style.setProperty('animation', 'none', 'important');
-        zone.style.setProperty('transition', 'none', 'important');
-        zone.style.setProperty('-webkit-transform', 'none', 'important');
-        zone.style.setProperty('-webkit-animation', 'none', 'important');
-        zone.style.setProperty('-webkit-transition', 'none', 'important');
+        // CSS 클래스로 애니메이션 비활성화
+        zone.classList.add('fixed-touch-zone');
     }
 
     handleTouchStart(e, value) {

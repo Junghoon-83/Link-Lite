@@ -37,12 +37,18 @@ class LeadershipAssessment {
             this.leadershipTypes = typesData;
             this.isInitialized = true;
 
-            console.log('LeadershipAssessment initialized:', {
-                questionsCount: this.questions.length,
-                typesCount: Object.keys(this.leadershipTypes).length
-            });
+            if (typeof logger !== 'undefined') {
+                logger.log('LeadershipAssessment initialized:', {
+                    questionsCount: this.questions.length,
+                    typesCount: Object.keys(this.leadershipTypes).length
+                });
+            }
         } catch (error) {
-            console.error('Failed to load assessment data:', error);
+            if (typeof logger !== 'undefined') {
+                logger.error('Failed to load assessment data:', error);
+            } else {
+                console.error('Failed to load assessment data:', error);
+            }
             throw error;
         }
     }
@@ -60,14 +66,22 @@ class LeadershipAssessment {
         // 점수 검증 (정적 메서드 사용)
         const validScore = LeadershipAssessment.validateScore(score);
         if (validScore === null) {
-            console.error(`Invalid score: ${score} for question ${questionId}`);
+            if (typeof logger !== 'undefined') {
+                logger.error(`Invalid score: ${score} for question ${questionId}`);
+            } else {
+                console.error(`Invalid score: ${score} for question ${questionId}`);
+            }
             return;
         }
 
         // questionId 검증
         const question = this.questions.find(q => q.id === questionId);
         if (!question) {
-            console.error(`Invalid question ID: ${questionId}`);
+            if (typeof logger !== 'undefined') {
+                logger.error(`Invalid question ID: ${questionId}`);
+            } else {
+                console.error(`Invalid question ID: ${questionId}`);
+            }
             return;
         }
 
