@@ -562,11 +562,12 @@ class AppController {
             }
 
             console.log('=== 결과 페이지로 이동 ===');
-            // 결과 페이지로 이동
-            this.showSection('results');
 
             // 애널리틱스 추적
             this.analyticsManager.trackFollowershipSelection(expandedFollowers);
+
+            // 결과 페이지로 이동 (섹션 전환만 - 새 페이지 리로드 없음)
+            this.showSection('results');
 
             console.log('✓ 결과 페이지 표시 완료');
         } catch (error) {

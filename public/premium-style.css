@@ -691,9 +691,8 @@ body::before {
     line-height: 1.5;
     min-height: 4.5em;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
     padding: 0 0 var(--space-3);
     margin-bottom: var(--space-3);
 }
@@ -1398,9 +1397,8 @@ body::before {
     .question-text {
         min-height: 6em;
         font-size: var(--font-size-lg);
-        align-items: center;
-        justify-content: center;
-        text-align: center;
+        align-items: flex-start;
+        text-align: left;
     }
 
     .fab-retake {
@@ -1494,9 +1492,8 @@ body::before {
     .question-text {
         min-height: 7em;
         font-size: var(--font-size-base);
-        align-items: center;
-        justify-content: center;
-        text-align: center;
+        align-items: flex-start;
+        text-align: left;
     }
 
     .fab-retake {

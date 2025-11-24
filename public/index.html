@@ -2123,7 +2123,7 @@
         }
         */
 
-        // 테스트용 단축키 기능
+        // 테스트용 단축키 기능 (AppController 메서드 사용)
         document.addEventListener('keydown', function(e) {
             console.log('키 이벤트 감지:', e.key, 'Ctrl:', e.ctrlKey, 'Meta:', e.metaKey);
 
@@ -2131,23 +2131,15 @@
             const assessmentActive = document.getElementById('assessment').classList.contains('active');
             console.log('진단 화면 활성:', assessmentActive);
 
-            if (assessmentActive) {
+            if (assessmentActive && window.app) {
                 // Ctrl/Cmd + 숫자키로 점수 자동 입력
                 if ((e.ctrlKey || e.metaKey) && e.key >= '1' && e.key <= '6') {
                     e.preventDefault();
                     const value = parseInt(e.key);
                     console.log('점수 입력 시도:', value);
 
-                    if (mobileInput) {
-                        console.log('mobileInput 존재, setValue 호출');
-                        mobileInput.setValue(value);
-                        const question = assessment.getQuestion(currentQuestion);
-                        assessment.recordResponse(question.id, value);
-                        updateNextButton();
-                        console.log('점수 입력 완료:', value);
-                    } else {
-                        console.log('mobileInput이 없음');
-                    }
+                    app.selectScore(value);
+                    console.log('점수 입력 완료:', value);
                 }
 
                 // Ctrl/Cmd + Shift + F: 4.5 기준 랜덤 점수로 채우기
@@ -2182,46 +2174,48 @@
                     const value = parseInt(e.key);
                     console.log('단순 숫자키 입력:', value);
 
-                    if (mobileInput) {
-                        mobileInput.setValue(value);
-                        const question = assessment.getQuestion(currentQuestion);
-                        assessment.recordResponse(question.id, value);
-                        updateNextButton();
-                        console.log('단순 숫자키로 점수 입력 완료:', value);
-                    }
+                    app.selectScore(value);
+                    console.log('단순 숫자키로 점수 입력 완료:', value);
                 }
             }
         });
 
-        // 모든 질문을 특정 점수로 채우는 함수
+        // 모든 질문을 특정 점수로 채우는 함수 (AppController 사용)
         function fillAllQuestionsWithScore(score) {
-            const totalQuestions = assessment.getTotalQuestions();
+            if (!window.app) {
+                console.error('AppController가 초기화되지 않았습니다');
+                return;
+            }
+
+            const totalQuestions = app.assessment.getTotalQuestions();
 
             // 모든 질문에 점수 기록
             for (let i = 0; i < totalQuestions; i++) {
-                const question = assessment.getQuestion(i);
-                assessment.recordResponse(question.id, score);
+                const question = app.assessment.getQuestion(i);
+                app.assessment.recordResponse(question.id, score);
             }
 
             // 현재 질문의 UI 업데이트
-            if (mobileInput) {
-                mobileInput.setValue(score);
-            }
-            updateNextButton();
+            app.selectScore(score);
 
             // 안내 메시지
             console.log(`모든 질문이 ${score}점으로 설정되었습니다. 이제 '다음' 버튼을 눌러 결과를 확인하거나 다음 질문으로 넘어가세요.`);
         }
 
-        // 모든 질문을 4.5 기준 랜덤 점수로 채우는 함수
+        // 모든 질문을 4.5 기준 랜덤 점수로 채우는 함수 (AppController 사용)
         function fillAllQuestionsRandomly() {
-            const totalQuestions = assessment.getTotalQuestions();
+            if (!window.app) {
+                console.error('AppController가 초기화되지 않았습니다');
+                return;
+            }
+
+            const totalQuestions = app.assessment.getTotalQuestions();
             const baseScore = 4.5;
             const scores = [];
 
             // 모든 질문에 랜덤 점수 생성 및 기록
             for (let i = 0; i < totalQuestions; i++) {
-                const question = assessment.getQuestion(i);
+                const question = app.assessment.getQuestion(i);
 
                 // 4.5를 중심으로 ±0.5~1.5 범위의 랜덤 값 생성
                 // 결과: 3~6 범위의 점수 (1~6 사이로 제한)
@@ -2231,16 +2225,13 @@
                 // 1~6 범위로 제한하고 반올림
                 randomScore = Math.max(1, Math.min(6, Math.round(randomScore)));
 
-                assessment.recordResponse(question.id, randomScore);
+                app.assessment.recordResponse(question.id, randomScore);
                 scores.push(randomScore);
             }
 
             // 현재 질문의 UI 업데이트
-            if (mobileInput) {
-                const currentScore = scores[currentQuestion];
-                mobileInput.setValue(currentScore);
-            }
-            updateNextButton();
+            const currentScore = scores[app.state.currentQuestion];
+            app.selectScore(currentScore);
 
             // 점수 분포 확인
             const avg = (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2);
