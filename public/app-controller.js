@@ -660,17 +660,380 @@ class AppController {
             leadershipTypeElement.textContent = '리더십 유형 정보를 불러올 수 없습니다';
         }
 
-        // 레이더 차트 업데이트 (전역 함수 사용)
-        if (typeof window.updateRadarChart === 'function') {
-            window.updateRadarChart(leadershipResult.scores);
-        }
+        // 레이더 차트 업데이트 (내부 메서드 사용)
+        this._updateRadarChart(leadershipResult.scores);
 
-        // 리더십 팁 로드 (전역 함수 사용)
-        if (typeof window.loadLeadershipTips === 'function') {
-            window.loadLeadershipTips(leadershipResult.code);
-        }
+        // 리더십 팁 로드 (내부 메서드 사용)
+        this._loadLeadershipTips(leadershipResult.code);
 
         console.log('✓ 리더십 결과 표시 완료');
+    }
+
+    _updateRadarChart(scores) {
+        // 점수를 0-6 범위에서 0-160으로 변환 (중심에서 최대 반지름까지)
+        const center = 200;
+        const maxRadius = 160;
+
+        // 각 축의 각도 (라디안) - 120도씩 균등 분할
+        const angles = {
+            sharing: -Math.PI / 2,           // 위쪽 (90도)
+            interaction: Math.PI / 6,        // 오른쪽 아래 (30도)
+            growth: 5 * Math.PI / 6          // 왼쪽 아래 (150도)
+        };
+
+        // 점수에 따른 반지름 계산 (1~6점 범위)
+        const sharingRadius = ((scores.sharing - 1) / 5) * maxRadius;
+        const interactionRadius = ((scores.interaction - 1) / 5) * maxRadius;
+        const growthRadius = ((scores.growth - 1) / 5) * maxRadius;
+
+        // 각 점의 좌표 계산
+        const sharingX = center + sharingRadius * Math.cos(angles.sharing);
+        const sharingY = center + sharingRadius * Math.sin(angles.sharing);
+
+        const interactionX = center + interactionRadius * Math.cos(angles.interaction);
+        const interactionY = center + interactionRadius * Math.sin(angles.interaction);
+
+        const growthX = center + growthRadius * Math.cos(angles.growth);
+        const growthY = center + growthRadius * Math.sin(angles.growth);
+
+        // 점수 포인트 위치 업데이트
+        document.getElementById('sharingPoint').setAttribute('cx', sharingX);
+        document.getElementById('sharingPoint').setAttribute('cy', sharingY);
+
+        document.getElementById('interactionPoint').setAttribute('cx', interactionX);
+        document.getElementById('interactionPoint').setAttribute('cy', interactionY);
+
+        document.getElementById('growthPoint').setAttribute('cx', growthX);
+        document.getElementById('growthPoint').setAttribute('cy', growthY);
+
+        // 폴리곤 영역 업데이트
+        const polygonPoints = `${sharingX},${sharingY} ${interactionX},${interactionY} ${growthX},${growthY}`;
+        document.getElementById('scoreArea').setAttribute('points', polygonPoints);
+
+        // 애니메이션 효과 추가
+        this._animateRadarChart();
+
+        // 인터랙티브 효과 추가
+        this._addRadarChartInteraction(scores);
+    }
+
+    _animateRadarChart() {
+        const scoreArea = document.getElementById('scoreArea');
+        const points = document.querySelectorAll('.score-point');
+
+        // 초기 상태 설정
+        scoreArea.style.opacity = '0';
+        scoreArea.style.transform = 'scale(0)';
+
+        points.forEach((point, index) => {
+            point.style.opacity = '0';
+            point.style.transform = 'scale(0)';
+        });
+
+        // 애니메이션 실행
+        setTimeout(() => {
+            scoreArea.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            scoreArea.style.opacity = '1';
+            scoreArea.style.transform = 'scale(1)';
+        }, 300);
+
+        points.forEach((point, index) => {
+            setTimeout(() => {
+                point.style.transition = 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                point.style.opacity = '1';
+                point.style.transform = 'scale(1)';
+            }, 500 + index * 200);
+        });
+    }
+
+    _addRadarChartInteraction(scores) {
+        const scorePoints = document.querySelectorAll('.score-point');
+        const scoreCards = document.querySelectorAll('.score-detail-card');
+
+        // 점수 포인트 클릭/호버 이벤트
+        scorePoints.forEach((point) => {
+            const category = point.classList[1]; // sharing, interaction, growth
+
+            point.addEventListener('mouseenter', () => {
+                // 해당 카테고리 카드 하이라이트
+                const targetCard = document.querySelector(`[data-category="${category}"]`);
+                if (targetCard) {
+                    targetCard.style.transform = 'translateY(-4px) scale(1.02)';
+                    targetCard.style.boxShadow = '0 12px 32px rgba(71, 85, 105, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.7)';
+                }
+
+                // 점수 영역 하이라이트
+                const scoreArea = document.getElementById('scoreArea');
+                scoreArea.style.fill = `rgba(${this._getCategoryColor(category)}, 0.3)`;
+                scoreArea.style.stroke = `rgba(${this._getCategoryColor(category)}, 0.8)`;
+            });
+
+            point.addEventListener('mouseleave', () => {
+                // 카드 원래 상태로
+                const targetCard = document.querySelector(`[data-category="${category}"]`);
+                if (targetCard) {
+                    targetCard.style.transform = '';
+                    targetCard.style.boxShadow = '';
+                }
+
+                // 점수 영역 원래 상태로
+                const scoreArea = document.getElementById('scoreArea');
+                scoreArea.style.fill = 'rgba(139, 92, 246, 0.15)';
+                scoreArea.style.stroke = 'rgba(139, 92, 246, 0.6)';
+            });
+
+            point.addEventListener('click', () => {
+                // 점수 카드 애니메이션
+                const targetCard = document.querySelector(`[data-category="${category}"]`);
+                if (targetCard) {
+                    targetCard.style.animation = 'scoreCardPulse 0.6s ease';
+                    setTimeout(() => {
+                        targetCard.style.animation = '';
+                    }, 600);
+                }
+            });
+        });
+
+        // 점수 카드 호버 이벤트
+        scoreCards.forEach((card) => {
+            const category = card.dataset.category;
+
+            card.addEventListener('mouseenter', () => {
+                // 해당 점수 포인트 하이라이트
+                const targetPoint = document.querySelector(`.score-point.${category}`);
+                if (targetPoint) {
+                    targetPoint.setAttribute('r', '9');
+                    targetPoint.style.filter = 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3))';
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                // 점수 포인트 원래 상태로
+                const targetPoint = document.querySelector(`.score-point.${category}`);
+                if (targetPoint) {
+                    targetPoint.setAttribute('r', '6');
+                    targetPoint.style.filter = 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))';
+                }
+            });
+        });
+    }
+
+    _getCategoryColor(category) {
+        switch (category) {
+            case 'sharing':
+                return '16, 185, 129';  // green
+            case 'interaction':
+                return '59, 130, 246';  // blue
+            case 'growth':
+                return '245, 158, 11';  // amber
+            default:
+                return '139, 92, 246';  // purple
+        }
+    }
+
+    async _loadLeadershipTips(leadershipCode) {
+        try {
+            // 데이터 로드 (캐싱)
+            if (!this._leadershipTipsData) {
+                const response = await fetch('data/leadership-tips.json');
+                this._leadershipTipsData = await response.json();
+            }
+
+            const typeData = this._leadershipTipsData[leadershipCode];
+            if (!typeData) {
+                console.warn('리더십 팁 데이터를 찾을 수 없습니다:', leadershipCode);
+                return;
+            }
+
+            this._currentTipsData = typeData;
+            this._activeWhenFilters = [];
+
+            // 소개 문구 설정
+            const introElement = document.getElementById('leadershipMoreIntro');
+            if (introElement) {
+                introElement.textContent = typeData.intro;
+            }
+
+            // 팁 카드 생성
+            const container = document.getElementById('leadershipTipsContainer');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            if (typeData.tips && typeData.tips.length > 0) {
+                // 상황별 필터 UI 생성
+                const filterUI = this._createSituationFilter(typeData.tips);
+                container.appendChild(filterUI);
+
+                // 팁 카드들을 담을 컨테이너
+                const cardsContainer = document.createElement('div');
+                cardsContainer.className = 'tip-cards-container';
+                cardsContainer.id = 'tipCardsContainer';
+
+                typeData.tips.forEach((tip, index) => {
+                    const card = this._createTipCard(tip, index);
+                    cardsContainer.appendChild(card);
+                });
+
+                container.appendChild(cardsContainer);
+            } else {
+                container.innerHTML = '<p class="empty-message">추가 팁이 준비 중입니다.</p>';
+            }
+        } catch (error) {
+            console.error('리더십 팁 로드 실패:', error);
+        }
+    }
+
+    _createSituationFilter(tips) {
+        // 모든 상황들을 수집
+        const allSituations = [];
+        tips.forEach(tip => {
+            if (tip.when && tip.when.length > 0) {
+                tip.when.forEach(situation => {
+                    if (!allSituations.includes(situation)) {
+                        allSituations.push(situation);
+                    }
+                });
+            }
+        });
+
+        const filterWrapper = document.createElement('div');
+        filterWrapper.className = 'situation-filter-wrapper';
+
+        filterWrapper.innerHTML = `
+            <div class="situation-filter-header">
+                <h4 class="situation-filter-title">지금 어떤 상황인가요?</h4>
+                <p class="situation-filter-desc">해당하는 상황을 선택하세요 (복수 선택 가능)</p>
+            </div>
+            <div class="situation-filter-chips" id="situationFilterChips">
+                ${allSituations.map(situation => `
+                    <button class="situation-chip" data-situation="${situation}">
+                        ${situation}
+                    </button>
+                `).join('')}
+            </div>
+            <div class="filter-result-message" id="filterResultMessage" style="display: none;">
+                <span class="result-count"></span>개의 추천 팁이 있습니다
+            </div>
+        `;
+
+        // 필터 클릭 이벤트 (토글 방식)
+        setTimeout(() => {
+            const chips = filterWrapper.querySelectorAll('.situation-chip');
+            chips.forEach(chip => {
+                this.eventManager.add(chip, 'click', () => {
+                    const situation = chip.dataset.situation;
+
+                    // 토글: 이미 선택되었으면 제거, 아니면 추가
+                    if (chip.classList.contains('active')) {
+                        chip.classList.remove('active');
+                        this._activeWhenFilters = this._activeWhenFilters.filter(s => s !== situation);
+                    } else {
+                        chip.classList.add('active');
+                        this._activeWhenFilters.push(situation);
+                    }
+
+                    this._filterTipsByMultipleSituations();
+                });
+            });
+        }, 0);
+
+        return filterWrapper;
+    }
+
+    _filterTipsByMultipleSituations() {
+        const cards = document.querySelectorAll('.tip-card');
+        const messageEl = document.getElementById('filterResultMessage');
+        let matchCount = 0;
+
+        cards.forEach(card => {
+            const tipIndex = parseInt(card.dataset.tipIndex);
+            const tip = this._currentTipsData.tips[tipIndex];
+
+            if (this._activeWhenFilters.length === 0) {
+                // 선택된 필터가 없으면 모든 카드 표시
+                card.style.display = 'block';
+                card.classList.remove('filtered-out', 'highlighted');
+            } else {
+                // 선택된 상황 중 하나라도 포함되면 표시
+                const matches = tip.when && this._activeWhenFilters.some(filter => tip.when.includes(filter));
+                if (matches) {
+                    card.style.display = 'block';
+                    card.classList.remove('filtered-out');
+                    card.classList.add('highlighted');
+                    matchCount++;
+                } else {
+                    card.style.display = 'none';
+                    card.classList.add('filtered-out');
+                    card.classList.remove('highlighted');
+                }
+            }
+        });
+
+        // 결과 메시지 표시
+        if (messageEl) {
+            if (this._activeWhenFilters.length > 0) {
+                messageEl.style.display = 'block';
+                messageEl.querySelector('.result-count').textContent = matchCount;
+            } else {
+                messageEl.style.display = 'none';
+            }
+        }
+    }
+
+    _createTipCard(tip, index) {
+        const card = document.createElement('div');
+        card.className = 'tip-card';
+        card.dataset.tipIndex = index;
+
+        card.innerHTML = `
+            <div class="tip-card-header">
+                <div class="tip-card-number">${index + 1}</div>
+                <h3 class="tip-card-title">${tip.title}</h3>
+                <button class="tip-card-toggle" aria-expanded="false" aria-label="상세 내용 펼치기">
+                    <svg class="toggle-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+            </div>
+            <div class="tip-card-content">
+                <div class="tip-section why-section">
+                    <h4 class="tip-section-title">왜 필요할까요?</h4>
+                    <div class="panel-content why-panel">
+                        <p class="why-text">${tip.why}</p>
+                    </div>
+                </div>
+                <div class="tip-section how-section">
+                    <h4 class="tip-section-title">이렇게 해보세요</h4>
+                    <div class="panel-content how-panel">
+                        ${tip.actions.map((action, i) => `
+                            <div class="action-card">
+                                <div class="action-step-number">Step ${i + 1}</div>
+                                <div class="action-situation-text">${action.situation}</div>
+                                <div class="action-detail">
+                                    <div class="action-label">실행 방법</div>
+                                    <div class="action-text">${action.action}</div>
+                                </div>
+                                <div class="action-example-box">
+                                    <div class="example-label">예시 문장</div>
+                                    <div class="example-text">"${action.example}"</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 카드 토글 이벤트
+        const toggleBtn = card.querySelector('.tip-card-toggle');
+        this.eventManager.add(toggleBtn, 'click', () => {
+            const isOpen = card.classList.contains('expanded');
+            toggleBtn.setAttribute('aria-expanded', !isOpen);
+            card.classList.toggle('expanded', !isOpen);
+        });
+
+        return card;
     }
 
     // ========================================
