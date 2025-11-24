@@ -522,40 +522,27 @@ class AppController {
         console.log('✓ 확장된 팀원 정보:', expandedFollowers);
         console.log('window.selectedFollowerTypes 확인:', window.selectedFollowerTypes);
 
-        // index.html의 전역 함수들 호출
+        // 리더십 진단 결과 계산 (한 번만)
+        const leadershipResult = this.assessment.determineLeadershipType();
+        console.log('리더십 결과:', leadershipResult);
+
         try {
-            console.log('=== 궁합 분석 시작 ===');
-            console.log('analyzeCompatibilityAuto 함수 존재:', typeof window.analyzeCompatibilityAuto);
+            console.log('=== 결과 화면 렌더링 시작 ===');
 
-            // 궁합 분석 실행
-            if (typeof window.analyzeCompatibilityAuto === 'function') {
-                console.log('✓ analyzeCompatibilityAuto() 호출');
-                console.log('전달할 selectedFollowerTypes:', window.selectedFollowerTypes);
-                window.analyzeCompatibilityAuto();
-            } else {
-                console.error('❌ analyzeCompatibilityAuto 함수가 없음');
-            }
+            // 1. 팀원 궁합 분석 (AppController 내부 메서드 사용)
+            this._analyzeTeamCompatibility(leadershipResult, expandedFollowers);
 
-            console.log('=== 리더십 결과 표시 ===');
-            // showResults() 함수 호출 - 리더십 유형, 강점, 주의점, 레이더 차트 모두 표시
+            // 2. 리더십 결과 표시 (전역 함수 사용 - 다음 단계에서 통합 예정)
             if (typeof window.showResults === 'function') {
                 console.log('✓ showResults() 호출');
                 window.showResults();
             } else {
-                console.error('❌ showResults 함수가 없음');
-
-                // 폴백: 개별적으로 호출
-                const result = this.assessment.determineLeadershipType();
-                console.log('리더십 결과:', result);
-
+                console.warn('⚠️ showResults 함수 없음 - 대체 방법 사용');
                 if (typeof window.updateRadarChart === 'function') {
-                    console.log('✓ updateRadarChart() 호출');
-                    window.updateRadarChart(result.scores);
+                    window.updateRadarChart(leadershipResult.scores);
                 }
-
                 if (typeof window.loadLeadershipTips === 'function') {
-                    console.log('✓ loadLeadershipTips() 호출');
-                    window.loadLeadershipTips(this.state.currentLeadershipCode);
+                    window.loadLeadershipTips(leadershipResult.code);
                 }
             }
 
@@ -573,6 +560,82 @@ class AppController {
             console.error('에러 스택:', error.stack);
             this.showErrorMessage('결과 페이지 표시 중 오류가 발생했습니다: ' + error.message);
         }
+    }
+
+    // ========================================
+    // Private Helper Methods
+    // ========================================
+
+    _analyzeTeamCompatibility(leadershipResult, selectedFollowers) {
+        console.log('=== _analyzeTeamCompatibility 시작 ===');
+        console.log('리더십 코드:', leadershipResult.code);
+        console.log('선택된 팔로워십:', selectedFollowers);
+
+        const compatibilityList = document.getElementById('compatibilityList');
+        if (!compatibilityList) {
+            console.error('❌ compatibilityList 엘리먼트를 찾을 수 없음');
+            return;
+        }
+
+        compatibilityList.innerHTML = '';
+
+        if (selectedFollowers.length === 0) {
+            compatibilityList.innerHTML = '<p class="empty-message">선택된 팀원이 없습니다.</p>';
+            return;
+        }
+
+        // 동일한 팔로워십 유형끼리 그룹화
+        const groupedFollowers = {};
+        selectedFollowers.forEach(follower => {
+            if (!groupedFollowers[follower.id]) {
+                groupedFollowers[follower.id] = [];
+            }
+            groupedFollowers[follower.id].push(follower.memberName);
+        });
+
+        // 그룹화된 데이터로 카드 생성
+        Object.keys(groupedFollowers).forEach(followerId => {
+            const memberNames = groupedFollowers[followerId];
+            const followerType = this.teamCompatibility.followershipTypes[followerId];
+            const compatibility = this.teamCompatibility.analyzeCompatibility(leadershipResult.code, followerId);
+
+            console.log('분석 중:', followerId, memberNames);
+            console.log('분석 결과:', compatibility);
+
+            const card = document.createElement('div');
+            card.className = 'compatibility-unified-card';
+
+            // 팀원 이름들을 개별 배지로 표시
+            const nameBadges = memberNames.map(name =>
+                `<span class="member-name-badge">${name}</span>`
+            ).join('');
+
+            card.innerHTML = `
+                <div class="compatibility-card-header">
+                    <div class="follower-info">
+                        <div class="follower-type-line">
+                            <h4 class="follower-type-name">${followerType.name}</h4>
+                            <span class="follower-type-subtitle">${followerType.subtitle}</span>
+                        </div>
+                    </div>
+                    <div class="member-names-container">${nameBadges}</div>
+                </div>
+                <div class="compatibility-analysis-grid">
+                    <div class="analysis-box analysis-strength">
+                        <div class="analysis-box-label"><span class="analysis-icon">✓</span> 강점</div>
+                        <div class="analysis-box-content">${compatibility.strengths[0]}</div>
+                    </div>
+                    <div class="analysis-box analysis-caution">
+                        <div class="analysis-box-label"><span class="analysis-icon">⚠</span> 주의</div>
+                        <div class="analysis-box-content">${compatibility.challenges[0]}</div>
+                    </div>
+                </div>
+            `;
+
+            compatibilityList.appendChild(card);
+        });
+
+        console.log('✓ 팔로워십 분석 완료');
     }
 
     // ========================================

@@ -1042,78 +1042,11 @@
         }
 
 
+        // DEPRECATED: AppController._analyzeTeamCompatibility()로 이동됨
+        // 하위 호환성을 위한 래퍼 함수
         function analyzeCompatibilityAuto() {
-            try {
-                const result = assessment.determineLeadershipType();
-                const compatibilityList = document.getElementById('compatibilityList');
-
-                compatibilityList.innerHTML = '';
-
-                console.log('=== 팔로워십 분석 시작 ===');
-                console.log('리더십 코드:', result.code);
-                console.log('선택된 팔로워십:', selectedFollowerTypes);
-
-                if (selectedFollowerTypes.length === 0) {
-                    compatibilityList.innerHTML = '<p class="empty-message">선택된 팀원이 없습니다.</p>';
-                    return;
-                }
-
-                // 동일한 팔로워십 유형끼리 그룹화
-                const groupedFollowers = {};
-                selectedFollowerTypes.forEach(follower => {
-                    if (!groupedFollowers[follower.id]) {
-                        groupedFollowers[follower.id] = [];
-                    }
-                    groupedFollowers[follower.id].push(follower.memberName);
-                });
-
-                // 그룹화된 데이터로 카드 생성
-                Object.keys(groupedFollowers).forEach(followerId => {
-                    const memberNames = groupedFollowers[followerId];
-                    const followerType = teamCompatibility.followershipTypes[followerId];
-                    const compatibility = teamCompatibility.analyzeCompatibility(result.code, followerId);
-
-                    console.log('분석 중:', followerId, memberNames);
-                    console.log('분석 결과:', compatibility);
-
-                    const card = document.createElement('div');
-                    card.className = 'compatibility-unified-card';
-
-                    // 팀원 이름들을 개별 배지로 표시
-                    const nameBadges = memberNames.map(name =>
-                        `<span class="member-name-badge">${name}</span>`
-                    ).join('');
-
-                    card.innerHTML = `
-                        <div class="compatibility-card-header">
-                            <div class="follower-info">
-                                <div class="follower-type-line">
-                                    <h4 class="follower-type-name">${followerType.name}</h4>
-                                    <span class="follower-type-subtitle">${followerType.subtitle}</span>
-                                </div>
-                            </div>
-                            <div class="member-names-container">${nameBadges}</div>
-                        </div>
-                        <div class="compatibility-analysis-grid">
-                            <div class="analysis-box analysis-strength">
-                                <div class="analysis-box-label"><span class="analysis-icon">✓</span> 강점</div>
-                                <div class="analysis-box-content">${compatibility.strengths[0]}</div>
-                            </div>
-                            <div class="analysis-box analysis-caution">
-                                <div class="analysis-box-label"><span class="analysis-icon">⚠</span> 주의</div>
-                                <div class="analysis-box-content">${compatibility.challenges[0]}</div>
-                            </div>
-                        </div>
-                    `;
-
-                    compatibilityList.appendChild(card);
-                });
-
-                console.log('=== 팔로워십 분석 완료 ===');
-            } catch (error) {
-                console.error('팔로워십 분석 중 오류:', error);
-                showErrorMessage('팔로워십 분석 중 오류가 발생했습니다: ' + error.message);
-            }
+            console.warn('⚠️ analyzeCompatibilityAuto()는 deprecated됨 - AppController가 직접 호출함');
+            // AppController.showResultsPage()에서 직접 처리하므로 여기서는 아무것도 하지 않음
         }
 
         function updateRadarChart(scores) {
