@@ -363,28 +363,39 @@
         <div class="inquiry-modal-content">
             <button class="inquiry-modal-close" id="closeInquiryBtn" aria-label="문의 창 닫기">&times;</button>
 
-            <div id="inquiryForm" class="inquiry-form">
+            <form id="inquiryForm" class="inquiry-form" name="team-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                <input type="hidden" name="form-name" value="team-inquiry">
+                <!-- Honeypot for spam protection -->
+                <p style="display: none;">
+                    <label>Don't fill this out: <input name="bot-field"></label>
+                </p>
+
                 <h3 class="inquiry-title" id="inquiryTitle">Link 팀 진단 상담 신청</h3>
                 <p class="inquiry-desc">관심을 가져주셔서 감사합니다. 아래 정보를 남겨주시면 담당자가 연락드리겠습니다.</p>
 
                 <div class="inquiry-field">
                     <label for="inquiryEmail">이메일 <span class="required">*</span></label>
-                    <input type="email" id="inquiryEmail" placeholder="example@company.com" required>
+                    <input type="email" id="inquiryEmail" name="email" placeholder="example@company.com" required>
                 </div>
 
                 <div class="inquiry-field">
                     <label for="inquiryName">이름</label>
-                    <input type="text" id="inquiryName" placeholder="홍길동">
+                    <input type="text" id="inquiryName" name="name" placeholder="홍길동">
+                </div>
+
+                <div class="inquiry-field">
+                    <label for="inquiryPhone">전화번호</label>
+                    <input type="tel" id="inquiryPhone" name="phone" placeholder="010-1234-5678">
                 </div>
 
                 <div class="inquiry-field">
                     <label for="inquiryCompany">회사/조직명</label>
-                    <input type="text" id="inquiryCompany" placeholder="회사명">
+                    <input type="text" id="inquiryCompany" name="company" placeholder="회사명">
                 </div>
 
                 <div class="inquiry-field">
                     <label for="inquiryTeamSize">팀 규모</label>
-                    <select id="inquiryTeamSize">
+                    <select id="inquiryTeamSize" name="teamSize">
                         <option value="">선택해주세요</option>
                         <option value="1-5">1-5명</option>
                         <option value="6-10">6-10명</option>
@@ -396,7 +407,7 @@
 
                 <div class="inquiry-consent">
                     <label class="consent-checkbox">
-                        <input type="checkbox" id="inquiryConsent" checked>
+                        <input type="checkbox" id="inquiryConsent" name="consent" checked>
                         <span class="consent-text">
                             맞춤형 상담을 위해 진단 결과를 함께 전달합니다
                             <button type="button" class="consent-detail-btn" id="consentDetailBtn">상세보기</button>
@@ -409,8 +420,12 @@
                     </div>
                 </div>
 
-                <button class="inquiry-submit" id="submitInquiryBtn" aria-label="상담 신청 제출하기">상담 신청하기</button>
-            </div>
+                <!-- Hidden fields for diagnosis data -->
+                <input type="hidden" id="diagnosisData" name="diagnosisData">
+                <input type="hidden" id="timestamp" name="timestamp">
+
+                <button type="submit" class="inquiry-submit" id="submitInquiryBtn" aria-label="상담 신청 제출하기">상담 신청하기</button>
+            </form>
 
             <div id="inquirySuccess" class="inquiry-success" style="display: none;" role="alert" aria-live="polite">
                 <div class="success-icon" aria-hidden="true">✓</div>
@@ -677,8 +692,10 @@
             if (closeSuccessBtn) {
                 app.eventManager.add(closeSuccessBtn, 'click', () => closeInquiryModal());
             }
-            if (submitInquiryBtn) {
-                app.eventManager.add(submitInquiryBtn, 'click', () => submitInquiry());
+            // 폼 제출 이벤트 처리
+            const inquiryFormElement = document.getElementById('inquiryForm');
+            if (inquiryFormElement) {
+                app.eventManager.add(inquiryFormElement, 'submit', (e) => submitInquiry(e));
             }
             if (consentDetailBtn) {
                 app.eventManager.add(consentDetailBtn, 'click', () => toggleConsentDetail());
@@ -759,9 +776,13 @@
             document.body.style.overflow = '';
         }
 
-        function submitInquiry() {
+        async function submitInquiry(e) {
+            e.preventDefault();
+
+            const form = document.getElementById('inquiryForm');
             const email = document.getElementById('inquiryEmail').value.trim();
             const name = document.getElementById('inquiryName').value.trim();
+            const phone = document.getElementById('inquiryPhone').value.trim();
             const company = document.getElementById('inquiryCompany').value.trim();
             const teamSize = document.getElementById('inquiryTeamSize').value;
             const consentChecked = document.getElementById('inquiryConsent').checked;
@@ -779,35 +800,57 @@
                 return;
             }
 
-            // 기본 데이터
-            const inquiryData = {
-                email: email,
-                name: name || '미입력',
-                company: company || '미입력',
-                teamSize: teamSize || '미선택',
-                timestamp: new Date().toISOString(),
-                consentGiven: consentChecked
-            };
-
-            // 동의한 경우 진단 결과 포함
+            // 진단 데이터 수집
+            let diagnosisData = null;
             if (consentChecked && assessment) {
                 const result = assessment.determineLeadershipType();
-                inquiryData.diagnosisData = {
+                diagnosisData = {
                     leadershipType: currentLeadershipCode || '미진단',
+                    leadershipName: result ? result.name : '미진단',
                     scores: result ? {
-                        S: result.scores.S,
-                        I: result.scores.I,
-                        G: result.scores.G
+                        S: result.scores.S.toFixed(2),
+                        I: result.scores.I.toFixed(2),
+                        G: result.scores.G.toFixed(2)
                     } : null,
                     selectedFollowerTypes: selectedFollowerTypes || []
                 };
             }
 
-            console.log('문의 데이터:', inquiryData);
+            // Hidden fields에 데이터 채우기
+            document.getElementById('diagnosisData').value = diagnosisData ? JSON.stringify(diagnosisData, null, 2) : '진단 결과 공유 미동의';
+            document.getElementById('timestamp').value = new Date().toISOString();
 
-            // 성공 화면 표시
-            document.getElementById('inquiryForm').style.display = 'none';
-            document.getElementById('inquirySuccess').style.display = 'block';
+            // GA4 이벤트 추적
+            if (window.app && window.app.analyticsManager) {
+                window.app.analyticsManager.trackTeamDiagnosisCTA();
+            }
+
+            try {
+                // Netlify Forms 제출
+                const formData = new FormData(form);
+                const response = await fetch('/', {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams(formData).toString()
+                });
+
+                if (response.ok) {
+                    // 성공 화면 표시
+                    form.style.display = 'none';
+                    document.getElementById('inquirySuccess').style.display = 'block';
+
+                    if (typeof logger !== 'undefined') {
+                        logger.log('✅ 팀 진단 상담 신청 완료:', { email, name, phone, consentChecked });
+                    }
+                } else {
+                    throw new Error('폼 제출 실패');
+                }
+            } catch (error) {
+                if (typeof logger !== 'undefined') {
+                    logger.error('❌ 폼 제출 오류:', error);
+                }
+                alert('상담 신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            }
         }
 
         function toggleConsentDetail() {
