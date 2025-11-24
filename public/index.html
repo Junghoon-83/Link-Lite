@@ -826,30 +826,48 @@
             }
 
             try {
-                // Netlify Forms 제출
-                const formData = new FormData(form);
-                const response = await fetch('/', {
-                    method: 'POST',
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: new URLSearchParams(formData).toString()
-                });
+                // 로컬 환경 감지
+                const isLocal = window.location.hostname === 'localhost' ||
+                               window.location.hostname === '127.0.0.1';
 
-                if (response.ok) {
+                if (isLocal) {
+                    // 로컬 환경: 콘솔 로그만 출력
+                    if (typeof logger !== 'undefined') {
+                        logger.log('✅ [로컬 테스트] 팀 진단 상담 신청:', {
+                            email, name, phone, company, teamSize,
+                            consentChecked, diagnosisData
+                        });
+                    }
+
                     // 성공 화면 표시
                     form.style.display = 'none';
                     document.getElementById('inquirySuccess').style.display = 'block';
-
-                    if (typeof logger !== 'undefined') {
-                        logger.log('✅ 팀 진단 상담 신청 완료:', { email, name, phone, consentChecked });
-                    }
                 } else {
-                    throw new Error('폼 제출 실패');
+                    // 프로덕션 환경: Netlify Forms 제출
+                    const formData = new FormData(form);
+                    const response = await fetch('/', {
+                        method: 'POST',
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: new URLSearchParams(formData).toString()
+                    });
+
+                    if (response.ok) {
+                        // 성공 화면 표시
+                        form.style.display = 'none';
+                        document.getElementById('inquirySuccess').style.display = 'block';
+
+                        if (typeof logger !== 'undefined') {
+                            logger.log('✅ 팀 진단 상담 신청 완료:', { email, name, phone, consentChecked });
+                        }
+                    } else {
+                        throw new Error('폼 제출 실패: ' + response.status);
+                    }
                 }
             } catch (error) {
                 if (typeof logger !== 'undefined') {
                     logger.error('❌ 폼 제출 오류:', error);
                 }
-                alert('상담 신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                alert('상담 신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.\n\n오류 내용: ' + error.message);
             }
         }
 
