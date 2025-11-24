@@ -682,6 +682,20 @@ class AppController {
             leadershipTypeElement.textContent = '리더십 유형 정보를 불러올 수 없습니다';
         }
 
+        // 점수 및 유형 검증 로그
+        console.log('=== 리더십 결과 검증 ===');
+        console.log('점수:', leadershipResult.scores);
+        console.log('  - Sharing:', leadershipResult.scores.sharing);
+        console.log('  - Interaction:', leadershipResult.scores.interaction);
+        console.log('  - Growth:', leadershipResult.scores.growth);
+        console.log('유형 코드:', leadershipResult.code);
+        console.log('유형 이름:', leadershipResult.type.name);
+        console.log('임계값 4.5 기준:');
+        console.log('  - Sharing >= 4.5?', leadershipResult.scores.sharing >= 4.5);
+        console.log('  - Interaction >= 4.5?', leadershipResult.scores.interaction >= 4.5);
+        console.log('  - Growth >= 4.5?', leadershipResult.scores.growth >= 4.5);
+        console.log('====================');
+
         // 레이더 차트 업데이트 (내부 메서드 사용)
         this._updateRadarChart(leadershipResult.scores);
 
