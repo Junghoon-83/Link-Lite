@@ -3078,7 +3078,7 @@ body::before {
 
     .full-version-cta-unified {
         padding: var(--space-5);
-        margin-top: var(--space-4);
+        margin-top: var(--space-8);
     }
 
     .cta-header-line {
@@ -3136,8 +3136,9 @@ body::before {
     }
 
     .cta-button-primary {
-        padding: var(--space-3) var(--space-5);
-        font-size: var(--font-size-xs);
+        padding: var(--space-4) var(--space-6);
+        font-size: var(--font-size-sm);
+        min-height: 44px;
     }
 
     .cta-arrow {
