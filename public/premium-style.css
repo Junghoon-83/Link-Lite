@@ -72,6 +72,29 @@
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+    /* Animation Duration */
+    --duration-fast: 150ms;
+    --duration-base: 200ms;
+    --duration-medium: 300ms;
+    --duration-slow: 500ms;
+    --duration-slower: 800ms;
+
+    /* Animation Easing */
+    --ease-linear: linear;
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-sharp: cubic-bezier(0.4, 0, 0.6, 1);
+    --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Breakpoints (for JavaScript media queries) */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
 }
 
 /* Reset and Base Styles */
@@ -219,7 +242,8 @@ body::before {
         var(--primary-700) 75%,
         var(--primary-800) 100%);
     background-size: 400% 400%;
-    animation: gradientShift 8s ease infinite;
+    animation: gradientShift var(--duration-slower) var(--ease-linear) infinite;
+    animation-duration: 8s;
     padding: var(--space-10) var(--space-8) var(--space-8);
     margin: calc(-1 * var(--space-12)) calc(-1 * var(--space-10)) var(--space-8);
     border-radius: var(--radius-3xl) var(--radius-3xl) 0 0;
@@ -419,7 +443,7 @@ body::before {
         transparent
     );
     border-radius: var(--radius-full);
-    animation: pulse 2s ease-in-out infinite;
+    animation: pulse 2s var(--ease-in-out) infinite;
 }
 
 @keyframes pulse {
@@ -476,10 +500,10 @@ body::before {
         #334155 75%,
         #1e293b 100%);
     background-size: 400% 400%;
-    -webkit-animation: gradientShift 8s ease infinite;
-    -moz-animation: gradientShift 8s ease infinite;
-    -o-animation: gradientShift 8s ease infinite;
-    animation: gradientShift 8s ease infinite;
+    -webkit-animation: gradientShift 8s var(--ease-linear) infinite;
+    -moz-animation: gradientShift 8s var(--ease-linear) infinite;
+    -o-animation: gradientShift 8s var(--ease-linear) infinite;
+    animation: gradientShift 8s var(--ease-linear) infinite;
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.3);
     padding: var(--space-6) var(--space-12);
@@ -487,7 +511,7 @@ body::before {
     font-size: var(--font-size-xl);
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--duration-slow) var(--ease-in-out);
     backdrop-filter: blur(16px) saturate(160%);
     box-shadow:
         0 16px 48px rgba(71, 85, 105, 0.25),
@@ -507,7 +531,7 @@ body::before {
     margin-top: var(--space-12);
     letter-spacing: -0.01em;
     min-width: 16rem;
-    animation: buttonPulse 3s ease-in-out infinite;
+    animation: buttonPulse 3s var(--ease-in-out) infinite;
 }
 
 /* 이전 버튼 애니메이션 딜레이 */
@@ -549,10 +573,10 @@ body::before {
         #334155 75%,
         #1e293b 100%);
     background-size: 400% 400%;
-    -webkit-animation: gradientShiftAlt 8s ease infinite;
-    -moz-animation: gradientShiftAlt 8s ease infinite;
-    -o-animation: gradientShiftAlt 8s ease infinite;
-    animation: gradientShiftAlt 8s ease infinite;
+    -webkit-animation: gradientShiftAlt 8s var(--ease-linear) infinite;
+    -moz-animation: gradientShiftAlt 8s var(--ease-linear) infinite;
+    -o-animation: gradientShiftAlt 8s var(--ease-linear) infinite;
+    animation: gradientShiftAlt 8s var(--ease-linear) infinite;
     z-index: -1;
     border-radius: inherit;
 }
@@ -566,7 +590,7 @@ body::before {
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.8s ease-in-out;
+    transition: left var(--duration-slower) var(--ease-in-out);
     z-index: 1;
     pointer-events: none;
 }
@@ -865,7 +889,7 @@ body::before {
     stroke: rgba(139, 92, 246, 0.6);
     stroke-width: 3;
     filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.2));
-    animation: scoreAreaPulse 3s ease-in-out infinite;
+    animation: scoreAreaPulse 3s var(--ease-in-out) infinite;
 }
 
 @keyframes scoreAreaPulse {
@@ -897,7 +921,7 @@ body::before {
     stroke-width: 3;
     stroke: white;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--duration-medium) var(--ease-out);
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
@@ -951,7 +975,7 @@ body::before {
     box-shadow:
         0 4px 16px rgba(71, 85, 105, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    transition: all 0.3s ease;
+    transition: all var(--duration-medium) var(--ease-out);
     cursor: pointer;
     position: relative;
     overflow: hidden;
@@ -1111,7 +1135,7 @@ body::before {
     border-radius: var(--radius-3xl);
     padding: var(--space-8);
     border: 2px solid rgba(255, 255, 255, 0.5);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--duration-slow) var(--ease-in-out);
     position: relative;
     overflow: visible;
     cursor: pointer;
@@ -1122,7 +1146,7 @@ body::before {
     width: 100%;
     max-width: 600px;
     gap: var(--space-6);
-    animation: breathingGlow 5s ease-in-out infinite;
+    animation: breathingGlow 5s var(--ease-in-out) infinite;
 }
 
 .feature-item:nth-child(1) {
@@ -1189,7 +1213,7 @@ body::before {
         0 12px 32px rgba(0, 0, 0, 0.2),
         0 6px 16px rgba(0, 0, 0, 0.12),
         inset 0 1px 0 rgba(255, 255, 255, 0.25);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s var(--ease-in-out);
 }
 
 .feature-icon-modern::before {
@@ -1737,7 +1761,7 @@ body::before {
     border: 2px solid var(--primary-200);
     border-radius: var(--radius-2xl);
     padding: var(--space-5);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--duration-medium) var(--ease-in-out);
 }
 
 .followership-card:hover {
@@ -2439,7 +2463,7 @@ body::before {
     font-size: var(--font-size-lg);
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--duration-medium) var(--ease-out);
     margin-top: var(--space-4);
 }
 
@@ -3243,7 +3267,7 @@ body::before {
     font-weight: 500;
     color: var(--primary-600);
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--duration-medium) var(--ease-in-out);
     white-space: normal;
     word-break: keep-all;
     text-align: center;
@@ -3298,7 +3322,7 @@ body::before {
     border: 1px solid var(--primary-200);
     overflow: hidden;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s var(--ease-in-out);
 }
 
 .tip-card:hover {
@@ -3357,7 +3381,7 @@ body::before {
     border-radius: var(--radius-full);
     padding: var(--space-2);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--duration-medium) var(--ease-out);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3380,7 +3404,7 @@ body::before {
 
 .toggle-icon {
     color: var(--primary-500);
-    transition: all 0.3s ease;
+    transition: all var(--duration-medium) var(--ease-out);
 }
 
 /* 카드 컨텐츠 */
@@ -3473,7 +3497,7 @@ body::before {
     background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(34, 197, 94, 0.03) 100%);
     border-radius: var(--radius-lg);
     border-left: 4px solid #22c55e;
-    transition: all 0.3s ease;
+    transition: all var(--duration-medium) var(--ease-out);
 }
 
 .when-item:hover {
@@ -3804,7 +3828,7 @@ body::before {
     z-index: 2000;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    transition: all var(--duration-medium) var(--ease-out);
     padding: var(--space-4);
 }
 
