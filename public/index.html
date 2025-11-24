@@ -502,8 +502,14 @@
         // ========================================
         let app = null;
 
-        // 페이지 로드 시 초기화
-        (async function() {
+        // 페이지 로드 시 초기화 - DOMContentLoaded 대기
+        document.addEventListener('DOMContentLoaded', async function() {
+            // MobileNativeInput 클래스가 로드될 때까지 대기
+            if (typeof MobileNativeInput === 'undefined') {
+                console.error('MobileNativeInput이 정의되지 않았습니다. mobile-native.js 로드를 확인하세요.');
+                return;
+            }
+
             app = new AppController();
             await app.init();
 

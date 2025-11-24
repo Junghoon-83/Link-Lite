@@ -170,13 +170,14 @@ class AppController {
     }
 
     loadQuestion(index) {
-        const question = this.assessment.getQuestion(index);
-        if (!question) {
-            console.error('질문을 찾을 수 없습니다:', index);
-            return;
-        }
+        try {
+            const question = this.assessment.getQuestion(index);
+            if (!question) {
+                console.error('질문을 찾을 수 없습니다:', index);
+                return;
+            }
 
-        this.state.currentQuestion = index;
+            this.state.currentQuestion = index;
 
         // UI 업데이트
         const questionNumberEl = document.getElementById('questionNumber');
@@ -239,8 +240,12 @@ class AppController {
             this.ui.mobileNav.updateNavigation(canGoPrev, canGoNext, '다음');
         }
 
-        // 세션 저장
-        this.storageManager.saveCurrentSession(this.assessment, this.state.currentQuestion);
+            // 세션 저장
+            this.storageManager.saveCurrentSession(this.assessment, this.state.currentQuestion);
+        } catch (error) {
+            console.error('질문 로드 오류:', error);
+            this.showErrorMessage('질문을 불러오는 중 오류가 발생했습니다. 페이지를 새로고침해주세요.');
+        }
     }
 
     updateNextButton() {
