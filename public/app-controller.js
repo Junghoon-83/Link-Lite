@@ -514,8 +514,15 @@ class AppController {
         });
 
         this.state.selectedFollowers = expandedFollowers;
+
+        // 전역 변수를 모두 업데이트 (window와 스크립트 스코프 모두)
         window.selectedFollowerTypes = expandedFollowers;
+        if (typeof selectedFollowerTypes !== 'undefined') {
+            selectedFollowerTypes = expandedFollowers;
+        }
+
         console.log('✓ 확장된 팀원 정보:', expandedFollowers);
+        console.log('window.selectedFollowerTypes 확인:', window.selectedFollowerTypes);
 
         // index.html의 전역 함수들 호출
         try {
@@ -525,6 +532,7 @@ class AppController {
             // 궁합 분석 실행
             if (typeof window.analyzeCompatibilityAuto === 'function') {
                 console.log('✓ analyzeCompatibilityAuto() 호출');
+                console.log('전달할 selectedFollowerTypes:', window.selectedFollowerTypes);
                 window.analyzeCompatibilityAuto();
             } else {
                 console.error('❌ analyzeCompatibilityAuto 함수가 없음');
