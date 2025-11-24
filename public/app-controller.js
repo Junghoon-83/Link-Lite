@@ -204,25 +204,68 @@ class AppController {
             }
         }
 
-        // 이전 응답 표시
-        const savedResponse = this.assessment.responses[question.id];
-        if (savedResponse) {
-            this.selectScore(savedResponse);
-        } else {
-            this.clearScoreSelection();
+        // 모바일 네이티브 입력 시스템 초기화
+        const inputContainer = document.getElementById('interactiveInput');
+        if (inputContainer) {
+            // 기존 인스턴스 정리
+            if (this.ui.mobileInput) {
+                this.ui.mobileInput.destroy();
+            }
+
+            // 새 모바일 입력 생성
+            const currentResponse = this.assessment.responses[question.id];
+            this.ui.mobileInput = new MobileNativeInput(inputContainer, {
+                defaultValue: currentResponse,
+                min: 1,
+                max: 6,
+                onChange: (value) => {
+                    this.assessment.recordResponse(question.id, value);
+                    this.updateNextButton();
+                }
+            });
         }
 
-        // 모바일 입력 초기화
-        if (this.ui.mobileInput && window.innerWidth <= 768) {
-            if (savedResponse) {
-                this.ui.mobileInput.setValue(savedResponse);
-            } else {
-                this.ui.mobileInput.clear();
-            }
+        // 버튼 상태 업데이트
+        const prevBtn = document.getElementById('prevBtn');
+        if (prevBtn) {
+            prevBtn.disabled = false; // 이전 버튼은 항상 활성화
+        }
+        this.updateNextButton();
+
+        // 모바일 네비게이션 업데이트
+        if (this.ui.mobileNav && window.innerWidth <= 768) {
+            const canGoPrev = true;
+            const canGoNext = this.assessment.responses[question.id] !== undefined;
+            this.ui.mobileNav.updateNavigation(canGoPrev, canGoNext, '다음');
         }
 
         // 세션 저장
         this.storageManager.saveCurrentSession(this.assessment, this.state.currentQuestion);
+    }
+
+    updateNextButton() {
+        const question = this.assessment.getQuestion(this.state.currentQuestion);
+        if (!question) return;
+
+        const hasResponse = this.assessment.responses[question.id] !== undefined;
+        const totalQuestions = this.assessment.getTotalQuestions();
+        const isLastQuestion = this.state.currentQuestion === totalQuestions - 1;
+
+        const nextBtn = document.getElementById('nextBtn');
+        const nextBtnText = document.getElementById('nextBtnText');
+
+        if (nextBtn) {
+            nextBtn.disabled = !hasResponse;
+        }
+        if (nextBtnText) {
+            nextBtnText.textContent = '다음';
+        }
+
+        // 모바일 네비게이션도 업데이트
+        if (this.ui.mobileNav && window.innerWidth <= 768) {
+            const canGoPrev = true;
+            this.ui.mobileNav.updateNavigation(canGoPrev, hasResponse, '다음');
+        }
     }
 
     selectScore(score) {
