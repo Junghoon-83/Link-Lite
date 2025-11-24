@@ -7,7 +7,7 @@ class AnalyticsManager {
         this.isEnabled = typeof gtag !== 'undefined';
         this.sessionStartTime = Date.now();
         this.sessionId = this._getSessionId();
-    }
+        }
 
     // ========================================
     // 페이지뷰 추적
@@ -21,17 +21,18 @@ class AnalyticsManager {
             'assessment': '진단 화면',
             'followership': '팔로워십 선택',
             'results': '결과 화면'
-        };
+            };
 
         gtag('event', 'page_view', {
             page_title: pageTitles[sectionId] || sectionId,
             page_location: window.location.href + '#' + sectionId,
             page_path: '/' + sectionId,
             session_id: this.sessionId
-        });
+            });
 
-        console.log('📊 GA4 페이지뷰:', pageTitles[sectionId]);
-    }
+        if (typeof logger !== 'undefined') {
+            logger.log('📊 GA4 페이지뷰:', pageTitles[sectionId]);
+            }
 
     // ========================================
     // 진단 관련 이벤트
@@ -44,10 +45,11 @@ class AnalyticsManager {
             event_category: 'engagement',
             event_label: '진단 시작',
             session_id: this.sessionId
-        });
+            });
 
-        console.log('📊 GA4: 진단 시작');
-    }
+        if (typeof logger !== 'undefined') {
+            logger.log('📊 GA4: 진단 시작');
+            }
 
     trackQuestionAnswer(questionIndex, questionCategory, score) {
         if (!this.isEnabled) return;
@@ -58,8 +60,8 @@ class AnalyticsManager {
             question_category: questionCategory,
             score: score,
             session_id: this.sessionId
-        });
-    }
+            });
+        }
 
     trackAssessmentComplete(leadershipType, timeSpent) {
         if (!this.isEnabled) return;
@@ -71,10 +73,11 @@ class AnalyticsManager {
             time_spent_seconds: Math.round(timeSpent / 1000),
             value: 1,
             session_id: this.sessionId
-        });
+            });
 
-        console.log('📊 GA4: 진단 완료 -', leadershipType.name);
-    }
+        if (typeof logger !== 'undefined') {
+            logger.log('📊 GA4: 진단 완료 -', leadershipType.name);
+        }
 
     trackFollowershipSelection(followerTypes) {
         if (!this.isEnabled) return;
@@ -84,10 +87,11 @@ class AnalyticsManager {
             num_followers: followerTypes.length,
             follower_types: followerTypes.map(f => f.id).join(','),
             session_id: this.sessionId
-        });
+            });
 
-        console.log('📊 GA4: 팔로워십 선택 -', followerTypes.length, '개');
-    }
+        if (typeof logger !== 'undefined') {
+            logger.log('📊 GA4: 팔로워십 선택 -', followerTypes.length, '개');
+        }
 
     // ========================================
     // 이탈 및 에러 추적
@@ -103,10 +107,11 @@ class AnalyticsManager {
             progress_percent: progressPercent,
             question_number: currentQuestionIndex,
             session_id: this.sessionId
-        });
+            });
 
-        console.log('📊 GA4: 진단 이탈 -', progressPercent, '%');
-    }
+        if (typeof logger !== 'undefined') {
+            logger.log('📊 GA4: 진단 이탈 -', progressPercent, '%');
+        }
 
     trackError(errorMessage, errorContext) {
         if (!this.isEnabled) return;
@@ -116,10 +121,11 @@ class AnalyticsManager {
             fatal: false,
             error_context: errorContext,
             session_id: this.sessionId
-        });
+            });
 
-        console.log('📊 GA4: 에러 -', errorMessage);
-    }
+        if (typeof logger !== 'undefined') {
+            logger.log('📊 GA4: 에러 -', errorMessage);
+        }
 
     // ========================================
     // 기능 사용 추적
@@ -132,10 +138,11 @@ class AnalyticsManager {
             event_category: 'engagement',
             event_label: 'AI 대화창 열기',
             session_id: this.sessionId
-        });
+            });
 
-        console.log('📊 GA4: AI 그라운더 열기');
-    }
+        if (typeof logger !== 'undefined') {
+            logger.log('📊 GA4: AI 그라운더 열기');
+        }
 
     trackTeamDiagnosisCTA() {
         if (!this.isEnabled) return;
@@ -145,10 +152,11 @@ class AnalyticsManager {
             event_label: 'Link 팀 진단 알아보기',
             value: 10,
             session_id: this.sessionId
-        });
+            });
 
-        console.log('📊 GA4: 팀 진단 CTA 클릭');
-    }
+        if (typeof logger !== 'undefined') {
+            logger.log('📊 GA4: 팀 진단 CTA 클릭');
+        }
 
     trackShareLinkCreated() {
         if (!this.isEnabled) return;
@@ -157,10 +165,11 @@ class AnalyticsManager {
             event_category: 'engagement',
             event_label: '공유 링크 생성',
             session_id: this.sessionId
-        });
+            });
 
-        console.log('📊 GA4: 공유 링크 생성');
-    }
+        if (typeof logger !== 'undefined') {
+            logger.log('📊 GA4: 공유 링크 생성');
+        }
 
     trackShareLinkCopied() {
         if (!this.isEnabled) return;
@@ -169,10 +178,11 @@ class AnalyticsManager {
             event_category: 'engagement',
             event_label: '공유 링크 복사',
             session_id: this.sessionId
-        });
+            });
 
-        console.log('📊 GA4: 공유 링크 복사');
-    }
+        if (typeof logger !== 'undefined') {
+            logger.log('📊 GA4: 공유 링크 복사');
+        }
 
     // ========================================
     // 세션 정보
@@ -180,24 +190,24 @@ class AnalyticsManager {
 
     getSessionDuration() {
         return Date.now() - this.sessionStartTime;
-    }
+        }
 
     _getSessionId() {
         let sessionId = sessionStorage.getItem('linkLite_analyticsSessionId');
         if (!sessionId) {
             sessionId = this._generateUUID();
             sessionStorage.setItem('linkLite_analyticsSessionId', sessionId);
-        }
+            }
         return sessionId;
-    }
+        }
 
     _generateUUID() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             const r = Math.random() * 16 | 0;
             const v = c === 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
-        });
-    }
+            });
+        }
 }
 
 // Export
