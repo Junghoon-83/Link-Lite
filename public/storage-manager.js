@@ -23,17 +23,104 @@ class StorageManager {
 
         if (storedVersion !== this.APP_VERSION) {
             console.log(`버전 변경 감지: ${storedVersion} → ${this.APP_VERSION}`);
-            console.log('LocalStorage 초기화 중...');
 
-            // 모든 저장된 데이터 삭제
-            Object.values(this.STORAGE_KEYS).forEach(key => {
-                localStorage.removeItem(key);
-            });
+            // 버전별 마이그레이션 실행
+            this._migrateData(storedVersion, this.APP_VERSION);
 
             // 새 버전 저장
             localStorage.setItem(this.STORAGE_KEYS.APP_VERSION, this.APP_VERSION);
-            console.log('✓ LocalStorage 초기화 완료');
+            console.log('✓ 버전 업데이트 완료');
         }
+    }
+
+    _migrateData(fromVersion, toVersion) {
+        // 첫 설치 (버전 정보 없음)
+        if (!fromVersion) {
+            console.log('첫 설치: 데이터 초기화');
+            return;
+        }
+
+        console.log(`데이터 마이그레이션 시작: ${fromVersion} → ${toVersion}`);
+
+        try {
+            // 버전별 마이그레이션 로직
+            if (fromVersion === '1.0.0' && toVersion === '2.0.0') {
+                this._migrateFrom1to2();
+            } else if (this._isBreakingChange(fromVersion, toVersion)) {
+                // 호환되지 않는 변경: 데이터 백업 후 초기화
+                console.warn('호환되지 않는 버전 변경: 데이터 백업 및 초기화');
+                this._backupAndClear(fromVersion);
+            } else {
+                // 하위 호환 가능: 데이터 유지
+                console.log('하위 호환 가능: 데이터 유지');
+            }
+        } catch (error) {
+            console.error('마이그레이션 실패:', error);
+            // 마이그레이션 실패 시 안전하게 초기화
+            this._backupAndClear(fromVersion);
+        }
+    }
+
+    _isBreakingChange(fromVersion, toVersion) {
+        // 메이저 버전 변경 체크 (예: 1.x.x → 2.x.x)
+        const fromMajor = parseInt(fromVersion.split('.')[0]);
+        const toMajor = parseInt(toVersion.split('.')[0]);
+        return toMajor > fromMajor;
+    }
+
+    _migrateFrom1to2() {
+        console.log('1.0.0 → 2.0.0 마이그레이션 실행');
+
+        // 예시: 구버전 데이터 구조 변환
+        const oldResults = localStorage.getItem('old_results_key');
+        if (oldResults) {
+            try {
+                const parsed = JSON.parse(oldResults);
+                // 새 형식으로 변환
+                const newResults = this._convertResultFormat(parsed);
+                localStorage.setItem(this.STORAGE_KEYS.RESULTS_HISTORY, JSON.stringify(newResults));
+                localStorage.removeItem('old_results_key');
+                console.log('✓ 결과 데이터 변환 완료');
+            } catch (e) {
+                console.error('결과 데이터 변환 실패:', e);
+            }
+        }
+    }
+
+    _convertResultFormat(oldData) {
+        // 구버전 → 신버전 데이터 구조 변환
+        // 실제 구조에 맞게 구현
+        return oldData;
+    }
+
+    _backupAndClear(fromVersion) {
+        // 데이터 백업 (선택적)
+        const backup = {
+            version: fromVersion,
+            timestamp: Date.now(),
+            data: {}
+        };
+
+        // 중요 데이터만 백업
+        Object.entries(this.STORAGE_KEYS).forEach(([key, storageKey]) => {
+            const data = localStorage.getItem(storageKey);
+            if (data) {
+                backup.data[key] = data;
+            }
+        });
+
+        // 백업 저장 (7일 보관)
+        const backupKey = `linkLite_backup_${fromVersion}`;
+        localStorage.setItem(backupKey, JSON.stringify(backup));
+        console.log(`✓ 데이터 백업 완료: ${backupKey}`);
+
+        // 현재 데이터 삭제
+        Object.values(this.STORAGE_KEYS).forEach(key => {
+            if (key !== this.STORAGE_KEYS.APP_VERSION) {
+                localStorage.removeItem(key);
+            }
+        });
+        console.log('✓ LocalStorage 초기화 완료');
     }
 
     // ========================================

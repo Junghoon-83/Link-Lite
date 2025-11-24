@@ -4,6 +4,11 @@
  */
 
 class LeadershipAssessment {
+    // 상수 정의
+    static THRESHOLD = 4.5;  // High/Low 판정 임계값
+    static SCORE_MIN = 1;    // 최소 점수
+    static SCORE_MAX = 6;    // 최대 점수
+
     constructor() {
         this.questions = [];
         this.leadershipTypes = {};
@@ -42,9 +47,19 @@ class LeadershipAssessment {
         }
     }
 
+    // 정적 검증 메서드 (SecurityUtils와 통합)
+    static validateScore(value) {
+        const num = typeof value === 'number' ? value : parseInt(value, 10);
+        if (isNaN(num) || num < LeadershipAssessment.SCORE_MIN || num > LeadershipAssessment.SCORE_MAX) {
+            return null;
+        }
+        return num;
+    }
+
     recordResponse(questionId, score) {
-        // 점수 검증
-        if (typeof score !== 'number' || score < 1 || score > 6) {
+        // 점수 검증 (정적 메서드 사용)
+        const validScore = LeadershipAssessment.validateScore(score);
+        if (validScore === null) {
             console.error(`Invalid score: ${score} for question ${questionId}`);
             return;
         }
@@ -56,7 +71,7 @@ class LeadershipAssessment {
             return;
         }
 
-        this.responses[questionId] = score;
+        this.responses[questionId] = validScore;
     }
 
     calculateScores() {
@@ -111,7 +126,7 @@ class LeadershipAssessment {
     determineLeadershipType() {
         const scores = this.calculateScores();
         const lowerFactorScores = this.calculateLowerFactorScores();
-        const threshold = 4.5;
+        const threshold = LeadershipAssessment.THRESHOLD;
 
         const typeCode = [
             scores.sharing >= threshold ? 'H' : 'L',

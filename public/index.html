@@ -489,7 +489,12 @@
                 return names;
             },
             validateScore(value) {
-                const num = parseInt(value, 10);
+                // LeadershipAssessment의 정적 메서드 사용 (검증 로직 통합)
+                if (typeof LeadershipAssessment !== 'undefined' && LeadershipAssessment.validateScore) {
+                    return LeadershipAssessment.validateScore(value);
+                }
+                // Fallback (LeadershipAssessment 로드 전)
+                const num = typeof value === 'number' ? value : parseInt(value, 10);
                 if (isNaN(num) || num < 1 || num > 6) {
                     return null;
                 }
