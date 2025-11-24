@@ -134,10 +134,8 @@ class AppController {
             }
         }
 
-        // 새 섹션 표시
-        setTimeout(() => {
-            document.getElementById(sectionId).classList.add('active');
-        }, 150);
+        // 새 섹션 즉시 표시 (setTimeout 제거로 부드러운 전환)
+        document.getElementById(sectionId).classList.add('active');
 
         this.state.currentSection = sectionId;
         this.analyticsManager.trackPageView(sectionId);
@@ -566,17 +564,8 @@ class AppController {
             // 애널리틱스 추적
             this.analyticsManager.trackFollowershipSelection(expandedFollowers);
 
-            // 결과 페이지로 이동 (섹션 전환만 - 새 페이지 리로드 없음)
+            // 결과 페이지로 이동 (섹션 전환)
             this.showSection('results');
-
-            // 확실하게 팔로워십 섹션 숨기기
-            setTimeout(() => {
-                const followershipSection = document.getElementById('followership');
-                if (followershipSection && followershipSection.classList.contains('active')) {
-                    console.warn('⚠️ 팔로워십 섹션이 여전히 활성화되어 있음 - 강제 제거');
-                    followershipSection.classList.remove('active');
-                }
-            }, 200);
 
             console.log('✓ 결과 페이지 표시 완료');
         } catch (error) {
