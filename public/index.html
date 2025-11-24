@@ -503,10 +503,13 @@
         let app = null;
 
         // 하위 호환성을 위한 전역 변수 (오래된 코드에서 사용)
+        let assessment = null;
+        let teamCompatibility = null;
         let mobileNav = null;
         let mobileInput = null;
         let currentQuestion = 0;
         let currentLeadershipCode = null;
+        let selectedFollowerTypes = [];
 
         // 페이지 로드 시 초기화 - DOMContentLoaded 대기
         document.addEventListener('DOMContentLoaded', async function() {
@@ -562,6 +565,8 @@
             window.showSection = (id) => app.showSection(id);
 
             // 하위 호환성을 위한 전역 변수 노출 (점진적 제거 예정)
+            assessment = app.assessment;
+            teamCompatibility = app.teamCompatibility;
             window.assessment = app.assessment;
             window.teamCompatibility = app.teamCompatibility;
             window.storageManager = app.storageManager;
