@@ -32,7 +32,8 @@ class AnalyticsManager {
 
         if (typeof logger !== 'undefined') {
             logger.log('📊 GA4 페이지뷰:', pageTitles[sectionId]);
-            }
+        }
+    }
 
     // ========================================
     // 진단 관련 이벤트
@@ -49,7 +50,8 @@ class AnalyticsManager {
 
         if (typeof logger !== 'undefined') {
             logger.log('📊 GA4: 진단 시작');
-            }
+        }
+    }
 
     trackQuestionAnswer(questionIndex, questionCategory, score) {
         if (!this.isEnabled) return;
@@ -78,6 +80,7 @@ class AnalyticsManager {
         if (typeof logger !== 'undefined') {
             logger.log('📊 GA4: 진단 완료 -', leadershipType.name);
         }
+    }
 
     trackFollowershipSelection(followerTypes) {
         if (!this.isEnabled) return;
@@ -92,6 +95,7 @@ class AnalyticsManager {
         if (typeof logger !== 'undefined') {
             logger.log('📊 GA4: 팔로워십 선택 -', followerTypes.length, '개');
         }
+    }
 
     // ========================================
     // 이탈 및 에러 추적
@@ -112,6 +116,7 @@ class AnalyticsManager {
         if (typeof logger !== 'undefined') {
             logger.log('📊 GA4: 진단 이탈 -', progressPercent, '%');
         }
+    }
 
     trackError(errorMessage, errorContext) {
         if (!this.isEnabled) return;
@@ -126,6 +131,7 @@ class AnalyticsManager {
         if (typeof logger !== 'undefined') {
             logger.log('📊 GA4: 에러 -', errorMessage);
         }
+    }
 
     // ========================================
     // 기능 사용 추적
@@ -143,6 +149,7 @@ class AnalyticsManager {
         if (typeof logger !== 'undefined') {
             logger.log('📊 GA4: AI 그라운더 열기');
         }
+    }
 
     trackTeamDiagnosisCTA() {
         if (!this.isEnabled) return;
@@ -157,6 +164,7 @@ class AnalyticsManager {
         if (typeof logger !== 'undefined') {
             logger.log('📊 GA4: 팀 진단 CTA 클릭');
         }
+    }
 
     trackShareLinkCreated() {
         if (!this.isEnabled) return;
@@ -170,6 +178,7 @@ class AnalyticsManager {
         if (typeof logger !== 'undefined') {
             logger.log('📊 GA4: 공유 링크 생성');
         }
+    }
 
     trackShareLinkCopied() {
         if (!this.isEnabled) return;
@@ -183,6 +192,7 @@ class AnalyticsManager {
         if (typeof logger !== 'undefined') {
             logger.log('📊 GA4: 공유 링크 복사');
         }
+    }
 
     // ========================================
     // 세션 정보
