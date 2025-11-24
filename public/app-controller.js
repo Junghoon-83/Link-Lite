@@ -322,6 +322,9 @@ class AppController {
     nextQuestion() {
         if (this.state.currentQuestion < this.assessment.getTotalQuestions() - 1) {
             this.loadQuestion(this.state.currentQuestion + 1);
+        } else {
+            // 마지막 질문에서 다음 버튼 클릭 시 팔로워십 선택으로 이동
+            this.completeAssessment();
         }
     }
 
