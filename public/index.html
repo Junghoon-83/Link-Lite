@@ -502,6 +502,12 @@
         // ========================================
         let app = null;
 
+        // 하위 호환성을 위한 전역 변수 (오래된 코드에서 사용)
+        let mobileNav = null;
+        let mobileInput = null;
+        let currentQuestion = 0;
+        let currentLeadershipCode = null;
+
         // 페이지 로드 시 초기화 - DOMContentLoaded 대기
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('=== 초기화 디버깅 시작 ===');
