@@ -112,7 +112,7 @@
                             </div>
                         </div>
 
-                        <button class="premium-btn" onclick="startAssessment()">
+                        <button class="premium-btn" id="startBtn">
                             <span>진단 시작</span>
                             <span>→</span>
                         </button>
@@ -136,10 +136,10 @@
                     </div>
 
                     <div class="premium-nav">
-                        <button class="premium-btn premium-btn-secondary" id="prevBtn" onclick="previousQuestion()" disabled>
+                        <button class="premium-btn premium-btn-secondary" id="prevBtn" disabled>
                             ← 이전
                         </button>
-                        <button class="premium-btn" id="nextBtn" onclick="nextQuestion()" disabled>
+                        <button class="premium-btn" id="nextBtn" disabled>
                             <span id="nextBtnText">다음</span>
                             <span>→</span>
                         </button>
@@ -157,10 +157,10 @@
                         <div class="followership-grid" id="followershipOptionsPage"></div>
 
                         <div class="premium-nav" style="margin-top: var(--space-10);">
-                            <button class="premium-btn premium-btn-secondary" onclick="showSection('assessment')">
+                            <button class="premium-btn premium-btn-secondary" id="backToAssessmentBtn">
                                 ← 이전
                             </button>
-                            <button class="premium-btn" onclick="showResultsPage()" id="showResultsBtn" disabled>
+                            <button class="premium-btn" id="showResultsBtn" disabled>
                                 <span>결과 보기</span>
                                 <span>→</span>
                             </button>
@@ -302,7 +302,7 @@
                                     </div>
                                 </div>
 
-                                <button class="cta-button-primary" onclick="openInquiryModal()">
+                                <button class="cta-button-primary" id="openInquiryBtn">
                                     <span>Link 팀 진단 알아보기</span>
                                     <span class="cta-arrow">→</span>
                                 </button>
@@ -312,7 +312,7 @@
                         <!-- 하단 푸터 영역 -->
                         <footer class="results-footer">
                             <div class="footer-content">
-                                <button class="retake-link" onclick="resetAssessment()">
+                                <button class="retake-link" id="retakeBtn">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                                         <path d="M3 3v5h5"/>
@@ -333,7 +333,7 @@
     <!-- Link 팀 진단 문의 모달 -->
     <div id="inquiryModal" class="inquiry-modal">
         <div class="inquiry-modal-content">
-            <button class="inquiry-modal-close" onclick="closeInquiryModal()">&times;</button>
+            <button class="inquiry-modal-close" id="closeInquiryBtn">&times;</button>
 
             <div id="inquiryForm" class="inquiry-form">
                 <h3 class="inquiry-title">Link 팀 진단 상담 신청</h3>
@@ -371,7 +371,7 @@
                         <input type="checkbox" id="inquiryConsent" checked>
                         <span class="consent-text">
                             맞춤형 상담을 위해 진단 결과를 함께 전달합니다
-                            <button type="button" class="consent-detail-btn" onclick="toggleConsentDetail()">상세보기</button>
+                            <button type="button" class="consent-detail-btn" id="consentDetailBtn">상세보기</button>
                         </span>
                     </label>
                     <div id="consentDetail" class="consent-detail" style="display: none;">
@@ -381,14 +381,14 @@
                     </div>
                 </div>
 
-                <button class="inquiry-submit" onclick="submitInquiry()">상담 신청하기</button>
+                <button class="inquiry-submit" id="submitInquiryBtn">상담 신청하기</button>
             </div>
 
             <div id="inquirySuccess" class="inquiry-success" style="display: none;">
                 <div class="success-icon">✓</div>
                 <h3 class="success-title">상담 신청이 완료되었습니다</h3>
                 <p class="success-message">입력하신 이메일로 상세 안내를 보내드리겠습니다.<br>빠른 시일 내에 담당자가 연락드리겠습니다.</p>
-                <button class="inquiry-close-btn" onclick="closeInquiryModal()">확인</button>
+                <button class="inquiry-close-btn" id="closeSuccessBtn">확인</button>
             </div>
         </div>
     </div>
@@ -522,6 +522,77 @@
             window.teamCompatibility = app.teamCompatibility;
             window.storageManager = app.storageManager;
             window.analyticsManager = app.analyticsManager;
+
+            // ========================================
+            // Event Listeners - onclick 제거 후 addEventListener로 등록
+            // ========================================
+
+            // 진단 시작 버튼
+            const startBtn = document.getElementById('startBtn');
+            if (startBtn) {
+                app.eventManager.add(startBtn, 'click', () => app.startAssessment());
+            }
+
+            // 진단 화면 네비게이션
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            if (prevBtn) {
+                app.eventManager.add(prevBtn, 'click', () => app.previousQuestion());
+            }
+            if (nextBtn) {
+                app.eventManager.add(nextBtn, 'click', () => app.nextQuestion());
+            }
+
+            // 팔로워십 선택 화면 네비게이션
+            const backToAssessmentBtn = document.getElementById('backToAssessmentBtn');
+            const showResultsBtn = document.getElementById('showResultsBtn');
+            if (backToAssessmentBtn) {
+                app.eventManager.add(backToAssessmentBtn, 'click', () => app.showSection('assessment'));
+            }
+            if (showResultsBtn) {
+                app.eventManager.add(showResultsBtn, 'click', () => app.showResultsPage());
+            }
+
+            // 결과 화면 버튼
+            const openInquiryBtn = document.getElementById('openInquiryBtn');
+            const retakeBtn = document.getElementById('retakeBtn');
+            if (openInquiryBtn) {
+                app.eventManager.add(openInquiryBtn, 'click', () => openInquiryModal());
+            }
+            if (retakeBtn) {
+                app.eventManager.add(retakeBtn, 'click', () => app.resetAssessment());
+            }
+
+            // 문의 모달 버튼
+            const closeInquiryBtn = document.getElementById('closeInquiryBtn');
+            const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+            const submitInquiryBtn = document.getElementById('submitInquiryBtn');
+            const consentDetailBtn = document.getElementById('consentDetailBtn');
+
+            if (closeInquiryBtn) {
+                app.eventManager.add(closeInquiryBtn, 'click', () => closeInquiryModal());
+            }
+            if (closeSuccessBtn) {
+                app.eventManager.add(closeSuccessBtn, 'click', () => closeInquiryModal());
+            }
+            if (submitInquiryBtn) {
+                app.eventManager.add(submitInquiryBtn, 'click', () => submitInquiry());
+            }
+            if (consentDetailBtn) {
+                app.eventManager.add(consentDetailBtn, 'click', () => toggleConsentDetail());
+            }
+
+            // 모달 외부 클릭 시 닫기
+            const inquiryModal = document.getElementById('inquiryModal');
+            if (inquiryModal) {
+                app.eventManager.add(inquiryModal, 'click', (e) => {
+                    if (e.target === inquiryModal) {
+                        closeInquiryModal();
+                    }
+                });
+            }
+
+            console.log('✓ 이벤트 리스너 등록 완료');
         })();
 
         // Removed: 이 함수는 AppController.startAssessment()로 대체됨
