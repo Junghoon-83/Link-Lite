@@ -500,9 +500,9 @@
         // ========================================
         // Application Controller
         // ========================================
-        let app = null;
 
         // 하위 호환성을 위한 전역 변수 (오래된 코드에서 사용)
+        let app = null;
         let assessment = null;
         let teamCompatibility = null;
         let mobileNav = null;
@@ -544,6 +544,7 @@
 
             try {
                 app = new AppController();
+                window.app = app; // 전역 접근을 위해 window에도 할당
                 console.log('✓ AppController 인스턴스 생성 완료');
 
                 await app.init();
