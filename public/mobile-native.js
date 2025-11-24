@@ -566,8 +566,10 @@ class MobileNavigationManager {
         }
 
         // Check if mobile nav already exists
-        if (document.querySelector('.mobile-nav')) {
-            console.log('⚠️ 모바일 네비게이션 이미 존재');
+        const existingNav = document.querySelector('.mobile-nav');
+        if (existingNav) {
+            console.log('⚠️ 모바일 네비게이션 이미 존재 - 기존 요소 재사용');
+            this.navElement = existingNav;
             return;
         }
 
