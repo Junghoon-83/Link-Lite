@@ -10,6 +10,7 @@ class MobileNativeInput {
         this.min = options.min || 1;
         this.max = options.max || 6;
         this.onChange = options.onChange || (() => {});
+        this.isTouchDevice = false; // 터치 디바이스 감지
 
         this.labels = [
             '매우\n그렇지 않다',
@@ -140,13 +141,30 @@ class MobileNativeInput {
             this.observeZoneStyles(zone);
 
             // Touch Events
-            zone.addEventListener('touchstart', (e) => this.handleTouchStart(e, value), { passive: true });
+            zone.addEventListener('touchstart', (e) => {
+                this.isTouchDevice = true; // 터치 디바이스로 표시
+                this.handleTouchStart(e, value);
+            }, { passive: true });
             zone.addEventListener('touchend', (e) => this.handleTouchEnd(e, value), { passive: true });
 
             // Mouse Events (for desktop testing)
             zone.addEventListener('mousedown', (e) => this.handleTouchStart(e, value));
             zone.addEventListener('mouseup', (e) => this.handleTouchEnd(e, value));
             zone.addEventListener('click', (e) => this.selectValue(value));
+
+            // Hover Events - 우측 상단 점수 미리보기 (데스크톱만)
+            zone.addEventListener('mouseenter', () => {
+                // 터치 디바이스에서는 호버 미리보기 비활성화
+                if (!this.isTouchDevice) {
+                    this.handleHoverPreview(value);
+                }
+            });
+            zone.addEventListener('mouseleave', () => {
+                // 터치 디바이스에서는 호버 미리보기 비활성화
+                if (!this.isTouchDevice) {
+                    this.handleHoverEnd();
+                }
+            });
 
             // Keyboard Support
             zone.addEventListener('keydown', (e) => {
@@ -273,6 +291,61 @@ class MobileNativeInput {
     handleBlur(zone) {
         if (!zone.classList.contains('selected')) {
             zone.style.boxShadow = '';
+        }
+    }
+
+    handleHoverPreview(value) {
+        // 점수 색상 정의
+        const scoreColors = {
+            1: '#ef4444', // Red
+            2: '#f97316', // Orange
+            3: '#f59e0b', // Amber
+            4: '#84cc16', // Lime
+            5: '#22c55e', // Green
+            6: '#10b981'  // Emerald
+        };
+
+        // 우측 상단 점수 표시 영역 업데이트 (호버 중)
+        this.selectedDisplay.textContent = value;
+        this.selectedDisplay.style.setProperty('background', scoreColors[value], 'important');
+        this.selectedDisplay.style.setProperty('opacity', '0.8', 'important'); // 미리보기는 살짝 투명하게
+
+        // 피드백 바도 업데이트
+        const percentage = ((value - this.min) / (this.max - this.min)) * 100;
+        this.feedbackProgress.style.width = `${percentage}%`;
+        this.feedbackProgress.style.setProperty('background', scoreColors[value], 'important');
+        this.feedbackProgress.style.setProperty('opacity', '0.8', 'important');
+    }
+
+    handleHoverEnd() {
+        // 호버가 끝나면 실제 선택된 값으로 복원
+        if (this.value) {
+            const scoreColors = {
+                1: '#ef4444',
+                2: '#f97316',
+                3: '#f59e0b',
+                4: '#84cc16',
+                5: '#22c55e',
+                6: '#10b981'
+            };
+
+            this.selectedDisplay.textContent = this.value;
+            this.selectedDisplay.style.setProperty('background', scoreColors[this.value], 'important');
+            this.selectedDisplay.style.removeProperty('opacity'); // 투명도 제거
+
+            const percentage = ((this.value - this.min) / (this.max - this.min)) * 100;
+            this.feedbackProgress.style.width = `${percentage}%`;
+            this.feedbackProgress.style.setProperty('background', scoreColors[this.value], 'important');
+            this.feedbackProgress.style.removeProperty('opacity');
+        } else {
+            // 아직 선택하지 않았으면 초기 상태로
+            this.selectedDisplay.textContent = '-';
+            this.selectedDisplay.style.setProperty('background', '#8E8E93', 'important');
+            this.selectedDisplay.style.removeProperty('opacity');
+
+            this.feedbackProgress.style.width = '0%';
+            this.feedbackProgress.style.setProperty('background', '#8E8E93', 'important');
+            this.feedbackProgress.style.removeProperty('opacity');
         }
     }
 
