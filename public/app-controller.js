@@ -335,6 +335,9 @@ class AppController {
     }
 
     completeAssessment() {
+        console.log('=== completeAssessment 호출 ===');
+        console.log('assessment.isComplete():', this.assessment.isComplete());
+
         if (!this.assessment.isComplete()) {
             this.showErrorMessage('모든 질문에 답변해주세요.');
             return;
@@ -343,13 +346,20 @@ class AppController {
         const result = this.assessment.determineLeadershipType();
         this.state.currentLeadershipCode = result.code;
 
+        console.log('리더십 타입 결정:', result);
+        console.log('currentLeadershipCode:', this.state.currentLeadershipCode);
+
         this.analyticsManager.trackAssessmentComplete(
             result.type,
             Date.now() - this.storageManager.restoreCurrentSession()?.startedAt || 0
         );
 
+        console.log('팔로워십 섹션으로 이동');
         this.showSection('followership');
+
+        console.log('팔로워십 옵션 페이지 생성');
         this.createFollowershipOptionsPage();
+        console.log('✓ completeAssessment 완료');
     }
 
     // ========================================
@@ -357,11 +367,18 @@ class AppController {
     // ========================================
 
     createFollowershipOptionsPage() {
+        console.log('=== createFollowershipOptionsPage 호출 ===');
         const container = document.getElementById('followershipOptionsPage');
-        if (!container) return;
+        console.log('container:', container);
+
+        if (!container) {
+            console.error('❌ followershipOptionsPage 컨테이너를 찾을 수 없음');
+            return;
+        }
 
         container.innerHTML = '';
         const followershipTypes = this.teamCompatibility.followershipTypes;
+        console.log('followershipTypes:', Object.keys(followershipTypes));
 
         Object.keys(followershipTypes).forEach(typeId => {
             const type = followershipTypes[typeId];
@@ -386,12 +403,16 @@ class AppController {
 
             // 체크박스 이벤트
             const checkbox = card.querySelector('input[type="checkbox"]');
+            console.log(`체크박스 이벤트 등록: ${typeId}`, checkbox);
             this.eventManager.add(checkbox, 'change', () => {
+                console.log(`체크박스 change 이벤트 발생: ${typeId}`);
                 this.toggleFollowershipType(typeId);
             });
 
             container.appendChild(card);
         });
+
+        console.log('✓ 팔로워십 카드 생성 완료, 카드 수:', container.children.length);
     }
 
     toggleFollowershipType(typeId) {
