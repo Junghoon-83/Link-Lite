@@ -471,12 +471,6 @@ class AppController {
 
         console.log('✓ 팔로워십 선택 확인 완료');
 
-        // 전역 변수 업데이트 (하위 호환성)
-        window.selectedFollowerTypes = this.state.selectedFollowers;
-        window.currentLeadershipCode = this.state.currentLeadershipCode;
-
-        console.log('✓ 전역 변수 업데이트 완료');
-
         // 팀원 이름 수집 및 다중 이름 처리
         const expandedFollowers = [];
         this.state.selectedFollowers.forEach(follower => {
@@ -513,14 +507,7 @@ class AppController {
 
         this.state.selectedFollowers = expandedFollowers;
 
-        // 전역 변수를 모두 업데이트 (window와 스크립트 스코프 모두)
-        window.selectedFollowerTypes = expandedFollowers;
-        if (typeof selectedFollowerTypes !== 'undefined') {
-            selectedFollowerTypes = expandedFollowers;
-        }
-
         console.log('✓ 확장된 팀원 정보:', expandedFollowers);
-        console.log('window.selectedFollowerTypes 확인:', window.selectedFollowerTypes);
 
         // 리더십 진단 결과 계산 (한 번만)
         const leadershipResult = this.assessment.determineLeadershipType();
