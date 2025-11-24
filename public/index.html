@@ -42,15 +42,14 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg">
 
     <!-- Google Analytics 4 -->
-    <!-- TODO: Replace 'G-XXXXXXXXXX' with your actual GA4 Measurement ID -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T1NCMF2HJH"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
         // GA4 Configuration
-        gtag('config', 'G-XXXXXXXXXX', {
+        gtag('config', 'G-T1NCMF2HJH', {
             'anonymize_ip': true,
             'cookie_flags': 'SameSite=None;Secure',
             'send_page_view': false  // Manual page view tracking via AnalyticsManager
@@ -62,7 +61,10 @@
             'platform': 'web'
         });
 
-        console.log('📊 Google Analytics 4 initialized');
+        // Logger will be available after logger.js loads
+        if (typeof logger !== 'undefined') {
+            logger.log('📊 Google Analytics 4 initialized');
+        }
     </script>
 
     <!-- Fonts -->
