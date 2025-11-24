@@ -1,0 +1,263 @@
+/**
+ * 모바일 폰트 시스템 - 일관된 위계 및 가독성 개선
+ * 기존 12-14px → 16-18px로 전반적 증가
+ */
+
+/* ==============================================
+   모바일 폰트 크기 통합 시스템 (≤768px)
+   ============================================== */
+
+@media (max-width: 768px) {
+    /* 1. 헤딩 (Heading) 위계 */
+    h1, .h1 {
+        font-size: 2rem !important;      /* 32px - 메인 타이틀 */
+        line-height: 1.3 !important;
+    }
+
+    h2, .h2 {
+        font-size: 1.5rem !important;    /* 24px - 섹션 타이틀 */
+        line-height: 1.4 !important;
+    }
+
+    h3, .h3 {
+        font-size: 1.25rem !important;   /* 20px - 서브 타이틀 */
+        line-height: 1.4 !important;
+    }
+
+    h4, .h4 {
+        font-size: 1.125rem !important;  /* 18px - 카드 타이틀 */
+        line-height: 1.5 !important;
+    }
+
+    /* 2. 본문 (Body) 텍스트 */
+    body, p, .body-text {
+        font-size: 1rem !important;      /* 16px - 기본 본문 */
+        line-height: 1.6 !important;
+    }
+
+    .body-lg {
+        font-size: 1.125rem !important;  /* 18px - 큰 본문 */
+        line-height: 1.6 !important;
+    }
+
+    .body-sm {
+        font-size: 0.875rem !important;  /* 14px - 작은 본문 */
+        line-height: 1.5 !important;
+    }
+
+    /* 3. 캡션 (Caption) */
+    .caption, small {
+        font-size: 0.875rem !important;  /* 14px - 캡션 */
+        line-height: 1.5 !important;
+    }
+
+    .caption-sm {
+        font-size: 0.75rem !important;   /* 12px - 최소 크기 */
+        line-height: 1.4 !important;
+    }
+
+    /* 4. 버튼 텍스트 */
+    button, .btn, .button {
+        font-size: 1rem !important;      /* 16px - 버튼 */
+        line-height: 1.5 !important;
+    }
+
+    .btn-lg {
+        font-size: 1.125rem !important;  /* 18px - 큰 버튼 */
+    }
+
+    .btn-sm {
+        font-size: 0.875rem !important;  /* 14px - 작은 버튼 */
+    }
+
+    /* 5. 레이블 */
+    label, .label {
+        font-size: 0.875rem !important;  /* 14px - 레이블 */
+        line-height: 1.5 !important;
+    }
+
+    /* 6. 입력 필드 */
+    input, textarea, select {
+        font-size: 1rem !important;      /* 16px - iOS 줌 방지 */
+        line-height: 1.5 !important;
+    }
+}
+
+/* ==============================================
+   특정 컴포넌트별 폰트 크기 (≤768px)
+   ============================================== */
+
+@media (max-width: 768px) {
+    /* Welcome 페이지 */
+    .hero-title {
+        font-size: 2rem !important;      /* 32px */
+    }
+
+    .hero-subtitle {
+        font-size: 1.125rem !important;  /* 18px */
+    }
+
+    /* 질문 페이지 */
+    .question-number {
+        font-size: 0.875rem !important;  /* 14px */
+    }
+
+    .question-category {
+        font-size: 0.875rem !important;  /* 14px */
+    }
+
+    .question-text {
+        font-size: 1.125rem !important;  /* 18px - 중요! */
+        line-height: 1.6 !important;
+    }
+
+    /* 점수 선택 버튼 */
+    .score-label {
+        font-size: 0.875rem !important;  /* 14px */
+    }
+
+    .score-value {
+        font-size: 1.5rem !important;    /* 24px */
+    }
+
+    /* 팔로워십 카드 */
+    .followership-card h4 {
+        font-size: 1.125rem !important;  /* 18px */
+    }
+
+    .followership-card p {
+        font-size: 1rem !important;      /* 16px */
+    }
+
+    /* 결과 페이지 */
+    .leadership-type-title {
+        font-size: 1.75rem !important;   /* 28px */
+    }
+
+    .leadership-subtitle {
+        font-size: 1rem !important;      /* 16px */
+    }
+
+    .score-card-title {
+        font-size: 0.875rem !important;  /* 14px */
+    }
+
+    .score-card-value {
+        font-size: 1.75rem !important;   /* 28px */
+    }
+
+    .score-card-label {
+        font-size: 0.875rem !important;  /* 14px */
+    }
+
+    /* 레이더 차트 라벨 */
+    .radar-label {
+        font-size: 1rem !important;      /* 16px - Gemini 권장보다 큼 */
+    }
+
+    .label-desc {
+        font-size: 0.875rem !important;  /* 14px */
+    }
+
+    /* CTA 섹션 */
+    .cta-title {
+        font-size: 1.25rem !important;   /* 20px */
+    }
+
+    .cta-description {
+        font-size: 1rem !important;      /* 16px */
+    }
+
+    .cta-button {
+        font-size: 1rem !important;      /* 16px */
+    }
+
+    /* 모달 */
+    .modal-title {
+        font-size: 1.5rem !important;    /* 24px */
+    }
+
+    .modal-body {
+        font-size: 1rem !important;      /* 16px */
+    }
+
+    .form-label {
+        font-size: 0.875rem !important;  /* 14px */
+    }
+
+    .form-input {
+        font-size: 1rem !important;      /* 16px - iOS 줌 방지 */
+    }
+
+    /* 네비게이션 */
+    .mobile-nav-btn {
+        font-size: 1rem !important;      /* 16px */
+    }
+}
+
+/* ==============================================
+   소형 모바일 (≤480px) - 추가 조정
+   ============================================== */
+
+@media (max-width: 480px) {
+    h1, .h1 {
+        font-size: 1.75rem !important;   /* 28px */
+    }
+
+    h2, .h2 {
+        font-size: 1.375rem !important;  /* 22px */
+    }
+
+    .question-text {
+        font-size: 1.0625rem !important; /* 17px */
+    }
+
+    .leadership-type-title {
+        font-size: 1.5rem !important;    /* 24px */
+    }
+
+    .score-card-value {
+        font-size: 1.5rem !important;    /* 24px */
+    }
+}
+
+/* ==============================================
+   줄간격 (Line Height) 통합
+   ============================================== */
+
+@media (max-width: 768px) {
+    /* 제목 줄간격 - 타이트 */
+    h1, h2, h3, h4, h5, h6,
+    .h1, .h2, .h3, .h4, .h5, .h6 {
+        line-height: 1.3 !important;
+    }
+
+    /* 본문 줄간격 - 편안함 */
+    p, .body-text, li {
+        line-height: 1.6 !important;
+    }
+
+    /* 짧은 텍스트 줄간격 - 보통 */
+    .caption, .label, button {
+        line-height: 1.5 !important;
+    }
+}
+
+/* ==============================================
+   가독성 개선 추가 속성
+   ============================================== */
+
+@media (max-width: 768px) {
+    body {
+        -webkit-text-size-adjust: 100% !important;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
+    }
+
+    /* 한글 단어 단위 줄바꿈 */
+    p, li, .body-text {
+        word-break: keep-all !important;
+        overflow-wrap: break-word !important;
+    }
+}
