@@ -397,6 +397,7 @@
     <script src="team-compatibility.js?v=14"></script>
     <script src="storage-manager.js?v=1"></script>
     <script src="analytics-manager.js?v=1"></script>
+    <script src="app-controller.js?v=1"></script>
     <script src="mobile-native.js?v=17"></script>
     <script>
         // Global Error Handler
@@ -497,91 +498,34 @@
         };
 
         // ========================================
-        // Core Instances
+        // Application Controller
         // ========================================
-        let assessment = new LeadershipAssessment();
-        let teamCompatibility = new TeamCompatibility();
-        let storageManager = new StorageManager();
-        let analyticsManager = new AnalyticsManager();
-        let currentQuestion = 0;
-        let selectedFollowerTypes = []; // { id: string, name: string, memberName: string }
-        let mobileInput = null;
-        let mobileNav = null;
-        let currentLeadershipCode = null; // 현재 리더십 유형 코드 저장
-
-        // ========================================
-        // Application Initialization
-        // ========================================
-        async function initializeApp() {
-            try {
-                // 시작 버튼 비활성화
-                const startBtn = document.querySelector('.premium-btn');
-                if (startBtn) {
-                    startBtn.disabled = true;
-                    startBtn.textContent = '데이터 로딩 중...';
-                }
-
-                // 1. Assessment 및 TeamCompatibility 초기화 (병렬)
-                await Promise.all([
-                    assessment.init(),
-                    teamCompatibility.init()
-                ]);
-                console.log('✓ Assessment 및 TeamCompatibility 초기화 완료');
-
-                // 시작 버튼 활성화
-                if (startBtn) {
-                    startBtn.disabled = false;
-                    startBtn.innerHTML = '<span>진단 시작</span><span>→</span>';
-                }
-
-                // 2. 세션 복구 시도
-                const savedSession = storageManager.restoreCurrentSession();
-                if (savedSession && !savedSession.isComplete) {
-                    const totalQuestions = assessment.getTotalQuestions();
-                    const shouldResume = confirm(
-                        '진행 중인 진단이 있습니다. 이어서 하시겠습니까?\n\n' +
-                        `마지막 진행: ${savedSession.currentQuestionIndex + 1}/${totalQuestions}번 질문`
-                    );
-
-                    if (shouldResume) {
-                        assessment.responses = savedSession.responses;
-                        currentQuestion = savedSession.currentQuestionIndex;
-                        showSection('assessment');
-                        loadQuestion(currentQuestion);
-                        console.log('✓ 세션 복구 완료:', savedSession.id);
-                    } else {
-                        storageManager.clearCurrentSession();
-                    }
-                }
-            } catch (error) {
-                console.error('초기화 오류:', error);
-                showErrorMessage('앱을 불러오는 중 오류가 발생했습니다. 페이지를 새로고침해주세요.');
-            }
-        }
+        let app = null;
 
         // 페이지 로드 시 초기화
-        initializeApp();
+        (async function() {
+            app = new AppController();
+            await app.init();
 
-        function startAssessment() {
-            // 초기화 완료 확인
-            if (!assessment.isInitialized || !teamCompatibility.isInitialized) {
-                showErrorMessage('데이터가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.');
-                return;
-            }
-            try {
-                showSection('assessment');
+            // 전역 함수를 app 메서드에 연결 (기존 코드 호환성 유지)
+            window.startAssessment = () => app.startAssessment();
+            window.resetAssessment = () => app.resetAssessment();
+            window.nextQuestion = () => app.nextQuestion();
+            window.previousQuestion = () => app.previousQuestion();
+            window.selectScore = (score) => app.recordScore(score);
+            window.showResultsPage = () => app.showResultsPage();
+            window.toggleFollowershipType = (id) => app.toggleFollowershipType(id);
+            window.showSection = (id) => app.showSection(id);
 
-                // Initialize mobile navigation for mobile screens
-                if (window.innerWidth <= 768 && !mobileNav) {
-                    mobileNav = new MobileNavigationManager();
-                }
+            // 하위 호환성을 위한 전역 변수 노출 (점진적 제거 예정)
+            window.assessment = app.assessment;
+            window.teamCompatibility = app.teamCompatibility;
+            window.storageManager = app.storageManager;
+            window.analyticsManager = app.analyticsManager;
+        })();
 
-                loadQuestion(0);
-            } catch (error) {
-                console.error('진단 시작 오류:', error);
-                showErrorMessage('진단을 시작할 수 없습니다. 페이지를 새로고침해주세요.');
-            }
-        }
+        // Removed: 이 함수는 AppController.startAssessment()로 대체됨
+        // window.startAssessment가 app.startAssessment()를 호출함
 
         function showSection(sectionId) {
             // 모든 섹션 숨기기
@@ -692,26 +636,8 @@
             }
         }
 
-        function nextQuestion() {
-            if (currentQuestion < assessment.getTotalQuestions() - 1) {
-                loadQuestion(currentQuestion + 1);
-            } else {
-                showResults();
-            }
-        }
-
-        function previousQuestion() {
-            if (currentQuestion > 0) {
-                loadQuestion(currentQuestion - 1);
-            } else {
-                // 첫 질문에서 이전 버튼 클릭 시 시작 화면으로
-                showSection('welcome');
-            }
-        }
-
-        // Expose functions to window for mobile navigation
-        window.nextQuestion = nextQuestion;
-        window.previousQuestion = previousQuestion;
+        // Removed: nextQuestion, previousQuestion은 AppController로 대체됨
+        // window.nextQuestion, window.previousQuestion가 app 메서드를 호출함
         window.goBackToAssessment = goBackToAssessment;
         window.showResultsPage = showResultsPage;
 
