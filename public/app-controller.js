@@ -212,17 +212,17 @@ class AppController {
                 this.ui.mobileInput.destroy();
             }
 
-            // 새 모바일 입력 생성
+            // 새 모바일 입력 생성 (새 질문이므로 선택 초기화)
             const currentResponse = this.assessment.responses[question.id];
             this.ui.mobileInput = new MobileNativeInput(inputContainer, {
-                defaultValue: currentResponse,
+                defaultValue: null, // 항상 선택 초기화
                 min: 1,
                 max: 6,
                 onChange: (value) => {
                     this.assessment.recordResponse(question.id, value);
                     this.updateNextButton();
 
-                    // 점수 선택 후 자동으로 다음으로 이동
+                    // 점수 선택 후 자동으로 다음으로 이동 (딜레이 300ms로 감소)
                     setTimeout(() => {
                         const totalQuestions = this.assessment.getTotalQuestions();
                         if (this.state.currentQuestion < totalQuestions - 1) {
@@ -232,7 +232,7 @@ class AppController {
                             // 마지막 질문 - 팔로워십 선택으로 이동
                             this.completeAssessment();
                         }
-                    }, 500);
+                    }, 300);
                 }
             });
         }
