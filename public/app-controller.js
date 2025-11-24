@@ -832,16 +832,24 @@ class AppController {
     }
 
     async _loadLeadershipTips(leadershipCode) {
+        const container = document.getElementById('leadershipTipsContainer');
+
         try {
             // 데이터 로드 (캐싱)
             if (!this._leadershipTipsData) {
                 const response = await fetch('data/leadership-tips.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 this._leadershipTipsData = await response.json();
             }
 
             const typeData = this._leadershipTipsData[leadershipCode];
             if (!typeData) {
                 console.warn('리더십 팁 데이터를 찾을 수 없습니다:', leadershipCode);
+                if (container) {
+                    container.innerHTML = '<p class="empty-message">해당 리더십 유형의 팁 데이터를 찾을 수 없습니다.</p>';
+                }
                 return;
             }
 
@@ -855,7 +863,6 @@ class AppController {
             }
 
             // 팁 카드 생성
-            const container = document.getElementById('leadershipTipsContainer');
             if (!container) return;
 
             container.innerHTML = '';
@@ -881,6 +888,26 @@ class AppController {
             }
         } catch (error) {
             console.error('리더십 팁 로드 실패:', error);
+            // 사용자에게 에러 메시지 표시
+            if (container) {
+                container.innerHTML = `
+                    <div class="error-message" style="
+                        background: #fee2e2;
+                        border: 1px solid #f87171;
+                        border-radius: 8px;
+                        padding: 16px;
+                        color: #991b1b;
+                        text-align: center;
+                    ">
+                        <p style="margin: 0 0 8px 0; font-weight: 600;">팁을 불러오는 데 실패했습니다</p>
+                        <p style="margin: 0; font-size: 14px;">페이지를 새로고침하거나 잠시 후 다시 시도해주세요.</p>
+                    </div>
+                `;
+            }
+            // 에러 추적 (AnalyticsManager가 있으면 사용)
+            if (this.analyticsManager) {
+                this.analyticsManager.trackError('Leadership tips load failed', error.message);
+            }
         }
     }
 

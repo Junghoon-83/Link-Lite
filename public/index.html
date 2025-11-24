@@ -501,15 +501,21 @@
         // Application Controller
         // ========================================
 
-        // 하위 호환성을 위한 전역 변수 (오래된 코드에서 사용)
+        // 하위 호환성을 위한 네임스페이스 (전역 변수 오염 방지)
+        const LinkLiteApp = {
+            app: null,
+            assessment: null,
+            teamCompatibility: null,
+            mobileNav: null,
+            mobileInput: null
+        };
+
+        // 전역 접근을 위한 alias (하위 호환성)
         let app = null;
         let assessment = null;
         let teamCompatibility = null;
         let mobileNav = null;
         let mobileInput = null;
-        let currentQuestion = 0;
-        let currentLeadershipCode = null;
-        // selectedFollowerTypes 제거 - AppController.state.selectedFollowers 사용
 
         // 페이지 로드 시 초기화 - DOMContentLoaded 대기
         document.addEventListener('DOMContentLoaded', async function() {
@@ -543,11 +549,14 @@
             console.log('✓ 모든 필수 클래스 로드 완료');
 
             try {
-                app = new AppController();
-                window.app = app; // 전역 접근을 위해 window에도 할당
+                // 네임스페이스를 통한 초기화
+                LinkLiteApp.app = new AppController();
+                // 하위 호환성을 위한 전역 변수 할당
+                app = LinkLiteApp.app;
+                window.app = LinkLiteApp.app;
                 console.log('✓ AppController 인스턴스 생성 완료');
 
-                await app.init();
+                await LinkLiteApp.app.init();
                 console.log('✓ AppController 초기화 완료');
             } catch (error) {
                 console.error('❌ AppController 초기화 실패:', error);
@@ -775,14 +784,6 @@
                 detail.style.display = 'none';
             }
         }
-
-        // 모달 외부 클릭 시 닫기
-        document.addEventListener('click', function(e) {
-            const modal = document.getElementById('inquiryModal');
-            if (e.target === modal) {
-                closeInquiryModal();
-            }
-        });
 
         // ========================================
         // Keyboard Shortcuts for Testing

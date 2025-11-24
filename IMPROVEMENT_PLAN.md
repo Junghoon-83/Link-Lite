@@ -239,11 +239,130 @@ npm install -D vite
 
 ---
 
-**마지막 업데이트**: 2025-11-24
-**현재 버전**: b99dc66 (11월 18일 버전 + Stage 1 + Stage 2 완료)
+**마지막 업데이트**: 2025-11-25
+**현재 버전**: 186df8b (코드 정리 및 보안 강화)
+**코드 품질 점수**: 7.5/10 (Code Review 2025-11-25)
 
 ## 완료된 커밋 히스토리
 - **d93a5f0**: 보안 강화 및 데이터 관리 시스템 구현 (Stage 1)
 - **c12cd5d**: AppController 클래스 도입 (Stage 2-1)
 - **aaba91f**: 이벤트 관리 개선 - onclick → addEventListener (Stage 2-2)
 - **b99dc66**: 접근성 개선 - ARIA 속성 및 시맨틱 마크업 (Stage 2-3)
+- **186df8b**: 코드 정리 및 보안 강화 - 976줄 제거, AppController 통합 (Stage 2-4)
+
+---
+
+## 🔥 Stage 2.5: Critical 이슈 수정 (즉시 수행)
+
+**Code Review 2025-11-25 발견 사항**
+
+### Critical 이슈 (즉시 수정 필요)
+
+#### 1. 메모리 누수 수정
+- [ ] **MutationObserver 중복 등록 방지**
+  - 파일: `mobile-native.js:171-189`
+  - 문제: observeZoneStyles 메서드가 여러 번 호출되면 observer 누적
+  - 해결: zone에 observer 저장하여 중복 방지
+
+  ```javascript
+  observeZoneStyles(zone) {
+      // 기존 observer 해제
+      const existingObserver = zone.__mutationObserver;
+      if (existingObserver) {
+          existingObserver.disconnect();
+      }
+
+      const observer = new MutationObserver((mutations) => { /* ... */ });
+      observer.observe(zone, {...});
+      zone.__mutationObserver = observer;
+
+      if (!this.observers) this.observers = [];
+      this.observers.push(observer);
+  }
+  ```
+
+#### 2. 전역 변수 오염 제거
+- [ ] **전역 변수 제거 또는 네임스페이스화**
+  - 파일: `index.html:504-512`
+  - 문제: 7개의 전역 변수로 window 객체 오염
+  - 해결: AppController가 이미 모든 상태 관리하므로 제거
+
+  ```javascript
+  // 제거 또는 네임스페이스 사용
+  const LinkLiteApp = {
+      app: null,
+      assessment: null,
+      teamCompatibility: null
+  };
+  ```
+
+#### 3. Promise 에러 처리 개선
+- [ ] **fetch 실패 시 UI 피드백 추가**
+  - 파일: `app-controller.js:834-884`
+  - 문제: 리더십 팁 로드 실패 시 사용자에게 알림 없음
+  - 해결: 에러 메시지 표시
+
+  ```javascript
+  } catch (error) {
+      console.error('리더십 팁 로드 실패:', error);
+      const container = document.getElementById('leadershipTipsContainer');
+      if (container) {
+          container.innerHTML = '<p class="error-message">팁을 불러오는 데 실패했습니다. 페이지를 새로고침해주세요.</p>';
+      }
+  }
+  ```
+
+#### 4. 중복 이벤트 리스너 제거
+- [ ] **모달 외부 클릭 이벤트 중복 제거**
+  - 파일: `index.html:780-785`
+  - 문제: 645-652줄과 780-785줄에 동일한 이벤트 리스너 중복
+  - 해결: 780-785줄 코드 제거
+
+### Major 이슈 (우선 수정 권장)
+
+#### 5. 입력 검증 로직 통합
+- [ ] **SecurityUtils와 LeadershipAssessment 검증 통합**
+  - 파일: `index.html:469-498`, `leadership-assessment.js:45-50`
+  - 문제: 두 곳에서 다른 검증 로직 사용
+  - 해결: LeadershipAssessment의 static 메서드로 통합
+
+#### 6. CSS 중복 코드 제거
+- [ ] **gradientShift 키프레임 중복 제거**
+  - 파일: `mobile-native.css:469-596`, `premium-style.css:275-282`
+  - 문제: 동일한 애니메이션이 두 파일에 중복 정의
+  - 해결: premium-style.css에만 정의
+
+#### 7. 매직 넘버 상수화
+- [ ] **임계값 4.5를 상수로 추출**
+  - 파일: `leadership-assessment.js:114`
+  - 문제: 하드코딩된 임계값
+  - 해결: `static THRESHOLD = 4.5` 사용
+
+#### 8. StorageManager 데이터 마이그레이션
+- [ ] **버전 업데이트 시 데이터 마이그레이션 로직 추가**
+  - 파일: `storage-manager.js:21-37`
+  - 문제: 버전 변경 시 모든 데이터 삭제
+  - 해결: 버전별 마이그레이션 함수 구현
+
+### Minor 이슈 (개선 권장)
+
+#### 9. Logger 유틸리티 도입
+- [ ] **console.log를 Logger로 대체**
+  - 모든 파일에 프로덕션 로그 남아있음
+  - 개발/프로덕션 모드 분리
+
+#### 10. SVG 접근성 개선
+- [ ] **레이더 차트에 role/aria 추가**
+  - 파일: `index.html:189-236`
+  - 해결: `<title>`, `<desc>`, `role="img"` 추가
+
+#### 11. CSS 클래스로 스타일 제어
+- [ ] **강제 스타일 적용을 CSS 클래스로 변경**
+  - 파일: `mobile-native.js:42-48`
+  - 문제: JavaScript로 스타일 강제 적용
+  - 해결: `.touch-zone-static` 클래스 사용
+
+#### 12. 사용되지 않는 코드 제거
+- [ ] **team-compatibility.js의 미사용 메서드 제거**
+  - `generateTeamReport` (57-95줄)
+  - `generateRecommendations` (97-122줄)

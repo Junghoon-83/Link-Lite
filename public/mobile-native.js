@@ -169,6 +169,19 @@ class MobileNativeInput {
     }
 
     observeZoneStyles(zone) {
+        // 기존 observer가 있으면 먼저 해제 (메모리 누수 방지)
+        const existingObserver = zone.__mutationObserver;
+        if (existingObserver) {
+            existingObserver.disconnect();
+            // observers 배열에서도 제거
+            if (this.observers) {
+                const index = this.observers.indexOf(existingObserver);
+                if (index > -1) {
+                    this.observers.splice(index, 1);
+                }
+            }
+        }
+
         // MutationObserver로 스타일 변경 감지
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
@@ -183,6 +196,9 @@ class MobileNativeInput {
             attributes: true,
             attributeFilter: ['style']
         });
+
+        // zone에 직접 저장하여 중복 방지
+        zone.__mutationObserver = observer;
 
         // 클래스에 observer 저장
         if (!this.observers) this.observers = [];
