@@ -320,9 +320,16 @@ class AppController {
     }
 
     nextQuestion() {
+        console.log('=== nextQuestion 호출 ===');
+        console.log('현재 질문:', this.state.currentQuestion);
+        console.log('전체 질문 수:', this.assessment.getTotalQuestions());
+        console.log('마지막 질문인가:', this.state.currentQuestion === this.assessment.getTotalQuestions() - 1);
+
         if (this.state.currentQuestion < this.assessment.getTotalQuestions() - 1) {
+            console.log('다음 질문으로 이동');
             this.loadQuestion(this.state.currentQuestion + 1);
         } else {
+            console.log('마지막 질문 - completeAssessment() 호출');
             // 마지막 질문에서 다음 버튼 클릭 시 팔로워십 선택으로 이동
             this.completeAssessment();
         }

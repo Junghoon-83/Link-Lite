@@ -589,7 +589,11 @@
                 app.eventManager.add(prevBtn, 'click', () => app.previousQuestion());
             }
             if (nextBtn) {
-                app.eventManager.add(nextBtn, 'click', () => app.nextQuestion());
+                app.eventManager.add(nextBtn, 'click', () => {
+                    console.log('=== 다음 버튼 클릭됨 ===');
+                    console.log('버튼 disabled:', nextBtn.disabled);
+                    app.nextQuestion();
+                });
             }
 
             // 팔로워십 선택 화면 네비게이션
