@@ -395,8 +395,12 @@ class AppController {
     }
 
     toggleFollowershipType(typeId) {
+        console.log('=== toggleFollowershipType 호출 ===', typeId);
         const checkbox = document.getElementById(`follower_${typeId}`);
         const memberInput = document.getElementById(`memberInput_${typeId}`);
+
+        console.log('checkbox:', checkbox);
+        console.log('checkbox.checked:', checkbox?.checked);
 
         if (checkbox.checked) {
             memberInput.style.display = 'block';
@@ -408,14 +412,19 @@ class AppController {
             this.state.selectedFollowers = this.state.selectedFollowers.filter(f => f.id !== typeId);
         }
 
+        console.log('현재 선택된 팔로워십:', this.state.selectedFollowers);
+
         // 결과 보기 버튼 상태 업데이트
         this.updateShowResultsButton();
     }
 
     updateShowResultsButton() {
         const btn = document.getElementById('showResultsBtn');
+        console.log('updateShowResultsButton - 버튼:', btn);
+        console.log('updateShowResultsButton - 선택 수:', this.state.selectedFollowers.length);
         if (btn) {
             btn.disabled = this.state.selectedFollowers.length === 0;
+            console.log('updateShowResultsButton - 버튼 disabled:', btn.disabled);
         }
     }
 

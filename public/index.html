@@ -599,7 +599,12 @@
                 app.eventManager.add(backToAssessmentBtn, 'click', () => app.showSection('assessment'));
             }
             if (showResultsBtn) {
-                app.eventManager.add(showResultsBtn, 'click', () => app.showResultsPage());
+                app.eventManager.add(showResultsBtn, 'click', () => {
+                    console.log('=== 결과 보기 버튼 클릭됨 ===');
+                    console.log('버튼 disabled 상태:', showResultsBtn.disabled);
+                    console.log('선택된 팔로워십:', app.state.selectedFollowers);
+                    app.showResultsPage();
+                });
             }
 
             // 결과 화면 버튼
