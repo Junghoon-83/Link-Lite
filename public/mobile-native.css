@@ -256,14 +256,14 @@
     scale: 1 !important;
     animation: none !important;
     background: linear-gradient(145deg,
-        rgba(255, 255, 255, 1),
-        rgba(248, 250, 252, 0.98)) !important;
+        rgba(232, 235, 240, 0.98),
+        rgba(226, 230, 236, 0.95)) !important;
     box-shadow:
-        0 16px 40px rgba(0, 0, 0, 0.06),
-        0 8px 20px rgba(0, 0, 0, 0.04),
-        0 4px 10px rgba(0, 0, 0, 0.02),
-        inset 0 1px 0 rgba(255, 255, 255, 1),
-        0 0 0 1px rgba(79, 70, 229, 0.12) !important;
+        0 16px 40px rgba(0, 0, 0, 0.08),
+        0 8px 20px rgba(0, 0, 0, 0.05),
+        0 4px 10px rgba(0, 0, 0, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 0 0 2px rgba(79, 70, 229, 0.15) !important;
 }
 
 .premium-score-button:hover .score-shimmer {
