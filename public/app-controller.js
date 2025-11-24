@@ -60,7 +60,13 @@ class AppController {
             // 3. 이벤트 리스너 등록
             this.setupEventListeners();
 
-            // 4. 세션 복구 시도
+            // 4. 모바일 네비게이션 초기화
+            if (window.innerWidth <= 768) {
+                this.ui.mobileNav = new MobileNavigationManager();
+                console.log('✓ 모바일 네비게이션 초기화 완료');
+            }
+
+            // 5. 세션 복구 시도
             await this.tryRestoreSession();
 
             this.state.isInitialized = true;
@@ -153,11 +159,6 @@ class AppController {
 
         try {
             this.showSection('assessment');
-
-            // 모바일 네비게이션 초기화
-            if (window.innerWidth <= 768 && !this.ui.mobileNav) {
-                this.ui.mobileNav = new MobileNavigationManager();
-            }
 
             this.loadQuestion(0);
             this.analyticsManager.trackAssessmentStart();
