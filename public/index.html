@@ -806,13 +806,13 @@
                 try {
                     const result = window.app.assessment.determineLeadershipType();
                     diagnosisData = {
-                        leadershipType: window.app.state.currentLeadershipCode || '미진단',
-                        leadershipName: result ? result.name : '미진단',
-                        scores: (result && result.scores) ? {
-                            S: result.scores.S ? result.scores.S.toFixed(2) : '0.00',
-                            I: result.scores.I ? result.scores.I.toFixed(2) : '0.00',
-                            G: result.scores.G ? result.scores.G.toFixed(2) : '0.00'
-                        } : null,
+                        leadershipType: result.code,
+                        leadershipName: result.type.name,
+                        scores: {
+                            sharing: result.scores.sharing.toFixed(2),
+                            interaction: result.scores.interaction.toFixed(2),
+                            growth: result.scores.growth.toFixed(2)
+                        },
                         selectedFollowerTypes: window.app.state.selectedFollowers || []
                     };
                 } catch (e) {
