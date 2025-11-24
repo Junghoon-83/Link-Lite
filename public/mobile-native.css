@@ -747,19 +747,13 @@
 
 /* 모바일 네비게이션 */
 @media (max-width: 768px) {
+    /* 모바일에서는 데스크톱 네비게이션 완전히 숨김 */
     .premium-nav {
-        display: none;
+        display: none !important;
     }
 
-    /* 진단, 팔로워십 선택, 결과 화면에서는 버튼 표시 */
-    #assessment .premium-nav,
-    #followership .premium-nav,
-    #results .premium-nav {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-3);
-        padding: var(--space-4) 0;
-    }
+    /* 모바일 네비게이션만 사용 */
+    /* 기존 규칙 제거: 데스크톱 버튼과 모바일 버튼이 동시 표시되어 충돌 발생 */
 }
 
 /* 태블릿 (481px ~ 768px) */
