@@ -4,13 +4,36 @@
 
 class StorageManager {
     constructor() {
+        this.APP_VERSION = '2.0.0'; // 버전 변경 시 캐시 자동 정리
         this.STORAGE_KEYS = {
             CURRENT_SESSION: 'linkLite_currentSession',
             RESULTS_HISTORY: 'linkLite_resultsHistory',
-            USER_PREFERENCES: 'linkLite_preferences'
+            USER_PREFERENCES: 'linkLite_preferences',
+            APP_VERSION: 'linkLite_appVersion'
         };
         this.MAX_RESULTS = 3;
         this.EXPIRY_DAYS = 30;
+
+        // 버전 체크 및 마이그레이션
+        this._checkVersion();
+    }
+
+    _checkVersion() {
+        const storedVersion = localStorage.getItem(this.STORAGE_KEYS.APP_VERSION);
+
+        if (storedVersion !== this.APP_VERSION) {
+            console.log(`버전 변경 감지: ${storedVersion} → ${this.APP_VERSION}`);
+            console.log('LocalStorage 초기화 중...');
+
+            // 모든 저장된 데이터 삭제
+            Object.values(this.STORAGE_KEYS).forEach(key => {
+                localStorage.removeItem(key);
+            });
+
+            // 새 버전 저장
+            localStorage.setItem(this.STORAGE_KEYS.APP_VERSION, this.APP_VERSION);
+            console.log('✓ LocalStorage 초기화 완료');
+        }
     }
 
     // ========================================

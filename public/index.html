@@ -2125,13 +2125,14 @@
 
         // 테스트용 단축키 기능 (AppController 메서드 사용)
         document.addEventListener('keydown', function(e) {
-            console.log('키 이벤트 감지:', e.key, 'Ctrl:', e.ctrlKey, 'Meta:', e.metaKey);
+            console.log('키 이벤트 감지:', e.key, 'Ctrl:', e.ctrlKey, 'Meta:', e.metaKey, 'Shift:', e.shiftKey);
 
             // 진단 화면에서만 작동
             const assessmentActive = document.getElementById('assessment').classList.contains('active');
-            console.log('진단 화면 활성:', assessmentActive);
+            console.log('진단 화면 활성:', assessmentActive, 'window.app 존재:', !!window.app);
 
             if (assessmentActive && window.app) {
+                console.log('✓ 단축키 처리 시작');
                 // Ctrl/Cmd + 숫자키로 점수 자동 입력
                 if ((e.ctrlKey || e.metaKey) && e.key >= '1' && e.key <= '6') {
                     e.preventDefault();
@@ -2145,8 +2146,9 @@
                 // Ctrl/Cmd + Shift + F: 4.5 기준 랜덤 점수로 채우기
                 if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'f') {
                     e.preventDefault();
-                    console.log('4.5 기준 랜덤 점수 채우기 시작');
+                    console.log('✓ Cmd+Shift+F 감지: 4.5 기준 랜덤 점수 채우기 시작');
                     fillAllQuestionsRandomly();
+                    console.log('✓ fillAllQuestionsRandomly() 완료');
                 }
                 // Ctrl/Cmd + F: 모든 질문을 5점으로 빠르게 채우기
                 else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
