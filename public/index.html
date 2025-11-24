@@ -802,17 +802,17 @@
 
             // 진단 데이터 수집
             let diagnosisData = null;
-            if (consentChecked && assessment) {
-                const result = assessment.determineLeadershipType();
+            if (consentChecked && window.app && window.app.assessment) {
+                const result = window.app.assessment.determineLeadershipType();
                 diagnosisData = {
-                    leadershipType: currentLeadershipCode || '미진단',
+                    leadershipType: window.app.state.currentLeadershipCode || '미진단',
                     leadershipName: result ? result.name : '미진단',
                     scores: result ? {
                         S: result.scores.S.toFixed(2),
                         I: result.scores.I.toFixed(2),
                         G: result.scores.G.toFixed(2)
                     } : null,
-                    selectedFollowerTypes: selectedFollowerTypes || []
+                    selectedFollowerTypes: window.app.state.selectedFollowers || []
                 };
             }
 
