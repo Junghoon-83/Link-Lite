@@ -423,11 +423,82 @@ class AppController {
     // ========================================
 
     showResultsPage() {
-        // 결과 표시 로직은 기존 코드 유지
-        this.showSection('results');
+        // 팔로워십 선택 확인
+        if (this.state.selectedFollowers.length === 0) {
+            this.showErrorMessage('팔로워십 유형을 최소 1개 이상 선택해주세요.');
+            return;
+        }
 
-        const result = this.assessment.determineLeadershipType();
-        // ... 기존 결과 표시 로직 ...
+        console.log('=== AppController.showResultsPage 호출 ===');
+        console.log('선택된 팔로워십:', this.state.selectedFollowers);
+
+        // 전역 변수 업데이트 (하위 호환성)
+        window.selectedFollowerTypes = this.state.selectedFollowers;
+        window.currentLeadershipCode = this.state.currentLeadershipCode;
+
+        // 팀원 이름 수집 및 다중 이름 처리
+        const expandedFollowers = [];
+        this.state.selectedFollowers.forEach(follower => {
+            const nameInput = document.getElementById(`memberName_${follower.id}`);
+            if (nameInput && nameInput.value.trim()) {
+                const names = nameInput.value
+                    .split(/[,\s]+/)
+                    .map(name => name.trim())
+                    .filter(name => name.length > 0);
+
+                if (names.length > 0) {
+                    names.forEach(name => {
+                        expandedFollowers.push({
+                            id: follower.id,
+                            name: this.teamCompatibility.followershipTypes[follower.id].name,
+                            memberName: name
+                        });
+                    });
+                } else {
+                    expandedFollowers.push({
+                        id: follower.id,
+                        name: this.teamCompatibility.followershipTypes[follower.id].name,
+                        memberName: '팀원'
+                    });
+                }
+            } else {
+                expandedFollowers.push({
+                    id: follower.id,
+                    name: this.teamCompatibility.followershipTypes[follower.id].name,
+                    memberName: '팀원'
+                });
+            }
+        });
+
+        this.state.selectedFollowers = expandedFollowers;
+        window.selectedFollowerTypes = expandedFollowers;
+        console.log('확장된 팀원 정보:', expandedFollowers);
+
+        // index.html의 전역 함수들 호출
+        try {
+            // 궁합 분석 실행
+            if (typeof window.analyzeCompatibilityAuto === 'function') {
+                window.analyzeCompatibilityAuto();
+            }
+
+            // 리더십 팁 로드
+            const tipsContainer = document.getElementById('leadershipTipsContainer');
+            if (tipsContainer && tipsContainer.children.length === 0 && this.state.currentLeadershipCode) {
+                console.log('리더십 팁 로드:', this.state.currentLeadershipCode);
+                if (typeof window.loadLeadershipTips === 'function') {
+                    window.loadLeadershipTips(this.state.currentLeadershipCode);
+                }
+            }
+
+            // 결과 페이지로 이동
+            this.showSection('results');
+
+            // 애널리틱스 추적
+            this.analyticsManager.trackFollowershipSelection(expandedFollowers);
+        } catch (error) {
+            console.error('결과 페이지 표시 중 오류:', error);
+            this.showErrorMessage('결과 페이지 표시 중 오류가 발생했습니다.');
+        }
     }
 
     // ========================================
