@@ -3911,6 +3911,9 @@ body::before {
     color: var(--primary-900);
     background: white;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    /* iOS Safari 드롭다운 위치 수정 */
+    position: relative;
+    z-index: 1;
 }
 
 .inquiry-field input:focus,
@@ -4062,6 +4065,12 @@ body::before {
 @media (max-width: 480px) {
     .inquiry-modal-content {
         padding: var(--space-6);
+        /* iOS Safari select 드롭다운 위치 수정 */
+        transform: none !important;
+    }
+
+    .inquiry-modal {
+        z-index: 10000;
     }
 
     .inquiry-title {
