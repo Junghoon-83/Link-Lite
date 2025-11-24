@@ -1047,9 +1047,10 @@
                 if (!mobileNav) {
                     mobileNav = new MobileNavigationManager();
                 }
-                // 진단 페이지가 아니면 숨김
+                // 진단 또는 팔로워십 페이지가 아니면 숨김
                 const isAssessmentPage = document.getElementById('assessment').classList.contains('active');
-                if (!isAssessmentPage) {
+                const isFollowershipPage = document.getElementById('followership').classList.contains('active');
+                if (!isAssessmentPage && !isFollowershipPage) {
                     mobileNav.hide();
                 }
             } else {

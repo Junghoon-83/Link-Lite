@@ -337,6 +337,9 @@ class AppController {
     previousQuestion() {
         if (this.state.currentQuestion > 0) {
             this.loadQuestion(this.state.currentQuestion - 1);
+        } else {
+            // 첫 번째 질문에서 이전 버튼 클릭 시 Welcome 페이지로
+            this.showSection('welcome');
         }
     }
 
@@ -422,10 +425,13 @@ class AppController {
             // 카드 전체 클릭 시 체크박스 토글 (모바일 터치 향상)
             this.eventManager.add(label, 'click', (e) => {
                 // 체크박스 자체를 클릭한 경우는 제외 (중복 방지)
-                if (e.target === checkbox) {
+                // 체크박스나 그 부모 요소(.followership-checkbox)를 클릭한 경우 제외
+                if (e.target === checkbox || e.target.closest('.followership-checkbox')) {
                     return;
                 }
 
+                // 이미 label의 기본 동작으로 체크박스가 토글되지 않는 경우를 위한 추가 처리
+                e.preventDefault();
                 console.log(`카드 영역 클릭 → 체크박스 토글: ${typeId}`);
                 checkbox.click(); // 체크박스 클릭을 프로그래밍적으로 트리거
             });
