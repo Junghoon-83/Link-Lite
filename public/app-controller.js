@@ -393,7 +393,7 @@ class AppController {
             card.setAttribute('data-type-id', typeId);
 
             card.innerHTML = `
-                <div class="followership-card-main">
+                <label class="followership-card-main" for="follower_${typeId}">
                     <div class="followership-checkbox">
                         <input type="checkbox" id="follower_${typeId}" value="${typeId}">
                     </div>
@@ -401,7 +401,7 @@ class AppController {
                         <h4 class="followership-type-name">${type.name}</h4>
                         <p class="followership-type-desc">${type.description}</p>
                     </div>
-                </div>
+                </label>
                 <div class="member-name-input" id="memberInput_${typeId}" style="display: none;">
                     <input type="text" placeholder="팀원 이름 입력 (여러 명은 쉼표(,)나 공백으로 구분)" class="member-name-field" id="memberName_${typeId}">
                 </div>

@@ -1419,7 +1419,7 @@ body::before {
     }
 
     .question-text {
-        min-height: 6em;
+        min-height: 3em;
         font-size: var(--font-size-lg);
         align-items: flex-start;
         text-align: left;
@@ -1514,7 +1514,7 @@ body::before {
     }
 
     .question-text {
-        min-height: 7em;
+        min-height: 3em;
         font-size: var(--font-size-base);
         align-items: flex-start;
         text-align: left;
@@ -1773,6 +1773,7 @@ body::before {
     display: flex;
     align-items: flex-start;
     gap: var(--space-4);
+    cursor: pointer;
 }
 
 .followership-checkbox {
@@ -3046,6 +3047,14 @@ body::before {
         padding-bottom: var(--space-1);
     }
 
+    .radar-label {
+        font-size: 14px;
+    }
+
+    .label-desc {
+        font-size: 12px;
+    }
+
     .leadership-details {
         gap: var(--space-3);
         padding: var(--space-3);
@@ -4031,12 +4040,14 @@ body::before {
 .consent-detail-btn {
     background: none;
     border: none;
-    color: var(--primary-400);
+    color: var(--accent-500);
     font-size: var(--font-size-xs);
     text-decoration: underline;
     cursor: pointer;
-    padding: 0;
+    padding: 8px;
+    margin: -8px;
     margin-left: var(--space-1);
+    font-weight: 500;
 }
 
 .consent-detail-btn:hover {
