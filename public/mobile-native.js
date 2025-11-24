@@ -310,8 +310,8 @@ class MobileNativeInput {
         this.selectedDisplay.style.setProperty('background', scoreColors[value], 'important');
         this.selectedDisplay.style.setProperty('opacity', '0.8', 'important'); // 미리보기는 살짝 투명하게
 
-        // 피드백 바도 업데이트
-        const percentage = ((value - this.min) / (this.max - this.min)) * 100;
+        // 피드백 바도 업데이트 (1점 = 16.67%, 6점 = 100%)
+        const percentage = (value / this.max) * 100;
         this.feedbackProgress.style.width = `${percentage}%`;
         this.feedbackProgress.style.setProperty('background', scoreColors[value], 'important');
         this.feedbackProgress.style.setProperty('opacity', '0.8', 'important');
@@ -333,7 +333,7 @@ class MobileNativeInput {
             this.selectedDisplay.style.setProperty('background', scoreColors[this.value], 'important');
             this.selectedDisplay.style.removeProperty('opacity'); // 투명도 제거
 
-            const percentage = ((this.value - this.min) / (this.max - this.min)) * 100;
+            const percentage = (this.value / this.max) * 100;
             this.feedbackProgress.style.width = `${percentage}%`;
             this.feedbackProgress.style.setProperty('background', scoreColors[this.value], 'important');
             this.feedbackProgress.style.removeProperty('opacity');
@@ -493,8 +493,8 @@ class MobileNativeInput {
             }
         });
 
-        // Update feedback bar with selected color
-        const percentage = ((this.value - this.min) / (this.max - this.min)) * 100;
+        // Update feedback bar with selected color (1점 = 16.67%, 6점 = 100%)
+        const percentage = (this.value / this.max) * 100;
         this.feedbackProgress.style.width = `${percentage}%`;
         this.feedbackProgress.style.setProperty('background', scoreColors[this.value] || '#8E8E93', 'important');
 
