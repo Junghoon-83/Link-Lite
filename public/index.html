@@ -803,17 +803,25 @@
             // 진단 데이터 수집
             let diagnosisData = null;
             if (consentChecked && window.app && window.app.assessment) {
-                const result = window.app.assessment.determineLeadershipType();
-                diagnosisData = {
-                    leadershipType: window.app.state.currentLeadershipCode || '미진단',
-                    leadershipName: result ? result.name : '미진단',
-                    scores: result ? {
-                        S: result.scores.S.toFixed(2),
-                        I: result.scores.I.toFixed(2),
-                        G: result.scores.G.toFixed(2)
-                    } : null,
-                    selectedFollowerTypes: window.app.state.selectedFollowers || []
-                };
+                try {
+                    const result = window.app.assessment.determineLeadershipType();
+                    diagnosisData = {
+                        leadershipType: window.app.state.currentLeadershipCode || '미진단',
+                        leadershipName: result ? result.name : '미진단',
+                        scores: (result && result.scores) ? {
+                            S: result.scores.S ? result.scores.S.toFixed(2) : '0.00',
+                            I: result.scores.I ? result.scores.I.toFixed(2) : '0.00',
+                            G: result.scores.G ? result.scores.G.toFixed(2) : '0.00'
+                        } : null,
+                        selectedFollowerTypes: window.app.state.selectedFollowers || []
+                    };
+                } catch (e) {
+                    if (typeof logger !== 'undefined') {
+                        logger.error('진단 데이터 수집 실패:', e);
+                    }
+                    // 진단 데이터 없이 진행
+                    diagnosisData = null;
+                }
             }
 
             // Hidden fields에 데이터 채우기
