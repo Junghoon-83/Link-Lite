@@ -587,8 +587,18 @@ class MobileNavigationManager {
             }
         });
 
-        document.getElementById('mobileNavNext').addEventListener('click', () => {
+        document.getElementById('mobileNavNext').addEventListener('click', (e) => {
+            const btn = e.currentTarget;
+
             console.log('=== 모바일 다음 버튼 클릭 ===');
+            console.log('버튼 disabled 상태:', btn.disabled);
+
+            // 버튼이 비활성화되어 있으면 무시
+            if (btn.disabled) {
+                console.warn('❌ 다음 버튼이 비활성화되어 있습니다');
+                return;
+            }
+
             // 현재 활성화된 섹션 확인
             const activeSection = document.querySelector('.premium-section.active');
             console.log('활성 섹션:', activeSection?.id);
@@ -602,6 +612,8 @@ class MobileNavigationManager {
             } else if (sectionId === 'followership' && typeof window.showResultsPage === 'function') {
                 console.log('→ window.showResultsPage() 호출');
                 window.showResultsPage();
+            } else {
+                console.error('❌ 적절한 함수를 찾을 수 없음:', sectionId);
             }
         });
     }
