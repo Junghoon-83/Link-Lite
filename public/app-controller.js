@@ -221,6 +221,18 @@ class AppController {
                 onChange: (value) => {
                     this.assessment.recordResponse(question.id, value);
                     this.updateNextButton();
+
+                    // 점수 선택 후 자동으로 다음으로 이동
+                    setTimeout(() => {
+                        const totalQuestions = this.assessment.getTotalQuestions();
+                        if (this.state.currentQuestion < totalQuestions - 1) {
+                            // 다음 질문으로
+                            this.nextQuestion();
+                        } else {
+                            // 마지막 질문 - 팔로워십 선택으로 이동
+                            this.completeAssessment();
+                        }
+                    }, 500);
                 }
             });
         }
@@ -640,6 +652,9 @@ class AppController {
         console.log('=== _displayLeadershipResults 시작 ===');
         console.log('리더십 결과:', leadershipResult);
 
+        // SVG 요소 강제 초기화 (캐시 이슈 방지)
+        this._resetRadarChart();
+
         // 리더십 유형 표시
         const leadershipTypeElement = document.getElementById('leadershipType');
         const leadershipSubtitleElement = document.getElementById('leadershipSubtitle');
@@ -684,16 +699,17 @@ class AppController {
 
         // 점수 및 유형 검증 로그
         console.log('=== 리더십 결과 검증 ===');
-        console.log('점수:', leadershipResult.scores);
+        console.log('🔢 원본 응답 데이터:', this.assessment.responses);
+        console.log('📊 점수:', leadershipResult.scores);
         console.log('  - Sharing:', leadershipResult.scores.sharing);
         console.log('  - Interaction:', leadershipResult.scores.interaction);
         console.log('  - Growth:', leadershipResult.scores.growth);
-        console.log('유형 코드:', leadershipResult.code);
-        console.log('유형 이름:', leadershipResult.type.name);
-        console.log('임계값 4.5 기준:');
-        console.log('  - Sharing >= 4.5?', leadershipResult.scores.sharing >= 4.5);
-        console.log('  - Interaction >= 4.5?', leadershipResult.scores.interaction >= 4.5);
-        console.log('  - Growth >= 4.5?', leadershipResult.scores.growth >= 4.5);
+        console.log('🏷️  유형 코드:', leadershipResult.code);
+        console.log('📝 유형 이름:', leadershipResult.type.name);
+        console.log('⚖️  임계값 4.5 기준:');
+        console.log('  - Sharing >= 4.5?', leadershipResult.scores.sharing >= 4.5 ? '✅' : '❌', leadershipResult.scores.sharing >= 4.5);
+        console.log('  - Interaction >= 4.5?', leadershipResult.scores.interaction >= 4.5 ? '✅' : '❌', leadershipResult.scores.interaction >= 4.5);
+        console.log('  - Growth >= 4.5?', leadershipResult.scores.growth >= 4.5 ? '✅' : '❌', leadershipResult.scores.growth >= 4.5);
         console.log('====================');
 
         // 레이더 차트 업데이트 (내부 메서드 사용)
@@ -705,7 +721,48 @@ class AppController {
         console.log('✓ 리더십 결과 표시 완료');
     }
 
+    _resetRadarChart() {
+        console.log('🔄 레이더 차트 초기화 시작');
+
+        // SVG 요소들을 중앙(200, 200)으로 강제 리셋
+        const center = 200;
+
+        // 점수 포인트 초기화
+        const sharingPoint = document.getElementById('sharingPoint');
+        const interactionPoint = document.getElementById('interactionPoint');
+        const growthPoint = document.getElementById('growthPoint');
+
+        if (sharingPoint && interactionPoint && growthPoint) {
+            sharingPoint.setAttribute('cx', center);
+            sharingPoint.setAttribute('cy', center);
+            interactionPoint.setAttribute('cx', center);
+            interactionPoint.setAttribute('cy', center);
+            growthPoint.setAttribute('cx', center);
+            growthPoint.setAttribute('cy', center);
+
+            // 스타일 초기화
+            sharingPoint.style.opacity = '0';
+            sharingPoint.style.transform = 'scale(0)';
+            interactionPoint.style.opacity = '0';
+            interactionPoint.style.transform = 'scale(0)';
+            growthPoint.style.opacity = '0';
+            growthPoint.style.transform = 'scale(0)';
+        }
+
+        // 폴리곤 영역 초기화
+        const scoreArea = document.getElementById('scoreArea');
+        if (scoreArea) {
+            scoreArea.setAttribute('points', `${center},${center} ${center},${center} ${center},${center}`);
+            scoreArea.style.opacity = '0';
+            scoreArea.style.transform = 'scale(0)';
+        }
+
+        console.log('✓ 레이더 차트 초기화 완료');
+    }
+
     _updateRadarChart(scores) {
+        console.log('📈 레이더 차트 업데이트 시작:', scores);
+
         // 점수를 0-6 범위에서 0-160으로 변환 (중심에서 최대 반지름까지)
         const center = 200;
         const maxRadius = 160;
@@ -721,6 +778,11 @@ class AppController {
         const sharingRadius = ((scores.sharing - 1) / 5) * maxRadius;
         const interactionRadius = ((scores.interaction - 1) / 5) * maxRadius;
         const growthRadius = ((scores.growth - 1) / 5) * maxRadius;
+
+        console.log('📐 반지름 계산:');
+        console.log('  - Sharing:', sharingRadius.toFixed(1), 'px');
+        console.log('  - Interaction:', interactionRadius.toFixed(1), 'px');
+        console.log('  - Growth:', growthRadius.toFixed(1), 'px');
 
         // 각 점의 좌표 계산
         const sharingX = center + sharingRadius * Math.cos(angles.sharing);
