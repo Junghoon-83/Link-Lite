@@ -118,7 +118,10 @@
                         <div class="feature-grid" role="list" aria-label="진단 기능">
                             <div class="feature-item" role="listitem">
                                 <div class="feature-icon-modern analytics" aria-hidden="true">
-                                    <i data-lucide="bar-chart-3" class="lucide-icon"></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon">
+                                        <path d="M3 3v18h18"/>
+                                        <path d="m19 9-5 5-4-4-3 3"/>
+                                    </svg>
                                 </div>
                                 <div class="feature-content">
                                     <h3 class="feature-title">SIG 모델 진단</h3>
@@ -127,7 +130,11 @@
                             </div>
                             <div class="feature-item" role="listitem">
                                 <div class="feature-icon-modern collaboration" aria-hidden="true">
-                                    <i data-lucide="users-round" class="lucide-icon"></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon">
+                                        <path d="M18 21a8 8 0 0 0-16 0"/>
+                                        <circle cx="10" cy="8" r="5"/>
+                                        <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"/>
+                                    </svg>
                                 </div>
                                 <div class="feature-content">
                                     <h3 class="feature-title">팔로워십 매칭</h3>
@@ -136,7 +143,10 @@
                             </div>
                             <div class="feature-item" role="listitem">
                                 <div class="feature-icon-modern insights" aria-hidden="true">
-                                    <i data-lucide="link-2" class="lucide-icon"></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon">
+                                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                    </svg>
                                 </div>
                                 <div class="feature-content">
                                     <h3 class="feature-title">링커십 전환</h3>
@@ -443,9 +453,6 @@
         </div>
     </div>
 
-    <!-- Lucide Icons CDN -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-
     <script src="logger.js?v=1"></script>
     <script src="leadership-assessment.js?v=14"></script>
     <script src="team-compatibility.js?v=14"></script>
@@ -454,18 +461,6 @@
     <script src="mobile-native.js?v=22"></script>
     <script src="app-controller.js?v=6"></script>
     <script>
-        // Lucide 아이콘 즉시 초기화
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-
-        // DOM 로드 후에도 다시 초기화 (동적 콘텐츠용)
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-        });
-
         // Global Error Handler
         window.addEventListener('error', function(event) {
             console.error('전역 에러 발생:', event.error);
