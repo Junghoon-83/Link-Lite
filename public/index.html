@@ -78,9 +78,6 @@
     <link rel="stylesheet" href="premium-style.css?v=1764005356">
     <link rel="stylesheet" href="mobile-font-system.css?v=1">
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
     <!-- Theme Color -->
     <meta name="theme-color" content="#8b5cf6">
 
@@ -446,6 +443,9 @@
         </div>
     </div>
 
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
     <script src="logger.js?v=1"></script>
     <script src="leadership-assessment.js?v=14"></script>
     <script src="team-compatibility.js?v=14"></script>
@@ -454,7 +454,12 @@
     <script src="mobile-native.js?v=22"></script>
     <script src="app-controller.js?v=6"></script>
     <script>
-        // Lucide 아이콘 초기화
+        // Lucide 아이콘 즉시 초기화
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+
+        // DOM 로드 후에도 다시 초기화 (동적 콘텐츠용)
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
