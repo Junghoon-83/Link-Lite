@@ -189,6 +189,31 @@
                     </nav>
                 </div>
 
+                <!-- 진단 완료 확인 모달 -->
+                <div id="assessmentCompleteModal" class="modal-overlay" style="display: none;" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+                    <div class="modal-content completion-modal">
+                        <div class="completion-icon">
+                            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                                <circle cx="40" cy="40" r="38" fill="#10b981" opacity="0.1"/>
+                                <circle cx="40" cy="40" r="30" fill="#10b981" opacity="0.2"/>
+                                <path d="M25 40 L35 50 L55 30" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h2 id="modalTitle" class="completion-title">진단 설문이 완료되었습니다! 🎉</h2>
+                        <p class="completion-message">
+                            총 <strong>23개 질문</strong>에 모두 응답하셨습니다.<br>
+                            이제 팀원의 팔로워십 유형을 선택하고<br>
+                            나의 리더십 분석 결과를 확인해보세요.
+                        </p>
+                        <div class="completion-actions">
+                            <button class="premium-btn" id="proceedToFollowershipBtn" aria-label="팔로워십 선택으로 이동">
+                                <span>팔로워십 선택하기</span>
+                                <span aria-hidden="true">→</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 팔로워십 선택 화면 -->
                 <div id="followership" class="premium-section" role="region" aria-label="팔로워십 선택 화면">
                     <div class="followership-selection">

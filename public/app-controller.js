@@ -230,8 +230,12 @@ class AppController {
                         setTimeout(() => {
                             this.nextQuestion();
                         }, 300);
+                    } else {
+                        // 마지막 질문에서 점수 선택 시 완료 모달 표시
+                        setTimeout(() => {
+                            this.showAssessmentCompleteModal();
+                        }, 300);
                     }
-                    // 마지막 질문에서는 자동 넘어가기 비활성화 - 사용자가 "완료" 버튼을 클릭해야 함
                 }
             });
         }
@@ -357,6 +361,35 @@ class AppController {
             // 첫 번째 질문에서 이전 버튼 클릭 시 Welcome 페이지로
             this.showSection('welcome');
         }
+    }
+
+    showAssessmentCompleteModal() {
+        console.log('=== showAssessmentCompleteModal 호출 ===');
+
+        const modal = document.getElementById('assessmentCompleteModal');
+        if (!modal) {
+            console.error('완료 모달을 찾을 수 없습니다');
+            return;
+        }
+
+        // 모달 표시
+        modal.style.display = 'flex';
+
+        // 팔로워십 선택 버튼 이벤트
+        const proceedBtn = document.getElementById('proceedToFollowershipBtn');
+        if (proceedBtn) {
+            // 기존 이벤트 리스너 제거 (중복 방지)
+            const newProceedBtn = proceedBtn.cloneNode(true);
+            proceedBtn.parentNode.replaceChild(newProceedBtn, proceedBtn);
+
+            newProceedBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+                this.completeAssessment();
+            });
+        }
+
+        // 배경 클릭 시 모달 닫기 비활성화 (사용자가 버튼을 통해서만 진행)
+        console.log('✓ 완료 모달 표시');
     }
 
     completeAssessment() {
