@@ -75,8 +75,11 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="mobile-native.css?v=1764003976">
-    <link rel="stylesheet" href="premium-style.css?v=1764005355">
+    <link rel="stylesheet" href="premium-style.css?v=1764005356">
     <link rel="stylesheet" href="mobile-font-system.css?v=1">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <!-- Theme Color -->
     <meta name="theme-color" content="#8b5cf6">
@@ -117,21 +120,27 @@
 
                         <div class="feature-grid" role="list" aria-label="진단 기능">
                             <div class="feature-item" role="listitem">
-                                <div class="feature-icon-modern analytics" aria-hidden="true"></div>
+                                <div class="feature-icon-modern analytics" aria-hidden="true">
+                                    <i data-lucide="bar-chart-3" class="lucide-icon"></i>
+                                </div>
                                 <div class="feature-content">
                                     <h3 class="feature-title">SIG 모델 진단</h3>
                                     <p class="feature-description">공유·상호작용·성장 영역 분석</p>
                                 </div>
                             </div>
                             <div class="feature-item" role="listitem">
-                                <div class="feature-icon-modern collaboration" aria-hidden="true"></div>
+                                <div class="feature-icon-modern collaboration" aria-hidden="true">
+                                    <i data-lucide="users-round" class="lucide-icon"></i>
+                                </div>
                                 <div class="feature-content">
                                     <h3 class="feature-title">팔로워십 매칭</h3>
                                     <p class="feature-description">팀원 유형별 맞춤 코칭 전략</p>
                                 </div>
                             </div>
                             <div class="feature-item" role="listitem">
-                                <div class="feature-icon-modern insights" aria-hidden="true"></div>
+                                <div class="feature-icon-modern insights" aria-hidden="true">
+                                    <i data-lucide="link-2" class="lucide-icon"></i>
+                                </div>
                                 <div class="feature-content">
                                     <h3 class="feature-title">링커십 전환</h3>
                                     <p class="feature-description">연결자로서의 실행 가이드</p>
@@ -445,6 +454,13 @@
     <script src="mobile-native.js?v=22"></script>
     <script src="app-controller.js?v=6"></script>
     <script>
+        // Lucide 아이콘 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+
         // Global Error Handler
         window.addEventListener('error', function(event) {
             console.error('전역 에러 발생:', event.error);
