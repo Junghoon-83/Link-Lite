@@ -214,6 +214,9 @@ class AppController {
 
             // 새 모바일 입력 생성
             const currentResponse = this.assessment.responses[question.id];
+            const totalQuestions = this.assessment.getTotalQuestions();
+            const isLastQuestion = index === totalQuestions - 1;
+
             this.ui.mobileInput = new MobileNativeInput(inputContainer, {
                 defaultValue: currentResponse, // 이전 응답 복원
                 min: 1,
@@ -222,17 +225,13 @@ class AppController {
                     this.assessment.recordResponse(question.id, value);
                     this.updateNextButton();
 
-                    // 점수 선택 후 자동으로 다음으로 이동 (딜레이 300ms)
-                    setTimeout(() => {
-                        const totalQuestions = this.assessment.getTotalQuestions();
-                        if (this.state.currentQuestion < totalQuestions - 1) {
-                            // 다음 질문으로
+                    // 마지막 질문이 아닐 때만 자동으로 다음으로 이동
+                    if (!isLastQuestion) {
+                        setTimeout(() => {
                             this.nextQuestion();
-                        } else {
-                            // 마지막 질문 - 팔로워십 선택으로 이동
-                            this.completeAssessment();
-                        }
-                    }, 300);
+                        }, 300);
+                    }
+                    // 마지막 질문에서는 자동 넘어가기 비활성화 - 사용자가 "완료" 버튼을 클릭해야 함
                 }
             });
         }
@@ -246,9 +245,12 @@ class AppController {
 
         // 모바일 네비게이션 업데이트
         if (this.ui.mobileNav && window.innerWidth <= 768) {
+            const totalQuestions = this.assessment.getTotalQuestions();
+            const isLastQuestion = index === totalQuestions - 1;
             const canGoPrev = true;
             const canGoNext = this.assessment.responses[question.id] !== undefined;
-            this.ui.mobileNav.updateNavigation(canGoPrev, canGoNext, '다음');
+            const buttonText = isLastQuestion ? '완료' : '다음';
+            this.ui.mobileNav.updateNavigation(canGoPrev, canGoNext, buttonText);
         }
 
             // 세션 저장
@@ -274,13 +276,15 @@ class AppController {
             nextBtn.disabled = !hasResponse;
         }
         if (nextBtnText) {
-            nextBtnText.textContent = '다음';
+            // 마지막 질문이면 "완료", 아니면 "다음"
+            nextBtnText.textContent = isLastQuestion ? '완료' : '다음';
         }
 
         // 모바일 네비게이션도 업데이트
         if (this.ui.mobileNav && window.innerWidth <= 768) {
             const canGoPrev = true;
-            this.ui.mobileNav.updateNavigation(canGoPrev, hasResponse, '다음');
+            const buttonText = isLastQuestion ? '완료' : '다음';
+            this.ui.mobileNav.updateNavigation(canGoPrev, hasResponse, buttonText);
         }
     }
 
