@@ -3012,11 +3012,11 @@ body::before {
     }
 
     .radar-label {
-        font-size: 14px;
+        font-size: 16px;
     }
 
     .label-desc {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .leadership-details {
@@ -3030,20 +3030,22 @@ body::before {
     }
 
     .detail-title {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-base);
         margin-bottom: var(--space-2);
+        font-weight: 700;
     }
 
     .detail-list li {
-        padding: var(--space-1) 0;
-        font-size: 13px;
+        padding: var(--space-2) 0;
+        font-size: var(--font-size-sm);
         line-height: 1.6;
+        padding-left: var(--space-4);
     }
 
     .full-version-cta-unified {
         padding: var(--space-5);
-        margin-top: var(--space-6);
-        margin-bottom: var(--space-4);
+        margin-top: var(--space-4);
+        margin-bottom: var(--space-3);
     }
 
     .cta-header-line {
@@ -3665,7 +3667,7 @@ body::before {
     }
 
     .tip-card-title {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-xs);
     }
 
     .tip-card.expanded .tip-card-content {
@@ -3674,39 +3676,47 @@ body::before {
     }
 
     .tip-section {
-        margin-bottom: var(--space-4);
+        margin-bottom: var(--space-3);
     }
 
     .tip-section-title {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-xs);
     }
 
     .action-card {
-        padding: var(--space-4);
+        padding: var(--space-3);
     }
 
     .action-situation-text {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-xs);
     }
 
     .action-detail {
-        padding: var(--space-3);
+        padding: var(--space-2);
     }
 
     .action-text {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-xs);
     }
 
     .action-example-box {
-        padding: var(--space-3);
+        padding: var(--space-2);
     }
 
     .example-text {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-xs);
     }
 
     .why-text {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-xs);
+    }
+
+    .action-step-number {
+        font-size: 10px;
+    }
+
+    .action-label, .example-label {
+        font-size: 10px;
     }
 }
 
@@ -3800,8 +3810,9 @@ body::before {
 
 @media (max-width: 480px) {
     .results-footer {
-        margin-top: var(--space-8);
-        padding: var(--space-4) var(--space-3);
+        margin-top: var(--space-6);
+        padding: var(--space-3) var(--space-3);
+        margin-bottom: var(--space-3);
     }
 }
 
