@@ -1478,7 +1478,7 @@ body::before {
     }
 
     .question-text {
-        min-height: 3em;
+        min-height: 2.5em;
         font-size: var(--font-size-base);
         align-items: flex-start;
         text-align: left;
@@ -3042,7 +3042,8 @@ body::before {
 
     .full-version-cta-unified {
         padding: var(--space-5);
-        margin-top: var(--space-8);
+        margin-top: var(--space-6);
+        margin-bottom: var(--space-4);
     }
 
     .cta-header-line {
@@ -3676,16 +3677,36 @@ body::before {
         margin-bottom: var(--space-4);
     }
 
+    .tip-section-title {
+        font-size: var(--font-size-sm);
+    }
+
     .action-card {
         padding: var(--space-4);
+    }
+
+    .action-situation-text {
+        font-size: var(--font-size-sm);
     }
 
     .action-detail {
         padding: var(--space-3);
     }
 
+    .action-text {
+        font-size: var(--font-size-sm);
+    }
+
     .action-example-box {
         padding: var(--space-3);
+    }
+
+    .example-text {
+        font-size: var(--font-size-sm);
+    }
+
+    .why-text {
+        font-size: var(--font-size-sm);
     }
 }
 
@@ -3779,8 +3800,8 @@ body::before {
 
 @media (max-width: 480px) {
     .results-footer {
-        margin-top: var(--space-10);
-        padding: var(--space-5) var(--space-3);
+        margin-top: var(--space-8);
+        padding: var(--space-4) var(--space-3);
     }
 }
 
