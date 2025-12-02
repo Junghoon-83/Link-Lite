@@ -1,4 +1,36 @@
 // ========================================
+// Security Utils - 입력 검증 및 XSS 방지
+// ========================================
+
+class SecurityUtils {
+    /**
+     * HTML 특수문자를 이스케이프하여 XSS 공격 방지
+     * @param {string} str - 이스케이프할 문자열
+     * @returns {string} 이스케이프된 문자열
+     */
+    static escapeHTML(str) {
+        if (str === null || str === undefined) return '';
+        const div = document.createElement('div');
+        div.textContent = String(str);
+        return div.innerHTML;
+    }
+
+    /**
+     * 사용자 입력 문자열 정제 (트림 + 길이 제한 + 특수문자 제거)
+     * @param {string} str - 정제할 문자열
+     * @param {number} maxLength - 최대 길이 (기본값: 50)
+     * @returns {string} 정제된 문자열
+     */
+    static sanitizeInput(str, maxLength = 50) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .trim()
+            .slice(0, maxLength)
+            .replace(/[<>\"'&]/g, ''); // HTML 태그 및 특수문자 제거
+    }
+}
+
+// ========================================
 // App Controller - 애플리케이션 상태 및 생명주기 관리
 // ========================================
 
@@ -444,18 +476,20 @@ class AppController {
             card.className = 'followership-card';
             card.setAttribute('data-type-id', typeId);
 
+            // 안전한 HTML 생성 (JSON 데이터도 이스케이프 처리)
+            const safeTypeId = SecurityUtils.escapeHTML(typeId);
             card.innerHTML = `
-                <label class="followership-card-main" for="follower_${typeId}">
+                <label class="followership-card-main" for="follower_${safeTypeId}">
                     <div class="followership-checkbox">
-                        <input type="checkbox" id="follower_${typeId}" value="${typeId}">
+                        <input type="checkbox" id="follower_${safeTypeId}" value="${safeTypeId}">
                     </div>
                     <div class="followership-info">
-                        <h4 class="followership-type-name">${type.name}</h4>
-                        <p class="followership-type-desc">${type.description}</p>
+                        <h4 class="followership-type-name">${SecurityUtils.escapeHTML(type.name)}</h4>
+                        <p class="followership-type-desc">${SecurityUtils.escapeHTML(type.description)}</p>
                     </div>
                 </label>
-                <div class="member-name-input" id="memberInput_${typeId}" style="display: none;">
-                    <input type="text" placeholder="팀원 이름 입력 (여러 명은 쉼표(,)나 공백으로 구분)" class="member-name-field" id="memberName_${typeId}">
+                <div class="member-name-input" id="memberInput_${safeTypeId}" style="display: none;">
+                    <input type="text" placeholder="팀원 이름 입력 (여러 명은 쉼표(,)나 공백으로 구분)" class="member-name-field" id="memberName_${safeTypeId}" maxlength="100">
                 </div>
             `;
 
@@ -542,14 +576,14 @@ class AppController {
 
         console.log('✓ 팔로워십 선택 확인 완료');
 
-        // 팀원 이름 수집 및 다중 이름 처리
+        // 팀원 이름 수집 및 다중 이름 처리 (입력값 정제 적용)
         const expandedFollowers = [];
         this.state.selectedFollowers.forEach(follower => {
             const nameInput = document.getElementById(`memberName_${follower.id}`);
             if (nameInput && nameInput.value.trim()) {
                 const names = nameInput.value
                     .split(/[,\s]+/)
-                    .map(name => name.trim())
+                    .map(name => SecurityUtils.sanitizeInput(name, 30)) // XSS 방지 및 길이 제한
                     .filter(name => name.length > 0);
 
                 if (names.length > 0) {
@@ -652,17 +686,18 @@ class AppController {
             const card = document.createElement('div');
             card.className = 'compatibility-unified-card';
 
-            // 팀원 이름들을 개별 배지로 표시
+            // 팀원 이름들을 개별 배지로 표시 (XSS 방지를 위해 이스케이프 처리)
             const nameBadges = memberNames.map(name =>
-                `<span class="member-name-badge">${name}</span>`
+                `<span class="member-name-badge">${SecurityUtils.escapeHTML(name)}</span>`
             ).join('');
 
+            // 안전한 HTML 생성 (모든 동적 데이터 이스케이프 처리)
             card.innerHTML = `
                 <div class="compatibility-card-header">
                     <div class="follower-info">
                         <div class="follower-type-line">
-                            <h4 class="follower-type-name">${followerType.name}</h4>
-                            <span class="follower-type-subtitle">${followerType.subtitle}</span>
+                            <h4 class="follower-type-name">${SecurityUtils.escapeHTML(followerType.name)}</h4>
+                            <span class="follower-type-subtitle">${SecurityUtils.escapeHTML(followerType.subtitle)}</span>
                         </div>
                     </div>
                     <div class="member-names-container">${nameBadges}</div>
@@ -670,11 +705,11 @@ class AppController {
                 <div class="compatibility-analysis-grid">
                     <div class="analysis-box analysis-strength">
                         <div class="analysis-box-label"><span class="analysis-icon">✓</span> 강점</div>
-                        <div class="analysis-box-content">${compatibility.strengths[0]}</div>
+                        <div class="analysis-box-content">${SecurityUtils.escapeHTML(compatibility.strengths[0])}</div>
                     </div>
                     <div class="analysis-box analysis-caution">
                         <div class="analysis-box-label"><span class="analysis-icon">⚠</span> 주의</div>
-                        <div class="analysis-box-content">${compatibility.challenges[0]}</div>
+                        <div class="analysis-box-content">${SecurityUtils.escapeHTML(compatibility.challenges[0])}</div>
                     </div>
                 </div>
             `;
@@ -1293,6 +1328,7 @@ class EventManager {
 
 // Export
 if (typeof window !== 'undefined') {
+    window.SecurityUtils = SecurityUtils;
     window.AppController = AppController;
     window.EventManager = EventManager;
 }

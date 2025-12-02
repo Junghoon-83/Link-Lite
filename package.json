@@ -6,9 +6,26 @@
   "scripts": {
     "start": "python3 -m http.server 8000 --directory public",
     "dev": "python3 -m http.server 8000 --directory public",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:verbose": "jest --verbose"
   },
   "keywords": ["leadership", "assessment", "team", "compatibility", "analysis"],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "roots": ["<rootDir>/tests"],
+    "testMatch": ["**/*.test.js"],
+    "collectCoverageFrom": [
+      "public/**/*.js",
+      "!public/data/**"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["text", "lcov", "html"]
+  }
 }
